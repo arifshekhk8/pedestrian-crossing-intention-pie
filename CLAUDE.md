@@ -10,14 +10,28 @@ a YOLO26 + ByteTrack live-video demo. It is a linear, numbered research pipeline
 not an application. There is no build system, no test suite, no linter; "running
 the code" means executing the numbered scripts in order.
 
-Authoritative project state lives in three hand-maintained docs — **read these
-first**, they are kept current with real numbers:
-- `THESIS_PLAN.md` — locked architecture, dataset splits, day-by-day plan.
-- `PROGRESS_LOG.md` — chronological results log (every run's numbers).
-- `CODE_STATE.md` — per-file status and what each script produces.
+Authoritative project state lives in three hand-maintained docs (in `pipeline/`) —
+**read these first**, they are kept current with real numbers:
+- `pipeline/THESIS_PLAN.md` — locked architecture, dataset splits, day-by-day plan.
+- `pipeline/PROGRESS_LOG.md` — chronological results log (every run's numbers).
+- `pipeline/CODE_STATE.md` — per-file status and what each script produces.
 
-`supervisor_review/` is a self-contained presentation pack (explainer + figures +
-demo videos); regenerate its figures/CSVs from the run outputs, don't hand-edit.
+`paper_and_artifacts/supervisor_review/` is a self-contained presentation pack
+(explainer + figures + demo videos); regenerate its figures/CSVs from the run
+outputs, don't hand-edit.
+
+## Repository layout (after the GitHub reorg)
+
+Three top-level folders. **Run scripts from the repo root** (e.g.
+`python pipeline/04_train_bilstm.py`) so the relative paths resolve.
+- `pipeline/` — all numbered scripts, the three project docs, the multi-seed
+  result tables, and the live-demo outputs (`pipeline/demo_out/`).
+- `journal_prep/` — the 11-issue journal-readiness program (one folder per issue).
+- `paper_and_artifacts/` — `Journal_writing/` (manuscript), `runs/` (trained
+  checkpoints + norm stats), and `supervisor_review/` (presentation pack).
+
+Gitignored data lives at the repo root and is NOT tracked: `PIE/`, `PIE_clips/`,
+`PIEPredict/`, `sequences/`, `pie_annotations.pkl`, `yolo26m.pt`, `.venv/`, `venv/`.
 
 ## Pipeline (scripts run in numeric order)
 
@@ -25,13 +39,13 @@ demo videos); regenerate its figures/CSVs from the run outputs, don't hand-edit.
 01_parse_annotations.py   PIE XML -> pie_annotations.pkl (one row per ped per frame)
 02_build_sequences.py     pkl -> sequences/{X.npy (N,16,5), y.npy, meta.pkl}
 03_bilstm_model.py        BiLSTMIntentPredictor (the locked baseline architecture)
-04_train_bilstm.py        train 5-D baseline -> runs/bilstm_baseline/
-03b + 04b                 bbox-only (4-D) ablation -> runs/bbox_only_bilstm_model/
-07_bilstm_attention.py + 07_train_attention.py   attention variant -> runs/BiLSTM_attention/
+04_train_bilstm.py        train 5-D baseline -> paper_and_artifacts/runs/bilstm_baseline/
+03b + 04b                 bbox-only (4-D) ablation -> paper_and_artifacts/runs/bilstm_bbox_only/
+07_bilstm_attention.py + 07_train_attention.py   attention variant -> paper_and_artifacts/runs/bilstm_attention/
 08_ablation_window.py     obs_len {8,16,30} sweep
 09_ablation_tte.py        TTE {30,45,60} sweep
 10_yolo_bytetrack_demo.py Phase 4 live demo (YOLO26 -> ByteTrack -> BiLSTM -> overlay)
-05_compare_runs.py        prints a side-by-side table from runs/*/final.json
+05_compare_runs.py        side-by-side table from paper_and_artifacts/runs/*/final.json
 ```
 
 ## Critical conventions (get these wrong and results silently break)
@@ -66,28 +80,28 @@ Always activate the venv first (it holds torch/ultralytics/etc.):
 source .venv/bin/activate
 ```
 
-Build data and train the baseline:
+Build data and train the baseline (run from the repo root):
 ```bash
-python 01_parse_annotations.py --pie-root PIE          # -> pie_annotations.pkl
-python 02_build_sequences.py --obs-len 16 --tte 45     # -> sequences/
-python 04_train_bilstm.py --epochs 100                 # -> runs/bilstm_baseline/
-python 05_compare_runs.py                              # results table
+python pipeline/01_parse_annotations.py --pie-root PIE       # -> pie_annotations.pkl
+python pipeline/02_build_sequences.py --obs-len 16 --tte 45  # -> sequences/
+python pipeline/04_train_bilstm.py --epochs 100              # -> paper_and_artifacts/runs/bilstm_baseline/
+python pipeline/05_compare_runs.py                           # results table
 ```
 
 Run the live demo (Phase 4). Reads frames via OpenCV so you can seek/limit a
 segment; device auto-selects cuda → mps → cpu:
 ```bash
-python 10_yolo_bytetrack_demo.py --stage demo \
+python pipeline/10_yolo_bytetrack_demo.py --stage demo \
   --video PIE_clips/set03/video_0012.mp4 --video-id video_0012 \
   --start-frame 7676 --max-frames 900 \
-  --weights-dir runs/bilstm_baseline --dump-csv --out-dir demo_out
+  --weights-dir paper_and_artifacts/runs/bilstm_baseline --dump-csv --out-dir pipeline/demo_out
 # --stage detect / track run just that sub-step; --ego-source obd reads *_obd.xml instead of the pkl
 ```
 
 ## Execution environments (this matters)
 
 - **Local (this machine):** MacBook Air M4. The demo (`10_`) runs here on **MPS**;
-  raw PIE clips and `runs/` weights are present. **`scikit-learn` is NOT installed
+  raw PIE clips (repo root) and `paper_and_artifacts/runs/` weights are present. **`scikit-learn` is NOT installed
   locally** (training/metrics ran on Kaggle) — compute metrics manually (e.g.
   Mann-Whitney AUC) rather than importing sklearn in local scripts.
 - **Kaggle (T4 GPU):** training and the ablation sweeps (`04`, `08`, `09`) were

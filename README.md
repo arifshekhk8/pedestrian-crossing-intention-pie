@@ -26,7 +26,9 @@ is ego-vehicle speed: removing it drops AUC to 0.753.
 
 ## Pipeline
 
-Scripts run in numeric order at the repository root:
+The scripts live in [`pipeline/`](pipeline/) and run in numeric order. Run them
+from the repository root so the relative paths resolve, for example
+`python pipeline/04_train_bilstm.py`:
 
 ```
 01_parse_annotations.py   PIE XML -> pie_annotations.pkl (one row per pedestrian per frame)
@@ -45,12 +47,11 @@ Scripts run in numeric order at the repository root:
 
 | Path | Contents |
 |---|---|
-| `0*_*.py`, `1*_*.py` | the numbered pipeline scripts |
-| `THESIS_PLAN.md`, `PROGRESS_LOG.md`, `CODE_STATE.md` | hand-maintained project state (kept current with real numbers) |
+| `pipeline/` | the numbered pipeline scripts, the hand-maintained project docs (`THESIS_PLAN.md`, `PROGRESS_LOG.md`, `CODE_STATE.md`), the multi-seed result tables, and the live-demo outputs (`demo_out/`) |
 | `journal_prep/` | the 11-issue journal-readiness program: leakage audit, clean protocol, bootstrap CIs, LOSO, ablations, latency, detector-in-the-loop |
-| `Journal_writing/` | the MDPI MTI manuscript workspace (LaTeX scaffold + bibliography) |
-| `runs/` | trained checkpoints, per-feature normalization stats, and final metrics |
-| `supervisor_review/` | presentation pack (figures and result tables) |
+| `paper_and_artifacts/Journal_writing/` | the MDPI MTI manuscript workspace (LaTeX scaffold + bibliography) |
+| `paper_and_artifacts/runs/` | trained checkpoints, per-feature normalization stats, and final metrics |
+| `paper_and_artifacts/supervisor_review/` | presentation pack (figures and result tables) |
 
 The repository is being populated incrementally, so some folders above arrive over
 the first days of commits.
@@ -62,7 +63,7 @@ Anywhere the model is used, the input must match training exactly:
 - Feature order `[x1, y1, x2, y2, vehicle_speed]` as raw PIE pixel coordinates
   (1920×1080), **not** normalized to image size.
 - Standardize with `(x - mean) / std` using the `norm_mean.npy` / `norm_std.npy`
-  saved in each run directory.
+  saved in each run directory under `paper_and_artifacts/runs/`.
 - Observation window is exactly 16 timesteps; decision threshold is 0.5 on
   `sigmoid(logit)`.
 - Checkpoints load with `torch.load(..., weights_only=False)` (the `best.pt` files
