@@ -1,0 +1,26 @@
+# Virtual environments
+.venv/
+venv/
+
+# Raw video & vendored upstream dataset repos (large/public, not redistributed here)
+PIE_clips/
+PIE/
+PIEPredict/
+
+# Large build artifacts (regenerate via the numbered scripts)
+pie_annotations.pkl
+journal_prep/issue1_leakage_audit/cross_state_map.pkl
+sequences/
+
+# Downloadable model weights
+yolo26m.pt
+
+# Rendered demo videos (exceed GitHub's 100 MB limit)
+*.mp4
+
+# OS / editor / Python / agent cruft
+.DS_Store
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.claude/
