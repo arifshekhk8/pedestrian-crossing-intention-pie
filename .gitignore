@@ -18,6 +18,12 @@ yolo26m.pt
 # Rendered demo videos (exceed GitHub's 100 MB limit)
 *.mp4
 
+# Demo sample frames -- keep one representative frame per clip, skip the rest
+pipeline/demo_out/*.png
+!pipeline/demo_out/demo_video_0012_f08126.png
+!pipeline/demo_out/demo_video_0016_f02456.png
+!pipeline/demo_out/detect_video_0016_f01926.png
+
 # OS / editor / Python / agent cruft
 .DS_Store
 __pycache__/
