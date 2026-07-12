@@ -1,0 +1,256 @@
+% =====================================================================
+% paper_skeleton.tex  —  MDPI MTI section scaffold
+% =====================================================================
+% HOW TO USE: this is NOT a standalone file. Start from the official MDPI
+% Overleaf template (Definitions/mdpi.cls), then paste these \section blocks
+% into the template body. Keep the template's front-matter (\Title, \Author,
+% \abstract, \keyword) and back-matter (\authorcontributions, \funding, etc.).
+% Citation keys below match references.bib. Replace every <NOTE ...> with prose
+% (ask Claude to draft each one — see ../README.md Part C).
+% =====================================================================
+
+% ---- FRONT MATTER (fill in the template's macros, shown here for reference) ----
+% \Title{Leakage-Free Pedestrian Crossing-Intention Prediction from Bounding
+%        Boxes and Ego-Speed: A Parsimonious BiLSTM Baseline on PIE}
+% \Author{...}  \address{...}  \corres{...}
+
+% \abstract{<NOTE ~200 words: (1) safety problem + intention prediction; (2) the
+% temporal-leakage finding in common PIE protocols; (3) our leakage-free,
+% crossing_point-anchored protocol; (4) a 2-stream (bbox + ego-speed) BiLSTM reaches
+% AUC 0.932 (95% CI 0.92-0.95) -- top of the standard-protocol band -- at 0.575 ms per
+% window; (5) shown with bootstrap CIs, LOSO, multi-seed ablations, a documented
+% hyperparameter search, and detector-in-the-loop evaluation. Conclude: minimal
+% modality is enough; the pipeline is detection-bound, not prediction-bound.>}
+
+% \keyword{pedestrian crossing intention; intention prediction; PIE dataset; BiLSTM;
+% temporal leakage; ADAS; ego-vehicle speed; real-time inference}
+
+% =====================================================================
+\section{Introduction}
+% <NOTE: safety motivation -- pedestrian fatalities, ADAS need to anticipate crossing
+% BEFORE it happens; intention != trajectory. Cite PIE \cite{rasouli2019pie}.>
+% <NOTE: the gap. (a) Many PIE works never check TEMPORAL LEAKAGE -- windows anchored
+% at track end can already contain crossing frames (Issue 1). (b) Recent SOTA is
+% heavy/multimodal (pose, optical flow, depth, semseg). (c) Single-split, single-seed,
+% GT-box evaluation is common. Cite PCPA \cite{kotseruba2021benchmark}, GTransPDM
+% \cite{gao2024gtranspdm}, PIP-Net \cite{azarmi2025pipnet}.>
+\paragraph{Contributions.}
+\begin{itemize}
+  \item % <NOTE: a temporal-leakage audit of the common PIE protocol + a leakage-free
+        % re-extraction anchored at PIE's crossing_point (0% leakage verified). Issues 1-2.>
+  \item % <NOTE: a parsimonious 2-stream (bbox + ego-speed) BiLSTM that matches top
+        % standard-protocol AUC (0.932) at real-time latency (0.575 ms/window). Issues 3, 9.>
+  \item % <NOTE: a rigorous evaluation -- bootstrap CIs, LOSO, multi-seed ablations,
+        % a documented hyperparameter search, and detector-in-the-loop. Issues 4-8, 10.>
+\end{itemize}
+% <NOTE: 1-sentence roadmap of the paper.>
+
+% =====================================================================
+\section{Related Work}
+% <NOTE: PIE crossing-prediction landscape. Build from
+% ../journal_prep/issue3_baseline_comparison/03_baseline_comparison.md:
+% PCPA \cite{kotseruba2021benchmark} (4-stream, AUC 0.86, defines the protocol);
+% Pedestrian Graph+ \cite{cadena2022pedgraph}; PIT/IntFormer; BiPed/PedFormer
+% \cite{rasouli2023pedformer}; GTransPDM \cite{gao2024gtranspdm} (pose+graph, 0.87);
+% PIP-Net \cite{azarmi2025pipnet} (7 modalities, 0.897).>
+% <NOTE: Occlusion-Aware Diffusion \cite{liu2025occlusion} as a PRECEDENT that
+% bbox+ego-velocity is a legitimate minimal modality -- but NOT a comparison row
+% (occluded-only, ~1-frame-ahead TTE). State the caveat.>
+% <NOTE: the field-wide gaps we close -- from 04_positioning_vs_prior_work.md:
+% leakage unchecked, single split, point estimates, single-seed ablations, GT-box
+% assumption, unjustified hyperparameters.>
+
+% =====================================================================
+\section{Materials and Methods}
+
+\subsection{The PIE Dataset}
+% <NOTE: PIE \cite{rasouli2019pie} -- on-board video, set01-06, bbox + vehicle OBD
+% ego-speed, crossing labels. Fixed split: train set01/02/04, val set05/06, test set03.>
+
+\subsection{Temporal Leakage and the Leakage-Free Protocol}
+% <NOTE: THE distinctive contribution. Common protocol anchors the window at the last
+% annotated frame minus TTE; this can overlap frames where the pedestrian is ALREADY
+% crossing -- the task collapses to "detect in-progress crossing." Issue 1: 67.9% of
+% crossers leaked under the old anchor. Fix: anchor at PIE's own crossing_point
+% attribute, slide obs_len=16 windows at 50% overlap with TTE in [30,60] frames before
+% the crossing point -> 0% leakage verified (Issue 2). N grows 1,389 -> 4,906.>
+
+\subsection{Features and Preprocessing}
+% <NOTE: 5-D feature [x1,y1,x2,y2,vehicle_speed] in raw PIE pixel coords (1920x1080),
+% train-only standardisation (mean/std from train split). obs_len=16, threshold 0.5.>
+
+\subsection{Model Architecture}
+% <NOTE: BiLSTMIntentPredictor -- input projection (Linear 5->64 + ReLU), 2-layer
+% bidirectional LSTM (hidden 128), linear head on the last step. ~0.6M params. Capacity
+% justified in Results (Issue 7: hidden + depth ablation).>
+
+\subsection{Training and Hyperparameter Selection}
+% <NOTE: Adam lr=1e-3, weight_decay=1e-5, batch 32, BCEWithLogits with pos_weight=1.682
+% (clean train balance), early stop on val AUC (patience 15), best-val checkpoint, test
+% touched once. Reproducibility: seed; 5 seeds for headline. Issue 8: a documented
+% 36-config grid search (val-only selection) CONFIRMS this hand-set config -> not arbitrary.>
+
+\subsection{Live Pipeline (Perception to Prediction)}
+% <NOTE: YOLO26-M \cite{yolo} person detection + ByteTrack \cite{zhang2022bytetrack}
+% multi-object tracking feed 16-frame bbox windows + ego-speed into the BiLSTM. Used
+% for the latency (Issue 9) and detector-in-the-loop (Issue 10) experiments.>
+
+% =====================================================================
+\section{Results}
+
+\subsection{Main Result and Confidence Intervals}
+% <NOTE: AUC 0.932 +/- 0.011 (5 seeds), 95% bootstrap CI [0.92, 0.95], PR-AUC 0.876,
+% Acc 0.883, F1 0.828. Eval-parity: per-ped 0.914 ~ per-window 0.913 (not an easier-eval
+% artifact). Issue 4. Note convergence moved from a suspicious epoch 3 (leaky) to ~17.>
+
+\subsection{Comparison with Published Baselines}
+% <NOTE: insert Table~\ref{tab:baselines}. Ours = top AUC of the standard-protocol band
+% with 2 streams; honest mid-pack Acc. Explain the high-AUC/mid-Acc profile (threshold-
+% free ROC/PR-AUC are the comparable metrics; recall-favoring operating point). Issue 3.
+% Both our rows (BiLSTM AND Transformer) lead the table on AUC with only 2 streams --
+% the parsimony finding holds across two independent architecture families, not one.>
+\begin{table}[H]
+\caption{Crossing-prediction performance on PIE (standard protocol: train set01/02/04,
+val set05/06, test set03). \label{tab:baselines}}
+\begin{tabular}{lllccc}
+\toprule
+\textbf{Method} & \textbf{Venue/Year} & \textbf{Modalities (streams)} & \textbf{Acc} & \textbf{AUC} & \textbf{F1} \\
+\midrule
+PCPA \cite{kotseruba2021benchmark} & WACV 2021 & bbox + pose + context + speed (4) & 0.87 & 0.86 & 0.77 \\
+Pedestrian Graph+ \cite{cadena2022pedgraph} & 2022 & pose graph + ego (2--3) & 0.89 & 0.90 & 0.81 \\
+IntFormer % <NOTE: bib entry pending -- Issue 3 BibTeX pass>
+ & 2021 & multimodal & 0.89 & 0.92 & 0.81 \\
+PIT % <NOTE: bib entry pending -- Issue 3 BibTeX pass>
+ & 2023 & multimodal & 0.91 & 0.92 & 0.82 \\
+BiPed / PedFormer \cite{rasouli2023pedformer} & 2023 & multimodal & 0.91 & 0.90 & 0.85 \\
+GTransPDM \cite{gao2024gtranspdm} & arXiv 2024 & bbox + pose + ego motion (3) & 0.90 & 0.87 & 0.82 \\
+PIP-Net \cite{azarmi2025pipnet} & IEEE T-ITS 2025 & bbox, pose, speed, context, opt-flow, semseg, depth (7) & 0.915 & 0.897 & 0.846 \\
+\midrule
+BiLSTM (ours) & 2026 & \textbf{bbox + ego-speed (2)} & 0.883 & 0.932 & 0.828 \\
+Transformer (ours, searched) & 2026 & \textbf{bbox + ego-speed (2)} & 0.894 & \textbf{0.950} & 0.845 \\
+\bottomrule
+\end{tabular}
+% <NOTE: IntFormer and PIT rows still need bib keys (Issue 3's pending BibTeX/DOI
+% pass -- arXiv ids for the field are in journal_prep/issue3_baseline_comparison/
+% 03_baseline_comparison.md's Sources section). GTransPDM's own Table I lists these
+% four via its own citation; consider citing GTransPDM's Table I as the secondary
+% source for PIT/IntFormer/Pedestrian-Graph+/BiPed if their own papers remain
+% unresolved by submission -- state this explicitly in the table note, don't hide it.
+% Transformer row: staged 78-config search (val-only selection, test touched once),
+% transformer/PLAN.md; 10k paired bootstrap vs the BiLSTM on the identical 2,094 test
+% windows gives Delta-AUC = +0.0135, 95% CI [+0.0097, +0.0174] (excludes 0), paired
+% t-test p=0.025 -- see transformer/phase5_analysis/05_comparison_report.md.>
+\end{table}
+
+\subsection{Feature Ablation: Ego-Speed Dominance}
+% <NOTE: the headline ablation. baseline (bbox+ego) 0.932 vs bbox-only 0.753 (-0.18)
+% vs attention 0.925 (no benefit). Ego-vehicle speed is the dominant predictor. Issue 2
+% (05_variant_comparison.md). Figure or inline.>
+
+\subsection{Cross-Set Generalization (LOSO)}
+% <NOTE: leave-one-set-out 6-fold AUC 0.928 +/- 0.041; set03 fold 0.931 ~ fixed split
+% -> set03 is representative, not an easy fold. Issue 5. Optional small table.>
+
+\subsection{Observation Window and Prediction Horizon}
+% <NOTE: window length insensitive (obs 8/16/30 -> 0.931/0.933/0.937, within seed
+% noise); prediction horizon DOES matter (TTE 30/45/60 -> 0.960/0.948/0.919, every
+% pairwise p<=0.008), CONFIRMED on a matched cohort (sample effect <=0.002). Issue 6.
+% Insert Fig 06_ablation_figure.png (+ 06b matched).>
+
+\subsection{Model Capacity}
+% <NOTE: hidden 64/128/256 -> 0.927/0.933/0.938 (256 n.s. at 3.8x params); depth 1/2/3
+% ~ 0.930/0.932/0.931. Model is small-data-limited; 128/2-layer justified. Issue 7 (+07b).
+% Contrast worth drawing out in prose: this null result for the BiLSTM (more capacity
+% doesn't help) is NOT universal across architectures -- Section~\ref{sec:transformer-
+% comparison}'s Transformer search DID find that more capacity helps (4 layers beats 2,
+% 794,241 vs the BiLSTM's 594,561 params) once the architecture family changes. Small
+% data limits capacity gains for THIS recurrent architecture specifically, not for any
+% sequence model over this input.>
+
+\subsection{Transformer Comparison (Model-Choice Question, Answered Empirically)}
+\label{sec:transformer-comparison}
+% <NOTE: supervisor-requested extension (transformer/). Frames the "why not attention"
+% question every reviewer of a small-data BiLSTM paper asks, and answers it with a
+% measured result instead of a small-data argument alone.
+%
+% Protocol: identical frozen data/splits/pos_weight/seeds to the BiLSTM (transformer/
+% PLAN.md Section 2); only the transformer's own architecture+recipe were searched --
+% staged val-only selection (Stage A arch 36 configs -> Stage B recipe 36 -> transfer
+% check 6 -> Stage C top candidates x5 seeds), test set03 touched exactly once
+% (Stage D), mirroring Issue 8's own val-only discipline for the BiLSTM but at >=2x its
+% search budget (78 vs 36 seed-42 configs).
+%
+% Headline (5 seeds, test set03 N=2094): BiLSTM 0.932 +/- 0.011 vs Transformer-searched
+% 0.9497 +/- 0.0025 (794,241 params, d_model=128, num_layers=4, last-token pooling,
+% sinusoidal positional encoding). 10k paired bootstrap of Delta-AUC on the identical
+% windows (same resample indices both models, isolating sampling noise from genuine
+% difference): Delta = +0.0135, 95% CI [+0.0097, +0.0174] -- excludes 0. Paired t-test
+% over the 5 seeds: p=0.025 (n=5, stated as low-power; the window-paired bootstrap is
+% primary evidence). BOTH pre-registered WIN conditions met -> Transformer adopted as
+% co-headline model for this comparison, BiLSTM retained as the efficient baseline.
+%
+% The finding that makes this credible, not a coin-flip: Transformer-default (same
+% architecture family, but trained with the BiLSTM's own un-searched recipe, zero
+% tuning) is a statistical TIE with the BiLSTM (Delta=+0.0005, 95% CI [-0.0034,+0.0043]
+% includes 0, p=0.83). Attention does not trivially beat recurrence on this 16x5
+% signal -- a deliberately budgeted search is what found the improvement, echoing
+% Issue 8's own point that a documented search should be trusted over an asserted
+% architecture, in either direction (Issue 8: search CONFIRMED the BiLSTM's hand-set
+% config; here it FOUND something better -- both outcomes are honest depending on what
+% the search actually finds).
+%
+% LOSO (winner config, Issue-5 protocol, 6-fold): 0.939 +/- 0.044 vs the BiLSTM's
+% 0.928 +/- 0.041 -- directionally consistent, though 6 folds is too few for a
+% hypothesis test; reported as a generalization sanity check only.
+%
+% Latency (Issue 9 protocol, same M4 deployment hardware): the searched Transformer is
+% FASTER than the BiLSTM per window at CPU batch-1 (0.457 ms vs 0.575 ms, ~1.3x more
+% parameters notwithstanding) -- fully-parallel self-attention over T=16 tokens
+% apparently outruns the BiLSTM's sequential recurrence on this hardware/batch size.
+% Neither model is a latency concern for the live pipeline, which remains
+% detection-bound (Section on Inference Latency, Issue 9).
+%
+% Full evidence: transformer/PLAN.md (pre-registered design + all DONE blocks),
+% transformer/phase5_analysis/05_comparison_report.md (the verdict + parity gate),
+% 04_final_summary.md, 06_latency_report.md, 07_loso_report.md. Insert
+% transformer/phase5_analysis/05_comparison_figure.png as a figure here.>
+
+\subsection{Inference Latency}
+% <NOTE: isolated BiLSTM 0.575 ms/window (CPU), ~58x inside a 30 fps budget; CPU > MPS
+% at batch 1 (GPU dispatch overhead). Pipeline detection-bound: YOLO26-M 33.7 ms (93%),
+% BiLSTM 1.6 ms (4.5%) -> 27.5 fps. Issue 9. Insert Fig 09_latency_figure.png.>
+
+\subsection{Detector-in-the-Loop Robustness}
+% <NOTE: GT-box vs YOLO-box on demo clips (98 peds). AUC 0.962->0.953 (per-window),
+% 0.958->0.948 (per-ped); decisions flip in 3%. Prediction robust to box noise. Weak
+% links are perception: detector recall 88%, ByteTrack fragmentation (track purity 39%).
+% Indicative (2 clips). Issue 10. Insert Fig 10_gt_vs_detector_figure.png.>
+
+% =====================================================================
+\section{Discussion}
+% <NOTE: interpret. (1) Parsimony: 2 cheap streams reach top AUC -> heavy multimodal
+% pipelines may be over-engineered for crossing prediction. (2) Why high-AUC/mid-Acc is
+% honest, not "easy eval" (leakage removed, eval-parity, CIs, LOSO). (3) Positioning vs
+% each prior work -- compress 04_positioning_vs_prior_work.md into a paragraph or table.
+% (4) Deployment: the bottleneck is detection+tracking, not the predictor.>
+\subsection{Limitations}
+% <NOTE: state before a reviewer does. (a) Ego-speed carries much of the signal and
+% partly encodes the ego-driver's anticipation (instrumented car slows for expected
+% crossers) -- a legitimate inference-time signal but not purely vision-based; candidate
+% speed-perturbation robustness check. (b) ByteTrack fragments identities -> needs re-ID
+% in deployment. (c) Issue 10 is indicative (2 clips, 98 peds). (d) Single dataset (PIE).>
+
+% =====================================================================
+\section{Conclusions}
+% <NOTE: restate the 3 contributions + the headline (0.932 at 0.575 ms with 2 streams,
+% leakage-free, rigorously validated). Future work: re-ID-strengthened pipeline,
+% speed-perturbation robustness, cross-dataset (JAAD), more demo clips for Issue 10.>
+
+% =====================================================================
+% BACK MATTER (use the template's macros)
+% \authorcontributions{<NOTE>}
+% \funding{<NOTE or "This research received no external funding.">}
+% \dataavailability{The PIE dataset is publicly available \cite{rasouli2019pie};
+%   our code and extraction protocol are available at <repo URL>.}
+% \conflictsofinterest{The authors declare no conflict of interest.}
+% \abbreviations{ <NOTE: AUC, BiLSTM, TTE, LOSO, ADAS, OBD, IoU ...> }
