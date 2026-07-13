@@ -1,0 +1,7 @@
+rank,cfg_id,is_default,is_winner,n_seeds,val_auc_mean,val_auc_std
+1,d128_ff512_L4_last_spe__adam_lr1e-03_plateau_do0.1_wd1e-05,False,True,5,0.978932,0.003783
+2,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.1_wd1e-02,False,False,5,0.978768,0.003687
+3,d128_ff256_L4_last_spe__adam_lr1e-03_plateau_do0.1_wd1e-05,False,False,5,0.977264,0.004231
+4,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-02,False,False,5,0.974616,0.005127
+5,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-05,False,False,5,0.974533,0.006867
+6,d128_ff256_L2_cls_lpe__adam_lr1e-03_plateau_do0.1_wd1e-05,True,False,5,0.962912,0.005632

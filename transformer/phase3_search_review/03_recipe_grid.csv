@@ -1,0 +1,43 @@
+rank,cfg_id,architecture_role,lr,schedule,dropout,weight_decay,optimizer,val_auc
+1,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-05,arch#1 (Stage B),0.001,plateau,0.1,1e-05,adamw,0.983325
+2,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-02,arch#1 (Stage B),0.001,plateau,0.1,0.01,adamw,0.982814
+3,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.1_wd1e-02,arch#1 (Stage B),0.001,warmup_cosine,0.1,0.01,adamw,0.982383
+4,d128_ff256_L4_last_spe__adamw_lr3e-04_warmup_cosine_do0.1_wd1e-02,arch#1 (Stage B),0.0003,warmup_cosine,0.1,0.01,adamw,0.982315
+5,d128_ff256_L4_last_spe__adamw_lr3e-04_warmup_cosine_do0.1_wd1e-05,arch#1 (Stage B),0.0003,warmup_cosine,0.1,1e-05,adamw,0.982302
+6,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.1_wd1e-05,arch#1 (Stage B),0.001,warmup_cosine,0.1,1e-05,adamw,0.982221
+7,d128_ff512_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.1_wd1e-02,arch#2 (transfer),0.001,warmup_cosine,0.1,0.01,adamw,0.981763
+8,d128_ff256_L2_mean_spe__adamw_lr1e-03_warmup_cosine_do0.1_wd1e-02,arch#3 (transfer),0.001,warmup_cosine,0.1,0.01,adamw,0.981494
+9,d128_ff512_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-02,arch#2 (transfer),0.001,plateau,0.1,0.01,adamw,0.981292
+10,d128_ff256_L2_mean_spe__adamw_lr1e-03_plateau_do0.1_wd1e-02,arch#3 (transfer),0.001,plateau,0.1,0.01,adamw,0.981211
+11,d128_ff256_L2_mean_spe__adamw_lr1e-03_plateau_do0.1_wd1e-05,arch#3 (transfer),0.001,plateau,0.1,1e-05,adamw,0.980807
+12,d128_ff512_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-05,arch#2 (transfer),0.001,plateau,0.1,1e-05,adamw,0.980147
+13,d128_ff256_L4_last_spe__adamw_lr3e-04_plateau_do0.1_wd1e-02,arch#1 (Stage B),0.0003,plateau,0.1,0.01,adamw,0.979797
+14,d128_ff256_L4_last_spe__adamw_lr3e-04_plateau_do0.1_wd1e-05,arch#1 (Stage B),0.0003,plateau,0.1,1e-05,adamw,0.979743
+15,d128_ff256_L4_last_spe__adamw_lr1e-04_plateau_do0.1_wd1e-02,arch#1 (Stage B),0.0001,plateau,0.1,0.01,adamw,0.979527
+16,d128_ff256_L4_last_spe__adamw_lr1e-04_plateau_do0.1_wd1e-05,arch#1 (Stage B),0.0001,plateau,0.1,1e-05,adamw,0.979527
+17,d128_ff256_L4_last_spe__adamw_lr1e-04_warmup_cosine_do0.1_wd1e-02,arch#1 (Stage B),0.0001,warmup_cosine,0.1,0.01,adamw,0.979406
+18,d128_ff256_L4_last_spe__adamw_lr1e-04_warmup_cosine_do0.1_wd1e-05,arch#1 (Stage B),0.0001,warmup_cosine,0.1,1e-05,adamw,0.979393
+19,d128_ff256_L4_last_spe__adamw_lr3e-04_warmup_cosine_do0.3_wd1e-05,arch#1 (Stage B),0.0003,warmup_cosine,0.3,1e-05,adamw,0.977642
+20,d128_ff256_L4_last_spe__adamw_lr3e-04_warmup_cosine_do0.3_wd1e-02,arch#1 (Stage B),0.0003,warmup_cosine,0.3,0.01,adamw,0.977588
+21,d128_ff256_L4_last_spe__adamw_lr3e-04_plateau_do0.3_wd1e-05,arch#1 (Stage B),0.0003,plateau,0.3,1e-05,adamw,0.977547
+22,d128_ff256_L4_last_spe__adamw_lr3e-04_plateau_do0.3_wd1e-02,arch#1 (Stage B),0.0003,plateau,0.3,0.01,adamw,0.977547
+23,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.3_wd1e-02,arch#1 (Stage B),0.001,warmup_cosine,0.3,0.01,adamw,0.977116
+24,d128_ff256_L4_last_spe__adamw_lr1e-04_warmup_cosine_do0.3_wd1e-02,arch#1 (Stage B),0.0001,warmup_cosine,0.3,0.01,adamw,0.976847
+25,d128_ff256_L4_last_spe__adamw_lr1e-04_warmup_cosine_do0.3_wd1e-05,arch#1 (Stage B),0.0001,warmup_cosine,0.3,1e-05,adamw,0.976847
+26,d128_ff256_L4_last_spe__adamw_lr1e-04_plateau_do0.3_wd1e-02,arch#1 (Stage B),0.0001,plateau,0.3,0.01,adamw,0.976726
+27,d128_ff256_L4_last_spe__adamw_lr1e-04_plateau_do0.3_wd1e-05,arch#1 (Stage B),0.0001,plateau,0.3,1e-05,adamw,0.976726
+28,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.3_wd1e-05,arch#1 (Stage B),0.001,warmup_cosine,0.3,1e-05,adamw,0.972267
+29,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.3_wd1e-05,arch#1 (Stage B),0.001,plateau,0.3,1e-05,adamw,0.971190
+30,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.3_wd1e-02,arch#1 (Stage B),0.001,plateau,0.3,0.01,adamw,0.971177
+31,d128_ff256_L4_last_spe__adamw_lr3e-04_plateau_do0.5_wd1e-02,arch#1 (Stage B),0.0003,plateau,0.5,0.01,adamw,0.968793
+32,d128_ff256_L4_last_spe__adamw_lr3e-04_warmup_cosine_do0.5_wd1e-02,arch#1 (Stage B),0.0003,warmup_cosine,0.5,0.01,adamw,0.968658
+33,d128_ff256_L4_last_spe__adamw_lr3e-04_warmup_cosine_do0.5_wd1e-05,arch#1 (Stage B),0.0003,warmup_cosine,0.5,1e-05,adamw,0.968590
+34,d128_ff256_L4_last_spe__adamw_lr3e-04_plateau_do0.5_wd1e-05,arch#1 (Stage B),0.0003,plateau,0.5,1e-05,adamw,0.968590
+35,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.5_wd1e-05,arch#1 (Stage B),0.001,warmup_cosine,0.5,1e-05,adamw,0.968469
+36,d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.5_wd1e-02,arch#1 (Stage B),0.001,warmup_cosine,0.5,0.01,adamw,0.964671
+37,d128_ff256_L4_last_spe__adamw_lr1e-04_plateau_do0.5_wd1e-05,arch#1 (Stage B),0.0001,plateau,0.5,1e-05,adamw,0.960334
+38,d128_ff256_L4_last_spe__adamw_lr1e-04_plateau_do0.5_wd1e-02,arch#1 (Stage B),0.0001,plateau,0.5,0.01,adamw,0.960280
+39,d128_ff256_L4_last_spe__adamw_lr1e-04_warmup_cosine_do0.5_wd1e-05,arch#1 (Stage B),0.0001,warmup_cosine,0.5,1e-05,adamw,0.959054
+40,d128_ff256_L4_last_spe__adamw_lr1e-04_warmup_cosine_do0.5_wd1e-02,arch#1 (Stage B),0.0001,warmup_cosine,0.5,0.01,adamw,0.959028
+41,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.5_wd1e-02,arch#1 (Stage B),0.001,plateau,0.5,0.01,adamw,0.953007
+42,d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.5_wd1e-05,arch#1 (Stage B),0.001,plateau,0.5,1e-05,adamw,0.951902
