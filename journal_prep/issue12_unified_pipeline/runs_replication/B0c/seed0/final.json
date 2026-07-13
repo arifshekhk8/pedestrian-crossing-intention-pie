@@ -1,0 +1,41 @@
+{
+  "family": "transformer",
+  "cfg": {
+    "d_model": 128,
+    "nhead": 4,
+    "num_layers": 4,
+    "dim_ff": 512,
+    "dropout": 0.1,
+    "pool": "last",
+    "pos": "sin",
+    "lr": 0.001,
+    "schedule": "plateau",
+    "weight_decay": 1e-05,
+    "optimizer": "adam"
+  },
+  "seed": 0,
+  "pos_weight": 1.682,
+  "device": "cpu",
+  "torch_version": "2.12.0",
+  "select": "auc",
+  "n_params": 794241,
+  "best_epoch": 21,
+  "val": {
+    "f1": 0.8600682593856656,
+    "acc": 0.9353312302839116,
+    "auc": 0.9787729813455451,
+    "pr_auc": 0.9391212738444649,
+    "prec": 0.9130434782608695,
+    "rec": 0.8129032258064516
+  },
+  "auc_best_epoch": 21,
+  "val_at_auc_best": {
+    "f1": 0.8600682593856656,
+    "acc": 0.9353312302839116,
+    "auc": 0.9787729813455451,
+    "pr_auc": 0.9391212738444649,
+    "prec": 0.9130434782608695,
+    "rec": 0.8129032258064516
+  },
+  "seconds": 39.5
+}
