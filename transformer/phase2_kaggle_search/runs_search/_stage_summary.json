@@ -1,0 +1,176 @@
+{
+  "stage_a_top3": [
+    {
+      "cfg": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_ff": 256,
+        "pool": "last",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "plateau",
+        "dropout": 0.1,
+        "weight_decay": 1e-05,
+        "optimizer": "adam"
+      },
+      "val_auc": 0.9839181089635665
+    },
+    {
+      "cfg": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_ff": 512,
+        "pool": "last",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "plateau",
+        "dropout": 0.1,
+        "weight_decay": 1e-05,
+        "optimizer": "adam"
+      },
+      "val_auc": 0.9824634655532359
+    },
+    {
+      "cfg": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 2,
+        "dim_ff": 256,
+        "pool": "mean",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "plateau",
+        "dropout": 0.1,
+        "weight_decay": 1e-05,
+        "optimizer": "adam"
+      },
+      "val_auc": 0.9819247087345949
+    }
+  ],
+  "stage_b_top3": [
+    {
+      "cfg": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_ff": 256,
+        "pool": "last",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "plateau",
+        "dropout": 0.1,
+        "weight_decay": 1e-05,
+        "optimizer": "adamw"
+      },
+      "val_auc": 0.9833254764630615
+    },
+    {
+      "cfg": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_ff": 256,
+        "pool": "last",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "plateau",
+        "dropout": 0.1,
+        "weight_decay": 0.01,
+        "optimizer": "adamw"
+      },
+      "val_auc": 0.9828136574853525
+    },
+    {
+      "cfg": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_ff": 256,
+        "pool": "last",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "warmup_cosine",
+        "dropout": 0.1,
+        "weight_decay": 0.01,
+        "optimizer": "adamw"
+      },
+      "val_auc": 0.9823826520304397
+    }
+  ],
+  "stage_c_candidates": [
+    {
+      "cfg_id": "d128_ff256_L4_last_spe__adam_lr1e-03_plateau_do0.1_wd1e-05",
+      "n_seeds": 5,
+      "val_auc_mean": 0.9772644622533504,
+      "val_auc_std": 0.004231010060710696
+    },
+    {
+      "cfg_id": "d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-05",
+      "n_seeds": 5,
+      "val_auc_mean": 0.9745329651828406,
+      "val_auc_std": 0.006866702147836747
+    },
+    {
+      "cfg_id": "d128_ff256_L4_last_spe__adamw_lr1e-03_plateau_do0.1_wd1e-02",
+      "n_seeds": 5,
+      "val_auc_mean": 0.9746164724897299,
+      "val_auc_std": 0.005126562015824879
+    },
+    {
+      "cfg_id": "d128_ff512_L4_last_spe__adam_lr1e-03_plateau_do0.1_wd1e-05",
+      "n_seeds": 5,
+      "val_auc_mean": 0.9789319146070443,
+      "val_auc_std": 0.0037832133321193256
+    },
+    {
+      "cfg_id": "d128_ff256_L4_last_spe__adamw_lr1e-03_warmup_cosine_do0.1_wd1e-02",
+      "n_seeds": 5,
+      "val_auc_mean": 0.9787675937773587,
+      "val_auc_std": 0.0036869260091673788
+    },
+    {
+      "cfg_id": "d128_ff256_L2_cls_lpe__adam_lr1e-03_plateau_do0.1_wd1e-05",
+      "n_seeds": 5,
+      "val_auc_mean": 0.9629119806047545,
+      "val_auc_std": 0.005632123751381682
+    }
+  ],
+  "winner_cfg_id": "d128_ff512_L4_last_spe__adam_lr1e-03_plateau_do0.1_wd1e-05",
+  "winner_cfg": {
+    "d_model": 128,
+    "nhead": 4,
+    "num_layers": 4,
+    "dim_ff": 512,
+    "pool": "last",
+    "pos": "sin",
+    "lr": 0.001,
+    "schedule": "plateau",
+    "dropout": 0.1,
+    "weight_decay": 1e-05,
+    "optimizer": "adam"
+  },
+  "winner_is_default": false,
+  "default_cfg_id": "d128_ff256_L2_cls_lpe__adam_lr1e-03_plateau_do0.1_wd1e-05",
+  "default_cfg": {
+    "d_model": 128,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_ff": 256,
+    "dropout": 0.1,
+    "pool": "cls",
+    "pos": "learned",
+    "lr": 0.001,
+    "schedule": "plateau",
+    "weight_decay": 1e-05,
+    "optimizer": "adam"
+  },
+  "seeds": [
+    42,
+    0,
+    1,
+    2,
+    3
+  ]
+}

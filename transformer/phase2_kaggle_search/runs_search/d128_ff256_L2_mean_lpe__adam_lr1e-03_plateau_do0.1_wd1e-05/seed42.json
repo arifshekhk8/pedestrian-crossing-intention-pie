@@ -1,0 +1,26 @@
+{
+  "d_model": 128,
+  "nhead": 4,
+  "num_layers": 2,
+  "dim_ff": 256,
+  "pool": "mean",
+  "pos": "learned",
+  "lr": 0.001,
+  "schedule": "plateau",
+  "dropout": 0.1,
+  "weight_decay": 1e-05,
+  "optimizer": "adam",
+  "seed": 42,
+  "n_params": 268161,
+  "best_epoch": 45,
+  "val": {
+    "loss": 0.20804130297730022,
+    "acc": 0.9132492113564669,
+    "f1": 0.819672131147541,
+    "auc": 0.968334567984376,
+    "pr_auc": 0.896486301484935,
+    "prec": 0.8333333333333334,
+    "rec": 0.8064516129032258
+  },
+  "seconds": 30.3
+}
