@@ -1,0 +1,25 @@
+{
+  "top2": [
+    "lr1e-03_do0.5_h128_nl2",
+    "lr1e-03_do0.3_h256_nl2"
+  ],
+  "cfgs": {
+    "lr1e-03_do0.5_h128_nl2": {
+      "lr": 0.001,
+      "dropout": 0.5,
+      "hidden": 128,
+      "num_layers": 2
+    },
+    "lr1e-03_do0.3_h256_nl2": {
+      "lr": 0.001,
+      "dropout": 0.3,
+      "hidden": 256,
+      "num_layers": 2
+    }
+  },
+  "env_drift_vs_issue8": {
+    "auc_drift": 0.006020607448313009,
+    "f1_drift": 0.02247962247962243
+  },
+  "determinism_gate": "PASS"
+}
