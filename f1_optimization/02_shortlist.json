@@ -1,0 +1,74 @@
+{
+  "shortlist": [
+    "lr1e-04_do0.3_h128_nl2",
+    "lr1e-04_do0.2_h256_nl2",
+    "lr1e-03_do0.5_h64_nl2",
+    "lr1e-03_do0.3_h256_nl2",
+    "lr1e-03_do0.2_h128_nl2",
+    "lr1e-03_do0.3_h128_nl2",
+    "lr1e-04_do0.2_h128_nl2",
+    "lr1e-03_do0.5_h128_nl2"
+  ],
+  "need_completion": [
+    "lr1e-03_do0.5_h64_nl2",
+    "lr1e-03_do0.3_h256_nl2",
+    "lr1e-03_do0.2_h128_nl2"
+  ],
+  "cfgs": {
+    "lr1e-04_do0.3_h128_nl2": {
+      "lr": 0.0001,
+      "dropout": 0.3,
+      "hidden": 128,
+      "num_layers": 2
+    },
+    "lr1e-04_do0.2_h256_nl2": {
+      "lr": 0.0001,
+      "dropout": 0.2,
+      "hidden": 256,
+      "num_layers": 2
+    },
+    "lr1e-03_do0.5_h64_nl2": {
+      "lr": 0.001,
+      "dropout": 0.5,
+      "hidden": 64,
+      "num_layers": 2
+    },
+    "lr1e-03_do0.3_h256_nl2": {
+      "lr": 0.001,
+      "dropout": 0.3,
+      "hidden": 256,
+      "num_layers": 2
+    },
+    "lr1e-03_do0.2_h128_nl2": {
+      "lr": 0.001,
+      "dropout": 0.2,
+      "hidden": 128,
+      "num_layers": 2
+    },
+    "lr1e-03_do0.3_h128_nl2": {
+      "lr": 0.001,
+      "dropout": 0.3,
+      "hidden": 128,
+      "num_layers": 2
+    },
+    "lr1e-04_do0.2_h128_nl2": {
+      "lr": 0.0001,
+      "dropout": 0.2,
+      "hidden": 128,
+      "num_layers": 2
+    },
+    "lr1e-03_do0.5_h128_nl2": {
+      "lr": 0.001,
+      "dropout": 0.5,
+      "hidden": 128,
+      "num_layers": 2
+    }
+  },
+  "seeds": [
+    42,
+    0,
+    1,
+    2,
+    3
+  ]
+}
