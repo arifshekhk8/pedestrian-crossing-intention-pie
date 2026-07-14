@@ -28,7 +28,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 SEQ_DIR = HERE / "sequences_clean"
 OUT_ROOT = HERE / "runs_clean" / "multiseed"
-TRAIN = ROOT / "04_train_bilstm.py"
+TRAIN = ROOT / "pipeline" / "04_train_bilstm.py"  # moved in the GitHub reorg
 POS_WEIGHT = 1.682   # clean train split neg/pos = 1366/812
 
 METRICS = ["auc", "f1", "acc", "prec", "rec"]

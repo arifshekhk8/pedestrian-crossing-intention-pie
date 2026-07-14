@@ -37,6 +37,6 @@ Our extra short tracks are **harder**, not easier — restricting to the benchma
 
 ## 3. Verdict
 
-**Evaluation parity holds.** The 0.913 clean AUC is robust to (a) the correlated-windows critique (per-ped 0.914) and (b) the min-track-length difference (benchmark-filter subset 0.919). The result therefore reflects genuine predictive signal in bbox motion + ego-speed, not an easier evaluation — consistent with the Occlusion-Aware Diffusion paper reaching 0.93–0.95 on bbox+ego only. This is the number and framing to carry into the Issue 3 baseline comparison.
+**Evaluation parity holds.** The 0.913 clean AUC is robust to (a) the correlated-windows critique (per-ped 0.914) and (b) the min-track-length difference (benchmark-filter subset 0.919). The result therefore reflects genuine predictive signal in bbox motion + ego-speed, not an easier evaluation — directionally consistent with the Occlusion-Aware Diffusion paper's bbox+ego-only results (0.93–0.95 — NOT protocol-comparable per Issue 3: occluded-only, ~1-frame TTE; modality precedent only). This is the number and framing to carry into the Issue 3 baseline comparison.
 
 Remaining documented deviation (state in Experimental Setup, not a confound): we sample at 0.5 overlap (the PIE config's trajectory value; 0.3 is its action default) — shown above to be immaterial since per-ped ≈ per-window.

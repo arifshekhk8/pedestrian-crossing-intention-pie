@@ -32,7 +32,7 @@ number is ~0.18. This is the single clearest demonstration that the old evaluati
 measured *detection of an in-progress crossing*, not prediction — and it pins down
 *which* of the two inputs carries the signal. It also supports the "bbox + ego
 velocity is a legitimate minimal modality" framing (cf. Occlusion-Aware Diffusion,
-bbox+ego only, 0.93–0.95).
+bbox+ego only, 0.93–0.95 — modality precedent, not protocol-comparable per Issue 3).
 
 ## Finding 2 — attention gives no measurable benefit on clean data
 
@@ -73,7 +73,12 @@ robustness check.
   and a checkpoint that scored 0.879 on leaky but only 0.680 on clean test. The
   notebook now hard-errors unless it loads the clean N=4,906 data. (A brief
   "backend-fragility" theory that the first run inspired was just this clean-vs-leaky
-  mixup — there is no backend effect; CPU/MPS/CUDA agree on clean data.)
+  mixup — no *large* backend effect; CPU/MPS/CUDA agree on clean data at the
+  effect-size level. 2026-07-13 audit correction: backends do NOT agree bit-for-bit —
+  the same config+seed trains to different checkpoints across CPU/MPS, and
+  LSTM-on-MPS is additionally process-history-dependent (~6e-3 val-AUC scale); see
+  `issue12_unified_pipeline/12_equivalence_report.md`. Conclusions here are
+  unaffected — variant deltas are 10-100× that scale.)
 - ⚠ Two cosmetic bugs remain in the downloaded `kaggle_result/` (it was re-run with
   the pre-fix notebook): `multiseed_clean_summary.csv` has its two model labels
   swapped, and `multiseed_clean_summary.md`'s header text says `POS_WEIGHT=1.44`

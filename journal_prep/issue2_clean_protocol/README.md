@@ -5,6 +5,13 @@ onset, then retrains. Fixes the leakage proven in
 [`../issue1_leakage_audit/01_leakage_report.md`](../issue1_leakage_audit/01_leakage_report.md).
 Full write-up + DONE block: [`../PLAN.md`](../PLAN.md) (Issue 2).
 
+> **Metric note (F1-first).** The "Key numbers" tables here lead with AUC because that
+> was the selection metric when the clean protocol was first established. Under the
+> project's **F1 → acc → AUC** hierarchy the F1 columns are in `05_variant_comparison.md`,
+> and the F1-first headline (BiLSTM F1 0.844 / Transformer 0.847) lives in
+> [`../../f1_optimization/`](../../f1_optimization/) and
+> [`../issue3_baseline_comparison/`](../issue3_baseline_comparison/).
+
 ## Files, in run order
 
 | # | File | What it is |
