@@ -1,0 +1,39 @@
+{
+  "cfg": {
+    "d_model": 128,
+    "nhead": 4,
+    "num_layers": 4,
+    "dim_ff": 512,
+    "dropout": 0.1,
+    "pool": "last",
+    "pos": "sin",
+    "lr": 0.001,
+    "schedule": "plateau",
+    "weight_decay": 1e-05,
+    "optimizer": "adam"
+  },
+  "seed": 0,
+  "pos_weight": 2.1,
+  "device": "mps",
+  "select": "f1",
+  "n_params": 794241,
+  "best_epoch": 14,
+  "val": {
+    "f1": 0.8571428571428571,
+    "acc": 0.9305993690851735,
+    "auc": 0.9695198329853861,
+    "pr_auc": 0.9193900777392663,
+    "prec": 0.8627450980392157,
+    "rec": 0.8516129032258064
+  },
+  "auc_best_epoch": 16,
+  "val_at_auc_best": {
+    "f1": 0.8475609756097561,
+    "acc": 0.9211356466876972,
+    "auc": 0.9743417065122231,
+    "pr_auc": 0.9210114415103912,
+    "prec": 0.8034682080924855,
+    "rec": 0.896774193548387
+  },
+  "seconds": 17.7
+}
