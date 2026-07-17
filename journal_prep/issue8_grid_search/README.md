@@ -6,6 +6,12 @@ asks "why these values?" This runs a transparent grid search with a **leakage-pr
 selection protocol** and reports the full grid — so the chosen config is justified
 by a documented val-AUC ranking rather than asserted.
 
+> **Metric note (F1-first).** This grid selected on **val AUC** (the metric in force
+> when it was run), so it is an **AUC-conditional** result — see the metric-conditional
+> notes in `08_grid_search_summary.md`. The symmetric **F1-first** hyperparameter/
+> operating-point optimization of both model families is
+> [`../../f1_optimization/`](../../f1_optimization/) (metric hierarchy F1 → acc → AUC).
+
 ## How to run
 
 ```bash

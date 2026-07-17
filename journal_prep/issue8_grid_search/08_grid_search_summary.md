@@ -34,3 +34,23 @@ Everything not searched is locked to the baseline (`sequences_clean/`, train-onl
 *Observation:* the highest *validation* AUCs cluster on lr=1e-4 (top of `08_grid_full.csv`), but that edge does not carry to the test set — a sign the small, class-skewed val split (set05/06) slightly favours the lower lr without better generalisation, which in turn supports the baseline's lr=1e-3.
 
 Full 36-config grid (seed-42 val AUC) in `08_grid_full.csv`; candidate multiseed in `08_candidates_multiseed.csv`. **Test set was used exactly once, on the final config(s).**
+---
+
+## Post-audit notes (2026-07-13)
+
+1. **This verdict is AUC-conditional.** Selection, ranking, and the
+   "search confirms the baseline" conclusion all use val/test AUC. Under the
+   supervisor's later F1-first hierarchy (`f1_optimization/`), re-ranking this same
+   grid by val F1 selects a different config (`lr1e-03_do0.3_h256_nl2`), which became
+   the F1-first headline LSTM (test F1 0.844 vs the baseline's 0.828). The AUC-based
+   conclusion above stands *for AUC*; it does not transfer to F1. Note also the
+   AUC-winner (`lr1e-04_do0.2_h256_nl2`) is F1-unstable on test (seed0 F1 0.67).
+2. **Reproducibility caveat (measured):** these cached MPS runs are only partially
+   reproducible today — nn.LSTM training on Apple MPS is process-history-dependent
+   (dropout-0.5 cells reproduce bit-exactly; dropout-0.2/0.3 and lr1e-4 cells drift
+   ~6e-3 val AUC), while CPU training is fully context-free. Stage-1's top-5 are
+   separated by ≤0.006 val AUC — within that drift. The grid's *relative ranking*
+   should therefore be treated as indicative; any config cited in the manuscript is
+   backed by fresh multi-seed runs under the unified engine
+   (`journal_prep/issue12_unified_pipeline/`), not by this cache alone. Measurements:
+   `12_equivalence_report.md`, `f1_optimization/03_shortlist_results.md`.
