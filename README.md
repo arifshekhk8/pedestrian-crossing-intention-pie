@@ -10,19 +10,25 @@ not an application. The code runs as a set of numbered scripts executed in order
 
 ## Headline result
 
-On a leakage-free, crossing-point-anchored PIE protocol, the two-stream
-(bounding box + ego-speed) BiLSTM reaches:
+Reporting hierarchy is **F1 → accuracy → AUC** (supervisor directive). On a
+leakage-free, crossing-point-anchored PIE protocol, the two-stream (bounding box +
+ego-speed) models, optimized for F1, reach:
 
-| Metric | Value |
-|---|---|
-| ROC-AUC | 0.932 ± 0.011 (5 seeds), 95% bootstrap CI [0.92, 0.95] |
-| PR-AUC | 0.876 |
-| Accuracy | 0.883 |
-| Inference latency | 0.575 ms per window |
+| Metric (test set03, 5 seeds) | BiLSTM (F1-first) | Transformer (F1-first) |
+|---|---|---|
+| **F1** | **0.844 ± 0.008** | **0.847 ± 0.017** |
+| Accuracy | 0.897 | 0.896 |
+| ROC-AUC | 0.940 | 0.947 |
+| Inference latency | 0.575 ms/window | 0.459 ms/window |
 
-It uses only two cheap input streams, yet sits at the top of the standard-protocol
-AUC band reported for heavier 3–7-stream multimodal models. The dominant predictor
-is ego-vehicle speed: removing it drops AUC to 0.753.
+Two cheap input streams reach **F1 0.844–0.847** — within 0.02–0.03 of the multimodal
+F1 ceiling (PedFormer 0.87) — while holding the **highest AUC in the standard-protocol
+table** (0.94–0.95), at a fraction of the feature-extraction cost of the 3–7-stream
+models above them. Under identical F1-first optimization the BiLSTM and Transformer
+**tie on F1**, so the parsimony finding is about the input signal, not the architecture.
+The dominant predictor is ego-vehicle speed (removing it drops AUC to 0.753). The
+frozen AUC-selected baseline (the demo checkpoint) is AUC 0.932 ± 0.011, 95% bootstrap
+CI [0.92, 0.95].
 
 ## Pipeline
 
@@ -48,10 +54,12 @@ from the repository root so the relative paths resolve, for example
 | Path | Contents |
 |---|---|
 | `pipeline/` | the numbered pipeline scripts, the hand-maintained project docs (`THESIS_PLAN.md`, `PROGRESS_LOG.md`, `CODE_STATE.md`), the multi-seed result tables, and the live-demo outputs (`demo_out/`) |
-| `journal_prep/` | the 11-issue journal-readiness program: leakage audit, clean protocol, bootstrap CIs, LOSO, ablations, latency, detector-in-the-loop |
+| `journal_prep/` | the 12-issue journal-readiness program: leakage audit, clean protocol, bootstrap CIs, LOSO, ablations, latency, detector-in-the-loop, and the unified model-agnostic training engine (`issue12_unified_pipeline/`) |
+| `transformer/` | the supervisor-requested Transformer-vs-BiLSTM extension (staged search; beats the BiLSTM on AUC, ties it on F1) |
+| `f1_optimization/` | the F1-first optimization program (metric hierarchy F1 → acc → AUC) for both model families |
 | `paper_and_artifacts/Journal_writing/` | the MDPI MTI manuscript workspace (LaTeX scaffold + bibliography) |
 | `paper_and_artifacts/runs/` | trained checkpoints, per-feature normalization stats, and final metrics |
-| `paper_and_artifacts/supervisor_review/` | presentation pack (figures and result tables) |
+| `paper_and_artifacts/supervisor_review/` | presentation pack (figures and result tables) — ⚠ a dated 2026-06 snapshot on the pre-leakage-fix numbers; the current numbers are in `journal_prep/` + `f1_optimization/` |
 
 The repository is being populated incrementally, so some folders above arrive over
 the first days of commits.

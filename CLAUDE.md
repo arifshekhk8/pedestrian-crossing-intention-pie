@@ -10,6 +10,45 @@ a YOLO26 + ByteTrack live-video demo. It is a linear, numbered research pipeline
 not an application. There is no build system, no test suite, no linter; "running
 the code" means executing the numbered scripts in order.
 
+A supervisor-requested extension in `transformer/` (own docs: `transformer/PLAN.md` /
+`README.md` / `PROGRESS_LOG.md`) compares a staged-search Transformer encoder against
+the frozen BiLSTM under the identical protocol — result: the searched Transformer
+measurably beats the BiLSTM **on AUC** (test AUC 0.950 vs 0.932, 10k paired bootstrap
+ΔAUC 95% CI excludes 0), while the same architecture run with the BiLSTM's un-searched
+recipe ties it exactly, i.e. the win came from the search, not the architecture family.
+
+A second supervisor directive (2026-07-12) set the metric hierarchy to **F1 →
+accuracy → AUC**. The F1-first program in top-level `f1_optimization/` (own
+PLAN/README/PROGRESS_LOG) optimized both families symmetrically: the LSTM improved
+significantly (test F1 0.828 → 0.844 ± 0.008, config h256), the transformer did not,
+and **on F1 the families TIE** — the AUC win is metric-specific. Everything
+replicates under ONE model-agnostic engine
+(`journal_prep/issue12_unified_pipeline/12_unified_engine.py`, families
+bilstm/transformer + gru/birnn registered) — **use that engine for any new model
+family or clean-protocol retraining**, not the legacy trainers.
+
+A third supervisor directive (2026-07-13) asked for two more model families on the
+same pipeline. The GRU study in top-level `gru/` (own PLAN/README/PROGRESS_LOG/
+SUPERVISOR_SUMMARY, phase folders G1–G5) gave the GRU — the BiLSTM's gated recurrent
+twin (only `nn.LSTM`→`nn.GRU`) — the identical Issue-8 search + F1-first optimization
+on the same unified CPU engine. Result: the GRU **ties the BiLSTM** on F1 (vs BiLSTM-F1
+ΔF1 +0.0071, CI includes 0) and on AUC at matched capacity/selection (vs frozen BiLSTM
+ΔAUC −0.0008), both surviving the pedestrian-cluster bootstrap; it loses to the searched
+transformer on AUC (ΔAUC −0.0070). So **the recurrent cell type doesn't matter — the
+input signal does** (the transformer's AUC edge stays its *search*, not attention-vs-
+recurrence). The parallel vanilla-RNN study in top-level `rnn/` (own
+PLAN/README/PROGRESS_LOG/SUPERVISOR_SUMMARY, phase folders R1–R6) closed this out
+(2026-07-14): the **un-gated** bidirectional tanh RNN (only `nn.LSTM`→`nn.RNN`, gating
+removed), given the same search + F1-first optimization on the same engine, **ties
+BiLSTM-F1 and GRU-F1 on F1** (ΔF1 +0.0033 / −0.0038, CIs include 0) and is
+level-to-marginally-better than the frozen BiLSTM on AUC at matched h128 (ΔAUC +0.0059) —
+**no cell-isolation endpoint is a loss** — and, unlike the GRU, its AUC-optimized version
+**ties the searched transformer** on AUC (ΔAUC −0.0013, CI includes 0). So **not even the
+LSTM's gating is what matters over a 16-step window — the input signal is** (LSTM ≈ GRU ≈
+vanilla RNN); it is also the smallest and fastest of the four families (0.316 ms/window CPU).
+All robust to the pedestrian-cluster bootstrap; caveat: horizon-specific (an un-gated RNN
+would likely fall behind over long sequences).
+
 Authoritative project state lives in three hand-maintained docs (in `pipeline/`) —
 **read these first**, they are kept current with real numbers:
 - `pipeline/THESIS_PLAN.md` — locked architecture, dataset splits, day-by-day plan.
@@ -22,13 +61,27 @@ outputs, don't hand-edit.
 
 ## Repository layout (after the GitHub reorg)
 
-Three top-level folders. **Run scripts from the repo root** (e.g.
-`python pipeline/04_train_bilstm.py`) so the relative paths resolve.
+Seven top-level folders. **Run scripts from the repo root** so relative paths resolve.
 - `pipeline/` — all numbered scripts, the three project docs, the multi-seed
-  result tables, and the live-demo outputs (`pipeline/demo_out/`).
-- `journal_prep/` — the 11-issue journal-readiness program (one folder per issue).
+  result tables, and the live-demo outputs (`pipeline/demo_out/`). ⚠ the trainer
+  `04_train_bilstm.py` keeps LEGACY leaky-era defaults (`sequences/`, pos_weight
+  1.44) as a historical artifact — clean-protocol training goes through the unified
+  engine (below).
+- `journal_prep/` — the 12-issue journal-readiness program (one folder per issue);
+  `issue12_unified_pipeline/` holds THE unified model-agnostic training engine.
 - `paper_and_artifacts/` — `Journal_writing/` (manuscript), `runs/` (trained
   checkpoints + norm stats), and `supervisor_review/` (presentation pack).
+- `transformer/` — the Transformer-vs-BiLSTM extension, one subfolder per phase
+  (`phase1_setup/` … `phase5_analysis/`); see `transformer/README.md`.
+- `f1_optimization/` — the F1-first optimization program (metric hierarchy
+  F1 → acc → AUC); see `f1_optimization/PLAN.md`.
+- `gru/` — the GRU-vs-BiLSTM recurrent-cell study, one subfolder per phase
+  (`phase1_setup/` … `phase5_analysis/`); GRU ties the BiLSTM on F1 and AUC; see
+  `gru/README.md`.
+- `rnn/` — the vanilla-RNN-vs-BiLSTM **gating**-isolation study (`birnn` = un-gated
+  bidirectional tanh RNN), one subfolder per phase (`phase1_setup/` … `phase5_analysis/`);
+  the un-gated RNN ties the LSTM/GRU on F1 and ties the searched transformer on AUC — gating
+  buys nothing over 16 steps — and is the smallest/fastest family; see `rnn/README.md`.
 
 Gitignored data lives at the repo root and is NOT tracked: `PIE/`, `PIE_clips/`,
 `PIEPredict/`, `sequences/`, `pie_annotations.pkl`, `yolo26m.pt`, `.venv/`, `venv/`.
@@ -65,10 +118,15 @@ Gitignored data lives at the repo root and is NOT tracked: `PIE/`, `PIE_clips/`,
 - **Fixed data splits by recording set** (no random split — prevents leakage):
   train = set01/02/04, val = set05/06, **test = set03**. Defined in
   `04_train_bilstm.py` (`TRAIN_SETS`/`VAL_SETS`/`TEST_SETS`); reuse, don't redefine.
-- **`POS_WEIGHT = 1.44`** (819 neg / 570 pos) is held fixed across all runs,
-  including the TTE ablation, so the only variable is the one being ablated.
-- **Reproducibility:** `set_seed(42)` + cuDNN deterministic. Re-running a config
-  must reproduce the logged AUC; the ablations explicitly verify this against Day 5.
+- **`POS_WEIGHT`**: 1.44 (819 neg / 570 pos) in the LEGACY pipeline only; the clean
+  protocol (everything journal-bound) uses **1.682** (1366/812). Held fixed unless
+  it is the ablated factor.
+- **Reproducibility (measured, `journal_prep/issue12_unified_pipeline/`):** CPU
+  training is bit-reproducible and context-free; **nn.LSTM training on Apple MPS is
+  process-history-dependent** (same cfg+seed, different result depending on what ran
+  earlier in the process) — recurrent runs needing exact reproduction go on CPU;
+  transformer training is context-free on MPS. Kaggle-GPU↔local-CPU inference drift
+  is ~1e-6 (benign, parity-gated).
 - **File-numbering quirk:** `THESIS_PLAN.md` reserved `07_` for the demo, but `07_`
   was taken by the attention model, so the demo is `10_`. New scripts continue the
   real sequence; don't reuse a taken number.
@@ -80,10 +138,18 @@ Always activate the venv first (it holds torch/ultralytics/etc.):
 source .venv/bin/activate
 ```
 
-Build data and train the baseline (run from the repo root):
+Train under the clean protocol (the journal-bound path — data already exists at
+`journal_prep/issue2_clean_protocol/sequences_clean/`):
+```bash
+python journal_prep/issue12_unified_pipeline/12_unified_engine.py \
+    --family bilstm --seed 42 --device cpu --select f1 --out_dir <run_dir>
+# families: bilstm | transformer | gru | birnn; --select auc = the frozen legacy rule
+```
+Legacy pipeline (historical record — ⚠ reproduces the RETRACTED leaky-era number,
+`sequences/` + pos_weight 1.44, not the published 0.932):
 ```bash
 python pipeline/01_parse_annotations.py --pie-root PIE       # -> pie_annotations.pkl
-python pipeline/02_build_sequences.py --obs-len 16 --tte 45  # -> sequences/
+python pipeline/02_build_sequences.py --obs-len 16 --tte 45  # -> sequences/ (leaky protocol)
 python pipeline/04_train_bilstm.py --epochs 100              # -> paper_and_artifacts/runs/bilstm_baseline/
 python pipeline/05_compare_runs.py                           # results table
 ```
@@ -101,9 +167,9 @@ python pipeline/10_yolo_bytetrack_demo.py --stage demo \
 ## Execution environments (this matters)
 
 - **Local (this machine):** MacBook Air M4. The demo (`10_`) runs here on **MPS**;
-  raw PIE clips (repo root) and `paper_and_artifacts/runs/` weights are present. **`scikit-learn` is NOT installed
-  locally** (training/metrics ran on Kaggle) — compute metrics manually (e.g.
-  Mann-Whitney AUC) rather than importing sklearn in local scripts.
+  raw PIE clips (repo root) and `paper_and_artifacts/runs/` weights are present.
+  `.venv` has torch 2.12, **scikit-learn 1.9 and scipy** (an older note claiming
+  sklearn was missing is stale — sklearn is fine in local scripts).
 - **Kaggle (T4 GPU):** training and the ablation sweeps (`04`, `08`, `09`) were
   run there. Those scripts hard-code `/kaggle/working/` and `/kaggle/input/`
   output paths — adjust paths when running them locally.
