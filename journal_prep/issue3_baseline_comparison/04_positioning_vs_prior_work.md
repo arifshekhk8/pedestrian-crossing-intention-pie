@@ -17,7 +17,7 @@ how does our design address it. This is the "Related Work / Discussion" backbone
 |---|---|---|---|
 | **PCPA** (WACV'21) | Heavy multimodal: 3D-CNN over RGB + pose + context + speed (4 streams); oldest anchor, AUC 0.86 | Match/beat AUC with **2 streams**, no RGB/pose encoder; real-time — **BiLSTM = 0.575 ms/window**, ~58× inside a 30 fps budget; pipeline is detection-bound (BiLSTM only 4.5% of per-frame cost) | Issue 3 table; **Issue 9 ✅ (latency)** |
 | **GTransPDM** (2024) | Requires **skeleton/pose estimation + graph** — extra model, degrades at distance/occlusion; reports near-perfect acc at TTE=0 (at onset) `[verify favorable-TTE]` | No pose pipeline; we evaluate strictly **pre-onset** (TTE∈[30,60]) on leak-free windows | Issue 1–2 (pre-onset, leak-free); Issue 3 |
-| **PIP-Net** (T-ITS'25) | **7 modalities** incl. optical flow, semantic segmentation, depth — prohibitive feature pipeline, many failure points, not real-time | 2 cheap streams (bbox + ego-speed); competitive AUC at a fraction of compute (BiLSTM 0.575 ms/window) | Issue 9 ✅ (latency); Issue 3 |
+| **PIP-Net** (T-ITS'25) | **7 modalities** incl. optical flow, semantic segmentation, depth — prohibitive feature pipeline, many failure points, not real-time; **also a custom random split** (own paper: ~50/40/10), so not protocol-comparable (removed from the Issue-3 table 2026-07-13) | 2 cheap streams (bbox + ego-speed); competitive AUC at a fraction of compute (BiLSTM 0.575 ms/window) | Issue 9 ✅ (latency); Issue 3 |
 | **Occlusion-Aware Diffusion** (T-ITS'25) | Short horizon (**~1 frame ahead**), occlusion-focused, diffusion sampling is expensive; no standard full-horizon benchmark number | Genuine **1–2 s** prediction horizon; lightweight single forward pass | Issue 3 note; Issue 9 |
 
 ## Field-wide methodological gaps we close (the stronger story)
@@ -29,7 +29,7 @@ how does our design address it. This is the "Related Work / Discussion" backbone
 | **Point estimates**, no confidence intervals | 10k-bootstrap 95% CIs on test AUC | Issue 4 |
 | **Single-seed** ablations reported as conclusions | Multi-seed (5-seed) mean ± std + significance tests, which *split* the old joint claim: window length insensitive (effect-size/equivalence: spread 0.006 < seed noise 0.007), but prediction-horizon AUC declines significantly (0.960→0.948→0.919 @1.0→2.0s) — a sensible degradation the leaky single-seed run had masked, and **confirmed on a matched cohort** (06b: same peds at all 3 horizons, decline unchanged, sample effect ≤0.002) so it is not a track-length artifact | **Issue 6** (done; and done for the model table) |
 | **Ground-truth boxes assumed** at inference | Detector-in-the-loop (YOLO→ByteTrack) degradation measured (Issue 10): prediction **robust to box noise** (AUC drop only +0.009/+0.010, 3% decision flips on 98 peds); honestly flags the real pipeline weak links — detector recall 88% and severe ByteTrack identity fragmentation (track purity 39%) — as detector/tracker engineering gaps, not prediction-model flaws | **Issue 10 ✅** |
-| Architecture / hyperparameters **unjustified** | Hidden-size ablation (Issue 7: 64/128/256, hidden=128 kept — 256 n.s. at 3.8× params) **+ a documented 36-config grid search** (Issue 8) with leakage-proof val-only selection (test touched once): the search **confirms the hand-set config** — its val-winner beats baseline on test by only Δ+0.0006 (p=0.91, n.s.). Hyperparameters justified by search, not asserted | Issue 7 ✅ / Issue 8 ✅ |
+| Architecture / hyperparameters **unjustified** | Hidden-size ablation (Issue 7: 64/128/256, hidden=128 kept — 256 n.s. at 3.8× params) **+ a documented 36-config grid search** (Issue 8) with leakage-proof val-only selection (test touched once): the search **confirms the hand-set config** — its val-winner beats baseline on test by only Δ+0.0006 (p=0.91, n.s.). Hyperparameters justified by search, not asserted. The same discipline was then applied to an **entirely different architecture family**: a 78-config staged search (`transformer/`) over a Transformer encoder — this time the search *did* find a measurable improvement (deeper: 4 vs 2 layers), not a null result, so the methodology isn't just confirming whatever we started with | Issue 7 ✅ / Issue 8 ✅ / `transformer/` ✅ |
 
 ## Our distinctive contribution (one paragraph for the intro/discussion)
 
@@ -41,6 +41,31 @@ with full statistical rigor (bootstrap CIs, LOSO across all 6 sets, multi-seed
 ablations, a documented grid search that confirms the hyperparameters) and deployment
 realism (detector-in-the-loop: AUC drops only +0.009 from GT to YOLO boxes). We trade
 raw accuracy for parsimony, recall-favoring safety behaviour, and reproducibility.*
+
+## Model-choice question, answered empirically (not just argued)
+
+A natural reviewer question for any small-data sequence model: *why a BiLSTM and
+not a Transformer?* Rather than argue this on capacity/small-data grounds alone, we
+measured it (`transformer/`, supervisor-requested extension): a small pre-LN
+Transformer encoder, given the identical frozen protocol and a staged 78-config
+architecture+recipe search (≥2× the BiLSTM's own Issue-8 search budget), reaches
+**test AUC 0.950 vs the BiLSTM's 0.932** — a 10k paired bootstrap of ΔAUC on the
+same 2,094 windows gives **+0.0135, 95% CI [+0.0097, +0.0174]** (excludes 0), paired
+t-test p=0.025. The nuance that makes this credible rather than a coin-flip: the
+*same* Transformer architecture, trained with the BiLSTM's own un-searched recipe,
+is a statistical **tie** with the BiLSTM (Δ=+0.0005, CI includes 0) — so attention
+does not trivially beat recurrence on this 16×5 signal; a deliberate, budgeted
+search is what found the improvement (deeper: num_layers=4; last-token pooling;
+sinusoidal positional encoding). **And the win is metric-specific (2026-07-13):**
+under the supervisor's F1-first hierarchy, identical F1-first optimization of both
+families (`f1_optimization/`) ends in a statistical **TIE on F1** (ΔF1 +0.0008, CI
+[−0.0124, +0.0142]) with the LSTM improving significantly (0.828 → 0.844) — so the
+model-choice answer is: *Transformer for the best AUC; either family for F1; the
+smaller BiLSTM remains fully defensible as the headline model under the F1-first
+hierarchy.* Full evidence chain:
+`transformer/phase5_analysis/05_comparison_report.md`, `transformer/PLAN.md`,
+`f1_optimization/06_comparison_report.md`,
+`journal_prep/issue12_unified_pipeline/12_replication_report.md`.
 
 ## Our own limitation (state it before a reviewer does)
 
