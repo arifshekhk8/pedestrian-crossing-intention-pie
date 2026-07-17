@@ -67,7 +67,7 @@ BUILDER = I2 / "02_build_sequences_clean.py"
 BASELINE_SEQ = I2 / "sequences_clean"          # obs16 / [30,60] — reuse, don't rebuild
 
 # locked baseline architecture (root 03_bilstm_model.py, filename starts with a digit)
-_spec = importlib.util.spec_from_file_location("m03", ROOT / "03_bilstm_model.py")
+_spec = importlib.util.spec_from_file_location("m03", ROOT / "pipeline" / "03_bilstm_model.py")
 _m = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_m)
 BiLSTM = _m.BiLSTMIntentPredictor
 

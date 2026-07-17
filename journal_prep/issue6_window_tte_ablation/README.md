@@ -7,6 +7,12 @@ runs (root `08_ablation_window.py` / `09_ablation_tte.py`, which ran on the
 obs_len/TTE" rested on a single-seed spread (~0.005 AUC) that sat *below* the
 seed-to-seed std (~0.011) — undefendable as written.
 
+> **Metric note (F1-first).** This issue is an **AUC-scoped** ablation (window/TTE
+> sensitivity is measured on ranking AUC). Under the project's **F1 → acc → AUC**
+> hierarchy the F1-first headline lives in [`../../f1_optimization/`](../../f1_optimization/)
+> and [`../issue3_baseline_comparison/`](../issue3_baseline_comparison/); AUC is
+> reported here as threshold-free corroboration.
+
 ## How to run
 
 ```bash
