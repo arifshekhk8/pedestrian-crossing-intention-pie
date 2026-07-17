@@ -1,10 +1,27 @@
 # Journal Paper — Writing Plan (MDPI MTI)
 
+> **⚠ UPDATE 2026-07-13 — read this before using the roadmap below.** Two things
+> changed after this plan was first written and the roadmap must be read through them:
+> 1. **Metric hierarchy is now F1 → accuracy → AUC** (supervisor directive). Every
+>    "headline AUC 0.932" framing below should be re-read **F1-first**: the headline
+>    is **F1 0.844 (BiLSTM) / 0.847 (Transformer)**, with AUC (0.94–0.95, top of the
+>    table) as threshold-free corroboration. The `paper_skeleton.tex` is already
+>    F1-first; this PLAN's prose is the straggler.
+> 2. **Two new programs must appear in the paper:** the `../../transformer/` extension
+>    (Transformer beats the BiLSTM **on AUC**, ties on F1) and the `../../f1_optimization/`
+>    program (symmetric F1-first optimization of both families), replicated under the
+>    unified engine `../../journal_prep/issue12_unified_pipeline/`. So it is a
+>    **12-issue** program, two model families, F1-first. Also: **PIP-Net was removed**
+>    from the baseline table (custom split); see `issue3_baseline_comparison/`.
+> The most current numbers/framing live in `f1_optimization/README.md`,
+> `issue3_baseline_comparison/03_baseline_comparison.md` (+ `05_master_comparison_table.md`),
+> and `transformer/SUPERVISOR_SUMMARY.md`.
+
 Target journal: **MTI — Multimodal Technologies and Interaction** (MDPI, open access).
 Tool: **Overleaf** + the official **MDPI Article LaTeX template** (`mdpi.cls` + `mdpi.bst`).
-All numbers are final (see `../journal_prep/` Issues 1–10). This plan maps our work
-onto the MDPI structure, section by section, with the exact results and figures that
-go in each.
+All numbers are final (see `../journal_prep/` Issues 1–12 + `../../f1_optimization/`).
+This plan maps our work onto the MDPI structure, section by section, with the exact
+results and figures that go in each.
 
 > **Golden rule:** every claim in the paper must trace to a number in `journal_prep/`.
 > Do not invent results. When in doubt, cite the issue folder.
@@ -17,13 +34,16 @@ go in each.
   Ego-Speed: A Parsimonious BiLSTM Baseline on PIE"*
 - *"Less Is Enough: A Two-Stream BiLSTM for Real-Time Pedestrian Crossing Prediction"*
 
-## 1. The paper's one-sentence thesis (the spine)
+## 1. The paper's one-sentence thesis (the spine, F1-first)
 
-> On a **leakage-free, canonical PIE protocol**, a BiLSTM using only **bounding-box
-> motion + ego-vehicle speed** reaches **AUC 0.932 [0.92–0.95]** — the top of the
-> standard-protocol band — at **0.575 ms/window**, i.e. competitive with 3–7-stream
-> multimodal SOTA at a fraction of the cost, shown with full statistical rigor and
-> detector-in-the-loop realism.
+> On a **leakage-free, canonical PIE protocol**, two-stream (**bounding-box motion +
+> ego-vehicle speed**) models reach **F1 0.844–0.847** — within 0.02–0.03 of the
+> multimodal F1 ceiling (PedFormer 0.87) — while holding the **highest AUC in the
+> standard-protocol table** (0.94–0.95) at **0.46–0.58 ms/window**, i.e. competitive
+> with 3–7-stream multimodal SOTA at a fraction of the cost, shown with full
+> statistical rigor and detector-in-the-loop realism. A BiLSTM and a staged-search
+> Transformer over the identical input **tie on F1** (the Transformer wins on AUC only),
+> so the parsimony result is about the input signal, not the architecture.
 
 Three contributions to hammer throughout:
 1. **A temporal-leakage audit + fix** (most papers never check this) — Issues 1–2.

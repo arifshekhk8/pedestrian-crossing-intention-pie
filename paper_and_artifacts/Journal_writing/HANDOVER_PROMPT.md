@@ -2,6 +2,25 @@ I'm continuing a master's-thesis → journal-paper project in this repo
 (/Users/arif/Developer/pedestrian-thesis). Please read this whole briefing, then read
 the key files I list, then continue from where we are.
 
+> **⚠ UPDATE 2026-07-13 — this briefing was written 2026-06-28 and is now partly
+> stale; read it through these three corrections:**
+> 1. **Metric hierarchy is F1 → accuracy → AUC** (supervisor directive). The headline
+>    is **F1 0.844 (BiLSTM) / 0.847 (Transformer)**, Acc 0.897/0.896, with AUC
+>    (0.94–0.95, top of the table) as threshold-free corroboration — *not* "AUC 0.932"
+>    first. That 0.932 is the frozen AUC-selected baseline (still valid, still the demo
+>    checkpoint), but it is no longer the headline framing.
+> 2. **It is now a 12-issue program plus two new sub-programs:** `../../transformer/`
+>    (Transformer beats the BiLSTM on AUC, ties on F1) and `../../f1_optimization/`
+>    (symmetric F1-first optimization of both families), both replicated under the
+>    unified engine `../../journal_prep/issue12_unified_pipeline/`. The paper must
+>    cover both model families, F1-first.
+> 3. **PIP-Net was removed** from the baseline comparison (its own paper uses a custom
+>    random split); the corrected table + the new 2024–2026 baselines live in
+>    `../../journal_prep/issue3_baseline_comparison/03_baseline_comparison.md` and
+>    `05_master_comparison_table.md`. The `paper_skeleton.tex` is already F1-first.
+> Most-current numbers: `f1_optimization/README.md`, `transformer/SUPERVISOR_SUMMARY.md`,
+> `issue3_baseline_comparison/`.
+
 ## What the project is
 Predicting **pedestrian crossing intention** on the **PIE dataset**: a 2-stream
 **BiLSTM** that takes 16 frames (~0.5 s) of a pedestrian's bounding box + the
