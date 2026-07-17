@@ -1,6 +1,15 @@
 """
 04_train_bilstm.py — Day 5: full training run, baseline BiLSTM.
 
+HISTORICAL ARTIFACT (2026-07-13 note): the DEFAULTS here are the RETRACTED
+leaky-era protocol (seq_dir="sequences", POS_WEIGHT=1.44). Running this as-is does
+NOT reproduce the published clean 0.932 — that needs
+--seq_dir journal_prep/issue2_clean_protocol/sequences_clean --pos_weight 1.682
+(exactly what issue2's 04_multiseed_baseline.py passes). For any NEW training use
+the unified engine: journal_prep/issue12_unified_pipeline/12_unified_engine.py.
+This file's behaviour is deliberately unchanged — it is the record of what produced
+the legacy runs and defines the demo's inference contract.
+
 Loads sequences/, splits by PIE set_id, normalizes with train-only stats,
 trains with early stopping + best-checkpoint on val AUC, final test eval
 with all 4 metrics + confusion matrix.
