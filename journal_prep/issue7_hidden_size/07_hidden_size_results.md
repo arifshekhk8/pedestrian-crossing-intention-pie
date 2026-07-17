@@ -22,3 +22,14 @@ Kruskal–Wallis across the three sizes: p = 0.121.
 ## Verdict
 
 **hidden=128 is justified.** No size differs significantly from it: hidden=256 is nominally +0.0045 AUC but **not significant** (paired-t p=0.338) at **3.8× the parameters** (2,237,313 vs 594,561), and hidden=64 is no better (p=0.347) at lower capacity; Kruskal–Wallis p=0.121. There is a *mild, non-significant* upward trend with capacity (0.927 → 0.933 → 0.938): the spread (0.0104) slightly exceeds seed noise (±0.0063) but no pairwise test is significant, so we do **not** claim capacity is fully saturated — only that nothing beats 128 significantly. We keep **hidden=128 as the accuracy/cost compromise** — the smaller, faster model is not significantly beaten by the 3.8×-larger one, which is the standard justification for the chosen capacity. The hidden=128 cell reproduces the baseline (this run 0.933 ± 0.007 vs the existing 0.932 ± 0.011).
+
+---
+
+**Post-audit note (2026-07-13) — this verdict is AUC-conditional.** The
+justification above tests significance on AUC only. Under the supervisor's F1-first
+hierarchy, hidden=256 (same lr/dropout family) is the selected headline LSTM config:
+`f1_optimization/` gate G3 passed with `lr1e-03_do0.3_h256_nl2` (5-seed mean val F1
+0.8508 vs h128's 0.8371 under the F1 protocol; test F1 0.8444 vs 0.8392). So:
+**h128 remains justified for AUC/efficiency; h256 is the F1-first choice** — the
+manuscript should state the metric-conditionality rather than a single "128 is
+enough" claim.

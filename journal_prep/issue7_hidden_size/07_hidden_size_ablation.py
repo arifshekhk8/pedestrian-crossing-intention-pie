@@ -46,7 +46,7 @@ ROOT = HERE.parent.parent
 SEQ_DIR = HERE.parent / "issue2_clean_protocol" / "sequences_clean"
 
 # locked baseline architecture (root 03_bilstm_model.py; filename starts with a digit)
-_spec = importlib.util.spec_from_file_location("m03", ROOT / "03_bilstm_model.py")
+_spec = importlib.util.spec_from_file_location("m03", ROOT / "pipeline" / "03_bilstm_model.py")
 _m = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_m)
 BiLSTM = _m.BiLSTMIntentPredictor
 
