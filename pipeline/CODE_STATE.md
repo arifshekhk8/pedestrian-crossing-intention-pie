@@ -4,7 +4,19 @@
 > scripts. Run scripts from the repo root (e.g. `python pipeline/04_train_bilstm.py`).
 > Trained runs are in `paper_and_artifacts/runs/`; demo outputs in `pipeline/demo_out/`;
 > the presentation pack in `paper_and_artifacts/supervisor_review/`. The gitignored
-> `sequences/`, `pie_annotations.pkl`, and `PIE/` stay at the repo root.
+> `sequences/`, `pie_annotations.pkl`, and `PIE/` stay at the repo root. The
+> Transformer-vs-BiLSTM extension is a separate top-level folder, `transformer/`,
+> with its own docs (`transformer/PLAN.md` / `README.md` / `PROGRESS_LOG.md`) — not
+> tracked in this file. Likewise the F1-first program (`f1_optimization/`, 2026-07-12:
+> LSTM F1 0.828→0.844, families TIE on F1), the GRU-vs-BiLSTM recurrent-cell study
+> (`gru/`, 2026-07-14: GRU ties the BiLSTM on F1 and AUC — cell doesn't matter, input
+> does; own docs), the vanilla-RNN gating-isolation study (`rnn/`, 2026-07-14: the
+> un-gated `birnn` ties the LSTM/GRU on F1 and ties the searched transformer on AUC —
+> gating buys nothing over 16 steps; smallest/fastest family; own docs), and the
+> unified model-agnostic training
+> engine (`journal_prep/issue12_unified_pipeline/`, 2026-07-13 — THE entrypoint for
+> new training; `04_train_bilstm.py` below is a historical artifact with leaky-era
+> defaults, see its docstring banner).
 
 ## 01_parse_annotations.py — DONE
 Parses PIE XML annotations into a single pandas DataFrame.

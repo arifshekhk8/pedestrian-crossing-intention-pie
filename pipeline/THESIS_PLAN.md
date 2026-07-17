@@ -67,11 +67,14 @@ bidirectional LSTM on PIE dataset bbox sequences (+ ego-speed).
 - Day 19: Discussion + Conclusion
 - Day 20: Polish + references + buffer
 
-## Metrics (always report all 4)
+## Metrics (report all, in this priority order)
 
-- Accuracy (don't trust alone — class imbalance)
-- F1 score
-- AUC-ROC
+**Reporting hierarchy: F1 → accuracy → AUC** (supervisor directive 2026-07-12;
+implemented across `f1_optimization/` and the journal docs).
+
+- **F1 score** (primary — imbalance-appropriate operating-point metric)
+- Accuracy (secondary; don't trust alone — class imbalance)
+- AUC-ROC (tertiary; threshold-free corroboration)
 - Precision + Recall (with confusion matrix)
 
 ## File naming convention (ACTUAL — supersedes the original aspirational list)

@@ -218,3 +218,37 @@ Key findings:
   anticipation (instrumented car slows for expected crossers).
 - TODO: multi-seed bbox-only + attention on clean data
   (`journal_prep/issue2_clean_protocol/06_multiseed_variants_kaggle.ipynb`).
+
+## Journal-prep Issues 3–12 + extensions (catch-up entry, 2026-07-13)
+
+This log's day-by-day detail stops at Issue 2; Issues 3–12 and the two model-family
+extensions each keep their own log. Summary of everything since:
+
+- **Issues 3–10 (journal_prep/):** baseline comparison + positioning (3), bootstrap CIs
+  (4, AUC [0.92,0.95]), LOSO 6-fold 0.928±0.041 (5), window/TTE multi-seed ablations (6),
+  hidden-size/depth (7, h128 justified), 36-config grid search confirms the hand-set
+  config (8), latency 0.575 ms/window (9), GT-box vs YOLO-box robustness (10). All done.
+- **Transformer extension (`transformer/`, 2026-07-11/12):** staged val-only search;
+  the searched Transformer **beats the BiLSTM on AUC** (0.950 vs 0.932, paired-bootstrap
+  ΔAUC CI excludes 0) but the un-searched twin ties it — the win is the search, not
+  attention.
+- **⭐ Metric pivot → F1 → accuracy → AUC (supervisor, 2026-07-12).** New program
+  `f1_optimization/` optimizes BOTH families F1-first: **LSTM improved to F1 0.844**
+  (h256, F1-checkpointing, val-τ*≈0.5), transformer 0.847 — and **on F1 the families
+  TIE** (the AUC win is metric-specific). Headline framing is now F1-first everywhere.
+- **Issue 12 (`journal_prep/issue12_unified_pipeline/`):** ONE model-agnostic engine
+  (bilstm/transformer/gru/birnn) with equivalence gates ALL PASS + single-device CPU
+  replication — the fair-comparison entrypoint for all future model families. Legacy
+  `pipeline/04_train_bilstm.py` retains the leaky-era defaults (banner added) and is
+  no longer the training path.
+- **GRU study (`gru/`, 2026-07-14).** Third supervisor directive (more model families):
+  the GRU (BiLSTM's gated twin, only `nn.LSTM`→`nn.GRU`) got the identical Issue-8 search
+  + F1-first optimization on the issue12 engine (local CPU). **TIES the BiLSTM on F1**
+  (vs BiLSTM-F1 ΔF1 +0.0071, CI incl. 0) **and on AUC at matched capacity/selection**
+  (vs frozen BiLSTM ΔAUC −0.0008), both surviving the pedestrian-cluster bootstrap; loses
+  to the searched transformer on AUC (ΔAUC −0.0070). GRU-F1 test F1 0.849 / AUC 0.941 /
+  Acc 0.901, LOSO 0.946. **The recurrent cell doesn't matter — the input signal does.**
+  Vanilla-RNN (`birnn`) parallel study pending. Full: `gru/SUPERVISOR_SUMMARY.md`.
+- Detailed logs: `journal_prep/PROGRESS_LOG` equivalents per issue, `transformer/PROGRESS_LOG.md`,
+  `f1_optimization/PROGRESS_LOG.md`. Current numbers: `f1_optimization/README.md`,
+  `journal_prep/issue3_baseline_comparison/03_baseline_comparison.md`.
