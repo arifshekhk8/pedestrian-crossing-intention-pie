@@ -5,6 +5,13 @@ test windows (set03) the sampling uncertainty matters. We percentile-bootstrap
 (10k) each checkpoint's raw test predictions → 95% CI on ROC-AUC and PR-AUC, for
 all three model variants × 5 seeds. Full plan: [`../PLAN.md`](../PLAN.md) (Issue 4).
 
+> **Metric note (F1-first).** This issue is an **AUC-scoped** analysis (it bootstraps
+> ranking AUC/PR-AUC). Under the project's **F1 → acc → AUC** hierarchy the F1-first
+> headline lives in [`../../f1_optimization/`](../../f1_optimization/) (incl. the F1
+> **pedestrian-cluster** bootstrap, `07_cluster_bootstrap.md`) and
+> [`../issue3_baseline_comparison/`](../issue3_baseline_comparison/); AUC is reported
+> here as threshold-free corroboration.
+
 ## Files
 
 | File | What it is |
