@@ -4,6 +4,12 @@ The main result uses one fixed split (test=set03). PIE has 6 recording sets;
 rotating the held-out set across all 6 and averaging is a much stronger
 generalization claim. Full plan: [`../PLAN.md`](../PLAN.md) (Issue 5).
 
+> **Metric note (F1-first).** This issue is an **AUC-scoped** generalization check.
+> Under the project's **F1 → acc → AUC** hierarchy the F1-first headline lives in
+> [`../../f1_optimization/`](../../f1_optimization/) and
+> [`../issue3_baseline_comparison/`](../issue3_baseline_comparison/); AUC is reported
+> here as threshold-free corroboration.
+
 ## Files
 
 | File | What it is |
