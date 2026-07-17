@@ -1,13 +1,18 @@
 # journal_prep/ — Reviewer-Readiness Work
 
 Everything here fixes issues a journal reviewer would raise *before* submission.
-It is **separate from the original thesis pipeline** at the repo root (`01_…` →
-`10_…` + `runs/`, `sequences/`), which is left untouched as the historical record
-(`supervisor_review/` and the root docs still point at it).
+It is **separate from the original thesis pipeline** in `pipeline/` (numbered scripts
++ `paper_and_artifacts/runs/`), which is left as the historical record
+(`paper_and_artifacts/supervisor_review/` still describes it).
 
-**Master issue list + status:** [`PLAN.md`](PLAN.md) (11 issues, 🔴/🟠/🟡 severity).
+**Master issue list + status:** [`PLAN.md`](PLAN.md) (12 issues, 🔴/🟠/🟡 severity).
 
-## Status at a glance (2026-06-26)
+**Metric hierarchy (supervisor directive, 2026-07-12): F1 → accuracy → AUC.** The
+F1-first optimization lives in top-level `f1_optimization/` (LSTM F1 0.828 → 0.844,
+significant; families TIE on F1); issues 3/7/8 below carry metric-conditional notes
+where their AUC-based verdicts differ under F1.
+
+## Status at a glance (updated 2026-07-13)
 
 | Issue | Topic | Status | Headline outcome |
 |---|---|---|---|
@@ -22,6 +27,12 @@ It is **separate from the original thesis pipeline** at the repo root (`01_…` 
 | 9 | Isolated BiLSTM latency | ✅ done | **BiLSTM = 0.575 ms/window** (CPU, ~58× inside 30fps budget); CPU beats MPS at batch 1 (GPU dispatch overhead); pipeline **detection-bound** — YOLO26-M 33.7ms (93%) vs BiLSTM 1.6ms (4.5%) → 27.5 fps (`issue9_latency/`) |
 | 10 | GT-box vs YOLO-box AUC drop | ✅ done | **prediction robust to box noise** — GT 0.962/0.958 vs YOLO 0.953/0.948 (drop +0.009/+0.010, 3% decision flips, N=98 peds); weak links are perception — detector recall 88%, **ByteTrack fragments badly** (track purity 39%, 59% competing-ID) (`issue10_gt_vs_detector/`) |
 | 11 | Doc cleanup to match reality | ✅ done | THESIS_PLAN (file-numbering + deferred hidden-size), CODE_STATE (journal_prep Issues 1–10 entries), PROGRESS_LOG (softened demo "AUC 1.000 N=10" → superseded by Issue 10; headline = clean 0.932) |
+| 12 | Unified pipeline + F1-first integration | ✅ done | **ONE model-agnostic engine** (bilstm/transformer/gru/birnn) with equivalence gates ALL PASS; single-engine CPU replication: LSTM F1 improvement + family TIE **replicate**; pedestrian-cluster bootstrap: all verdicts survive; issue3 table corrected vs sources (PedFormer 0.87 F1 split from BiPed; PIP-Net removed — custom split) (`issue12_unified_pipeline/`) |
+
+**2026-07-13 audit sweep (multi-agent judge + inline fixes):** all issue scripts
+py-compile again (post-reorg paths repaired); issues 7/8 marked metric-conditional;
+issue 10's YOLO row relabeled "oracle-matched"; determinism claims scoped
+(CPU context-free; LSTM-on-MPS process-history-dependent); cluster CIs added.
 
 ## Folder map
 

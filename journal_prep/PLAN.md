@@ -178,7 +178,7 @@ multimodal baselines in the Issue 3 table (PCPA 0.86, GTransPDM 0.87, PIP-Net
 | short tracks only (46–75, the 37 we extra-admit) | 0.8634 | the extra tracks are *harder*, not easier |
 
 So 0.913 reflects genuine signal in bbox motion + ego-speed, not an easier
-protocol — consistent with the Occlusion-Diffusion paper's 0.93–0.95 on bbox+ego
+protocol — directionally in line with the Occlusion-Diffusion paper's 0.93–0.95 on bbox+ego (modality precedent only; Issue 3 ruled it not protocol-comparable)
 only. Only documented deviation: 0.5 overlap (PIE's trajectory value; 0.3 is its
 action default), shown immaterial since per-ped ≈ per-window.
 
@@ -224,7 +224,12 @@ pos_weight 1.44 — use `.md`/`results.csv`.
 is conservative. best-epoch scatters 5–17 because val (set05/06; set05 = 13 peds,
 24% pos vs 37% train) is small and skewed — noisy model selection that directly
 motivates Issue 4 (bootstrap CI) and Issue 5 (LOSO). Seed 42 reproduced
-bit-for-bit → determinism confirmed.
+bit-for-bit → determinism confirmed **on CPU** (2026-07-13 audit scope-correction:
+determinism is per-device AND, for nn.LSTM training on Apple MPS, per-process-history
+— the same config+seed has different cached values across issue2/CPU, issue6-7/MPS
+and issue8/MPS runs. CPU training is fully context-free; recurrent-family training
+that must be exactly reproducible runs on CPU. Measured:
+`issue12_unified_pipeline/12_equivalence_report.md`).
 
 **Eval parity verified** (`03_eval_parity_report.md`): the 5-D 0.913 is robust to
 per-window-vs-per-pedestrian (per-ped 0.914) and to min-track-length
@@ -522,8 +527,12 @@ everything else locked. hidden=128 reproduces the baseline (0.933 ± 0.007 vs 0.
 params**; hidden=64 is no better (p=0.35). Honest nuance: a *mild, non-significant*
 upward trend with capacity (0.927→0.933→0.938; spread 0.010 slightly > seed noise
 0.006), so we don't claim saturation — only that nothing beats 128 significantly, so
-128 is kept as the **accuracy/cost compromise** (the standard justification). These 15
-runs are the hidden-size rows **Issue 8 reuses**. Full table + figure in
+128 is kept as the **accuracy/cost compromise** (the standard justification;
+2026-07-13: this is AUC-conditional — under the F1-first hierarchy hidden=256 is the
+selected headline config, see `f1_optimization/` and the note in
+`07_hidden_size_results.md`). Issue 8 runs its own cells independently (its
+hidden=256/lr=1e-3 cells *reproduce* Issue 7's finding, no runs are shared —
+corrected 2026-07-13, previously said "reuses"). Full table + figure in
 `07_hidden_size_results.md` / `07_hidden_size_figure.png`.
 
 ---
@@ -759,9 +768,46 @@ file numbering, the deferred-then-done hidden-size ablation, the completed
    the best-val checkpoint. Never select hyperparameters on test.  
 2. **Normalization is train-only**: `mean/std` computed on train split, applied to
    val and test. No recomputing per-fold without saving the fold's own stats.  
-3. **`POS_WEIGHT = 1.44`** stays fixed everywhere unless explicitly varying it as
-   the ablated factor.  
+3. **`POS_WEIGHT = 1.682`** (clean protocol; the pre-cleanup 1.44 is legacy) stays
+   fixed everywhere unless explicitly varying it as the ablated factor (the F1-first
+   program swept it symmetrically, val-selected — anchor retained for the LSTM).  
 4. **`set_seed(42)` is the canonical single-seed run** for all issues that need a
    reference point consistent with Day 5.  
 5. **`weights_only=False`** when loading `best.pt` (numpy-scalar in checkpoint).  
-6. **`threshold = 0.5`** for all binary classification decisions.
+6. **`threshold = 0.5`** for all cross-paper-comparable numbers; the F1-first
+   program (f1_optimization/) additionally selects a val-only operating point tau*
+   (which landed ~0.5 for the F1-optimized models) — val-tuned/ensemble numbers are
+   always labeled and never mixed into comparison tables.
+
+---
+
+## Issue 12 — Unified model-agnostic pipeline + F1-first integration 🟠
+
+**Risk level:** major (reviewer: "your two model families were trained by different
+code on different hardware — is the comparison fair?"; supervisor: "prioritize F1,
+then accuracy, then AUC").
+
+**Problem.** Cross-family claims spanned three engines and three device stacks, and
+all pre-F1-pivot verdicts (issues 3/7/8) were AUC-conditional.
+
+**What was built.** `issue12_unified_pipeline/`: ONE training engine
+(`12_unified_engine.py`, registry: bilstm/transformer/gru/birnn, frozen protocol,
+hardened seeding, provenance-complete final.json, no test path) + equivalence gates
+proving it reproduces the published pipeline bit-exactly (`12_equivalence_report.md`,
+ALL PASS — includes the measured MPS-history caveat for LSTM training; CPU is
+context-free) + a single-engine single-device CPU replication of the three F1-first
+endpoints incl. the G1 checkpoint-rule counterfactual (`12_replication_report.md`).
+Companion robustness annex in `f1_optimization/07_cluster_bootstrap.md`
+(pedestrian-cluster bootstrap: all verdicts survive; quote cluster CIs in the
+manuscript).
+
+**Success criterion:** equivalence gates pass; the headline F1-first verdicts
+replicate under one engine on one device. ✅ both met.
+
+### ✅ DONE (2026-07-13) — `issue12_unified_pipeline/`
+Verdicts under the unified engine on CPU: (i) LSTM F1 improvement **replicates**
+(IMPROVED); (iii) family TIE on F1 **replicates**; (ii) transformer improvement is
+*stronger* under the unified regime (significant here, non-significant in the
+original mixed regime — the conservative original verdict remains the citable one).
+GRU/biRNN builders registered + smoke-tested for the planned follow-up. This folder
+is the training entrypoint for ALL future model families.
