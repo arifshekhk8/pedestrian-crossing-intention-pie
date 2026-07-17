@@ -5,6 +5,12 @@ science of the live pipeline: **how much does feeding the BiLSTM noisy detector 
 (YOLO26-M + ByteTrack) instead of ground-truth boxes actually cost?** This quantifies
 the perception→prediction gap on the two demo clips.
 
+> **Metric note (F1-first).** This is an **AUC-scoped** robustness measurement (GT-box
+> vs YOLO-box AUC drop, an oracle-matched lower bound — see `10_gt_vs_detector_results.md`).
+> Under the project's **F1 → acc → AUC** hierarchy the F1-first headline lives in
+> [`../../f1_optimization/`](../../f1_optimization/) and
+> [`../issue3_baseline_comparison/`](../issue3_baseline_comparison/).
+
 ## How to run
 
 ```bash

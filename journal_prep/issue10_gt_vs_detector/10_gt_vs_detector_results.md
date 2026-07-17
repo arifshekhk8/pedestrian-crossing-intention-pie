@@ -14,7 +14,7 @@ Demo clips video_0012 + video_0016 (set03). For each clean GT window we run YOLO
 | path | per-window AUC | per-pedestrian AUC |
 |---|---|---|
 | **GT boxes** (offline) | 0.962 | 0.958 |
-| **YOLO boxes** (full pipeline) | 0.953 | 0.948 |
+| **YOLO boxes** (oracle-matched association†) | 0.953 | 0.948 |
 | **drop (GT − YOLO)** | **+0.009** | **+0.010** |
 
 On the matched windows the two probability streams agree closely: a decision flips across the 0.5 threshold in **10/311 (3%)** of windows.
@@ -26,3 +26,15 @@ On the matched windows the two probability streams agree closely: a decision fli
 **The pipeline's weak links are perception, not prediction:** (1) **detector recall** — 88% of pedestrians are detected, so ~12% are never covered well enough to predict at all (a safety gap worth stating); (2) **tracker fragmentation** — a single ByteTrack ID covers a mean of only **39%** of a pedestrian's frames and 59% of windows carry a competing ID, so a deployment would need stronger re-identification. Neither weakens the BiLSTM's tolerance to box noise above — they are detector/tracker engineering gaps, separate from this thesis's prediction model. Numbers are indicative (N=98 peds, two clips).
 
 _AUC computed via the rank/Mann–Whitney estimator (no sklearn locally)._
+---
+
+**Post-audit relabel (2026-07-13):** † the "YOLO boxes" row assembles each window
+from the best-IoU detection per frame **matched against the GT box** (GT-guided
+association). It isolates *box-quality* noise and is honestly labeled as such now —
+it is NOT an end-to-end tracked pipeline measurement: a deployed system builds
+windows from ByteTrack IDs (this report's own tracker stats: dominant-ID purity 39%,
+59% of windows carry a competing ID), which this design deliberately removes. The
++0.009 AUC drop is therefore a *lower bound* on deployed degradation; end-to-end
+tracked-window degradation is measured qualitatively in the live demo only and is
+disclaimed in the manuscript. Also note GT AUC on this 2-clip subset (0.962) sits
+above the headline 0.932 — do not migrate absolute values from this table.
