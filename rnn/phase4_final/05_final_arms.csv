@@ -1,0 +1,9 @@
+arm,stat,f1_05,f1_tau,acc_05,acc_tau,auc,tau
+rnn_f1_winner,per_seed_mean,0.8543,0.8518,0.9034,0.9018,0.948,0.495
+rnn_f1_winner,ensemble,0.8602,0.859,0.9078,0.9078,0.9546,0.53
+rnn_winner_auc,per_seed_mean,0.849,0.845,0.8998,0.8937,0.9481,0.357
+rnn_winner_auc,ensemble,0.864,0.8634,0.9107,0.9102,0.9545,0.497
+rnn_default_f1,per_seed_mean,0.843,0.8441,0.8954,0.8968,0.9415,0.52
+rnn_default_f1,ensemble,0.8543,0.851,0.9031,0.9045,0.947,0.608
+rnn_default_auc,per_seed_mean,0.8413,0.836,0.8954,0.8893,0.9421,0.428
+rnn_default_auc,ensemble,0.8492,0.8519,0.9011,0.9045,0.9483,0.555
