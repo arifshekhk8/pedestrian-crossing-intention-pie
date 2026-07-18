@@ -30,3 +30,31 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .claude/
+
+# Live-demo intermediates: multi-GB of raw frames and uncompressed video.
+# The published assets are the figure PDF and supplementary/video_s1.mp4,
+# both of which are committed. Regenerate with pipeline/11_demo_clean_ensemble.py.
+pipeline/demo_out_clean/
+
+# Generated presentation videos (regenerate with pipeline/12_supervisor_demo.py)
+pipeline/demo_videos/
+
+# Vendored third-party datasets. Obtain from the original authors; the scripts
+# under journal_prep/ and idd_ped_crossdataset/ expect them at these paths.
+journal_prep/cross_dataset_validation/JAAD/
+idd_ped_crossdataset/data/
+
+# IDD-PeD training checkpoints (~300 MB). Useless without the dataset above,
+# and rebuilt by idd_ped_crossdataset/scripts. Results and reports are tracked.
+idd_ped_crossdataset/checkpoints/
+
+# Overleaf export archives, rebuilt from paper_and_artifacts/Journal_writing/submission/
+paper_and_artifacts/Journal_writing/*.zip
+
+# LaTeX build products of the manuscript (main.pdf is tracked; these are not)
+paper_and_artifacts/Journal_writing/submission/*.aux
+paper_and_artifacts/Journal_writing/submission/*.log
+paper_and_artifacts/Journal_writing/submission/*.blg
+paper_and_artifacts/Journal_writing/submission/*.bbl
+paper_and_artifacts/Journal_writing/submission/*.out
+paper_and_artifacts/Journal_writing/submission/*.toc
