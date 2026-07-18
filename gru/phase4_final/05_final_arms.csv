@@ -1,0 +1,7 @@
+arm,stat,f1_05,f1_tau,acc_05,acc_tau,auc,tau
+gru_f1_winner,per_seed_mean,0.8499,0.8488,0.901,0.9013,0.9408,0.538
+gru_f1_winner,ensemble,0.8565,0.8628,0.9059,0.9107,0.9489,0.526
+gru_default_f1,per_seed_mean,0.8443,0.8443,0.8968,0.8983,0.9386,0.559
+gru_default_f1,ensemble,0.852,0.852,0.9021,0.9021,0.946,0.5
+gru_default_auc,per_seed_mean,0.8352,0.8403,0.8905,0.898,0.9327,0.562
+gru_default_auc,ensemble,0.8474,0.8466,0.8997,0.8988,0.9415,0.486
