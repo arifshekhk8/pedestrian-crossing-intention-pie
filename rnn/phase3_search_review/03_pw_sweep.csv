@@ -1,0 +1,6 @@
+pos_weight,val_f1_mean,val_f1_std,chosen
+1.0,0.8511,0.0214,False
+1.3,0.8498,0.0204,False
+1.682,0.8554,0.0141,True
+2.1,0.851,0.0239,False
+2.5,0.8551,0.0187,False
