@@ -1,0 +1,6 @@
+# PSI raw data (license-gated download) and trained checkpoints — not tracked.
+# Tracked: scripts, PSI_PLAN.md, *_results.json/.csv.
+PSI2.0/
+models_pie_full/
+seq_psi*/
+__pycache__/

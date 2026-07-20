@@ -1,0 +1,209 @@
+{
+  "ow16": {
+    "cfg": {
+      "lr": 0.0001,
+      "dropout": 0.2,
+      "hidden": 256,
+      "num_layers": 2
+    },
+    "pos_weight": 1.682,
+    "n_params": 560001,
+    "n_train": 4272,
+    "n_val": 634,
+    "train_pos": 1493,
+    "per_seed": [
+      {
+        "seed": 42,
+        "tau": 0.47532135248184204,
+        "n_params": 560001,
+        "best_epoch": 25,
+        "seconds": 53.2,
+        "val_f1": 0.8888888888888888,
+        "val_acc": 0.944794952681388,
+        "val_auc": 0.9772240554919522
+      },
+      {
+        "seed": 0,
+        "tau": 0.4885505139827728,
+        "n_params": 560001,
+        "best_epoch": 19,
+        "seconds": 31.1,
+        "val_f1": 0.897196261682243,
+        "val_acc": 0.9479495268138801,
+        "val_auc": 0.9815206411206142
+      },
+      {
+        "seed": 1,
+        "tau": 0.41528448462486267,
+        "n_params": 560001,
+        "best_epoch": 8,
+        "seconds": 28.8,
+        "val_f1": 0.8773006134969326,
+        "val_acc": 0.9369085173501577,
+        "val_auc": 0.9725638090107078
+      },
+      {
+        "seed": 2,
+        "tau": 0.3343825042247772,
+        "n_params": 560001,
+        "best_epoch": 37,
+        "seconds": 48.5,
+        "val_f1": 0.9134328358208955,
+        "val_acc": 0.9542586750788643,
+        "val_auc": 0.9820930702404203
+      },
+      {
+        "seed": 3,
+        "tau": 0.4666862189769745,
+        "n_params": 560001,
+        "best_epoch": 15,
+        "seconds": 27.6,
+        "val_f1": 0.891640866873065,
+        "val_acc": 0.944794952681388,
+        "val_auc": 0.9805778166879924
+      }
+    ],
+    "val_f1_mean": 0.893691893352405,
+    "val_f1_std": 0.013209229952303718,
+    "val_auc_mean": 0.9787958785103374,
+    "model_dir": "journal_prep/obs_window_extension/psi_crosstest/models_pie_full/rnn_f1/ow16"
+  },
+  "ow32": {
+    "cfg": {
+      "lr": 0.0001,
+      "dropout": 0.2,
+      "hidden": 256,
+      "num_layers": 2
+    },
+    "pos_weight": 1.682,
+    "n_params": 560001,
+    "n_train": 2064,
+    "n_val": 302,
+    "train_pos": 712,
+    "per_seed": [
+      {
+        "seed": 42,
+        "tau": 0.49598440527915955,
+        "n_params": 560001,
+        "best_epoch": 47,
+        "seconds": 43.5,
+        "val_f1": 0.8831168831168831,
+        "val_acc": 0.9403973509933775,
+        "val_auc": 0.969635997805012
+      },
+      {
+        "seed": 0,
+        "tau": 0.5211774110794067,
+        "n_params": 560001,
+        "best_epoch": 53,
+        "seconds": 51.2,
+        "val_f1": 0.896551724137931,
+        "val_acc": 0.9503311258278145,
+        "val_auc": 0.9768306810560332
+      },
+      {
+        "seed": 1,
+        "tau": 0.517838180065155,
+        "n_params": 560001,
+        "best_epoch": 22,
+        "seconds": 18.2,
+        "val_f1": 0.8609271523178808,
+        "val_acc": 0.9304635761589404,
+        "val_auc": 0.9657947686116699
+      },
+      {
+        "seed": 2,
+        "tau": 0.5,
+        "n_params": 560001,
+        "best_epoch": 21,
+        "seconds": 57.3,
+        "val_f1": 0.8974358974358975,
+        "val_acc": 0.9470198675496688,
+        "val_auc": 0.9679897567221512
+      },
+      {
+        "seed": 3,
+        "tau": 0.4412168860435486,
+        "n_params": 560001,
+        "best_epoch": 40,
+        "seconds": 47.0,
+        "val_f1": 0.89171974522293,
+        "val_acc": 0.9437086092715232,
+        "val_auc": 0.9790866410584721
+      }
+    ],
+    "val_f1_mean": 0.8859502804463044,
+    "val_f1_std": 0.015097862527067872,
+    "val_auc_mean": 0.9718675690506675,
+    "model_dir": "journal_prep/obs_window_extension/psi_crosstest/models_pie_full/rnn_f1/ow32"
+  },
+  "ow64": {
+    "cfg": {
+      "lr": 0.0001,
+      "dropout": 0.2,
+      "hidden": 256,
+      "num_layers": 2
+    },
+    "pos_weight": 1.682,
+    "n_params": 560001,
+    "n_train": 959,
+    "n_val": 138,
+    "train_pos": 326,
+    "per_seed": [
+      {
+        "seed": 42,
+        "tau": 0.17184759676456451,
+        "n_params": 560001,
+        "best_epoch": 42,
+        "seconds": 35.0,
+        "val_f1": 0.8378378378378378,
+        "val_acc": 0.9130434782608695,
+        "val_auc": 0.9577931866144106
+      },
+      {
+        "seed": 0,
+        "tau": 0.38129255175590515,
+        "n_params": 560001,
+        "best_epoch": 39,
+        "seconds": 32.5,
+        "val_f1": 0.8571428571428571,
+        "val_acc": 0.927536231884058,
+        "val_auc": 0.9577931866144106
+      },
+      {
+        "seed": 1,
+        "tau": 0.23078936338424683,
+        "n_params": 560001,
+        "best_epoch": 19,
+        "seconds": 19.8,
+        "val_f1": 0.8529411764705882,
+        "val_acc": 0.927536231884058,
+        "val_auc": 0.9562858004220681
+      },
+      {
+        "seed": 2,
+        "tau": 0.3174009323120117,
+        "n_params": 560001,
+        "best_epoch": 26,
+        "seconds": 35.0,
+        "val_f1": 0.8333333333333334,
+        "val_acc": 0.9130434782608695,
+        "val_auc": 0.9484473922218872
+      },
+      {
+        "seed": 3,
+        "tau": 0.40914082527160645,
+        "n_params": 560001,
+        "best_epoch": 19,
+        "seconds": 26.3,
+        "val_f1": 0.835820895522388,
+        "val_acc": 0.9202898550724637,
+        "val_auc": 0.9586976183298161
+      }
+    ],
+    "val_f1_mean": 0.843415220061401,
+    "val_f1_std": 0.010835327210322982,
+    "val_auc_mean": 0.9558034368405185,
+    "model_dir": "journal_prep/obs_window_extension/psi_crosstest/models_pie_full/rnn_f1/ow64"
+  }
+}

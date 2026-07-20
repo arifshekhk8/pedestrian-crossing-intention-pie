@@ -1,0 +1,32 @@
+
+========================================================================
+OW 16: full-PIE train 4272 (pos 1493, 34.9%) / val 634 (pos 155)
+========================================================================
+  RNN-F1 OW16 seed42  tau*=0.475 valF1=0.8889 valAUC=0.9772 (53.2s ep25)
+  RNN-F1 OW16 seed0   tau*=0.489 valF1=0.8972 valAUC=0.9815 (31.1s ep19)
+  RNN-F1 OW16 seed1   tau*=0.415 valF1=0.8773 valAUC=0.9726 (28.8s ep8)
+  RNN-F1 OW16 seed2   tau*=0.334 valF1=0.9134 valAUC=0.9821 (48.5s ep37)
+  RNN-F1 OW16 seed3   tau*=0.467 valF1=0.8916 valAUC=0.9806 (27.6s ep15)
+  -> OW16: val F1 0.8937±0.0132  val AUC 0.9788
+
+========================================================================
+OW 32: full-PIE train 2064 (pos 712, 34.5%) / val 302 (pos 71)
+========================================================================
+  RNN-F1 OW32 seed42  tau*=0.496 valF1=0.8831 valAUC=0.9696 (43.5s ep47)
+  RNN-F1 OW32 seed0   tau*=0.521 valF1=0.8966 valAUC=0.9768 (51.2s ep53)
+  RNN-F1 OW32 seed1   tau*=0.518 valF1=0.8609 valAUC=0.9658 (18.2s ep22)
+  RNN-F1 OW32 seed2   tau*=0.500 valF1=0.8974 valAUC=0.9680 (57.3s ep21)
+  RNN-F1 OW32 seed3   tau*=0.441 valF1=0.8917 valAUC=0.9791 (47.0s ep40)
+  -> OW32: val F1 0.8860±0.0151  val AUC 0.9719
+
+========================================================================
+OW 64: full-PIE train 959 (pos 326, 34.0%) / val 138 (pos 31)
+========================================================================
+  RNN-F1 OW64 seed42  tau*=0.172 valF1=0.8378 valAUC=0.9578 (35.0s ep42)
+  RNN-F1 OW64 seed0   tau*=0.381 valF1=0.8571 valAUC=0.9578 (32.5s ep39)
+  RNN-F1 OW64 seed1   tau*=0.231 valF1=0.8529 valAUC=0.9563 (19.8s ep19)
+  RNN-F1 OW64 seed2   tau*=0.317 valF1=0.8333 valAUC=0.9484 (35.0s ep26)
+  RNN-F1 OW64 seed3   tau*=0.409 valF1=0.8358 valAUC=0.9587 (26.3s ep19)
+  -> OW64: val F1 0.8434±0.0108  val AUC 0.9558
+
+TOTAL 556s. models in models_pie_full/rnn_f1/, summary in 02_pie_full_results.json/.csv — ready for PSI eval.

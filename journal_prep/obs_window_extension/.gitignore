@@ -1,0 +1,6 @@
+# Large artifacts — regenerate with 01_run_ow_extension.py (needs pie_annotations.pkl + PIE/).
+# Tracked: scripts, PLAN.md, 01_ow_results.json/.csv (the numbers), run.log.
+runs_ow/
+seq_ow32/
+seq_ow64/
+__pycache__/
