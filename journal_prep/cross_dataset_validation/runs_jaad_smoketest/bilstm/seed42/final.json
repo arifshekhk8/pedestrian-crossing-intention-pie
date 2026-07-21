@@ -1,0 +1,34 @@
+{
+  "family": "bilstm",
+  "cfg": {
+    "lr": 0.001,
+    "dropout": 0.3,
+    "hidden": 128,
+    "num_layers": 2
+  },
+  "seed": 42,
+  "pos_weight": 0.29708222811671087,
+  "device": "cpu",
+  "torch_version": "2.12.0",
+  "select": "f1",
+  "n_params": 594497,
+  "best_epoch": 15,
+  "val": {
+    "f1": 0.75,
+    "acc": 0.6190476190476191,
+    "auc": 0.553125,
+    "pr_auc": 0.8298070093513142,
+    "prec": 0.75,
+    "rec": 0.75
+  },
+  "auc_best_epoch": 10,
+  "val_at_auc_best": {
+    "f1": 0.6896551724137931,
+    "acc": 0.5714285714285714,
+    "auc": 0.609375,
+    "pr_auc": 0.8606236927459042,
+    "prec": 0.7692307692307693,
+    "rec": 0.625
+  },
+  "seconds": 4.6
+}
