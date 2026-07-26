@@ -1,0 +1,487 @@
+% =====================================================================
+% references.bib  —  MTI manuscript (MDPI numeric / mdpi.bst, natbib numeric)
+% Cite with \cite{key}; mdpi.bst renders numbered [n] in order of appearance.
+% Every entry was verified first-hand against the publisher record or arXiv page
+% (deep-research adversarial pass 2026-07, final citation audit 2026-07-26).
+% No unverified fields remain.
+% =====================================================================
+
+% ------------------------- Road-safety statistics (Introduction, Figure 1) -------------------------
+% All figures verified first-hand from the primary documents; see
+% ../STATISTICS_SOURCES.md for the exact quoted text and page/table provenance.
+@book{who2023roadsafety,
+  title     = {Global Status Report on Road Safety 2023},
+  author    = {{World Health Organization}},
+  publisher = {World Health Organization},
+  address   = {Geneva, Switzerland},
+  year      = {2023},
+  isbn      = {978-92-4-008651-7}
+}
+
+@techreport{nhtsa2025pedestrians,
+  title       = {Traffic Safety Facts 2023 Data: Pedestrians},
+  author      = {{National Highway Traffic Safety Administration}},
+  institution = {National Center for Statistics and Analysis, U.S. Department of Transportation},
+  address     = {Washington, DC, USA},
+  number      = {DOT HS 813 727},
+  year        = {2025}
+}
+
+@misc{ec2025roadfatalities,
+  author       = {{European Commission}},
+  title        = {{EU} Road Fatalities Drop by 3\% in 2024, but Progress Remains Slow},
+  year         = {2025},
+  howpublished = {Directorate-General for Mobility and Transport. Available online: \url{https://transport.ec.europa.eu/news-events/news/eu-road-fatalities-drop-3-2024-progress-remains-slow-2025-03-18_en} (accessed on 22 July 2026)}
+}
+
+% ------------------------- Datasets & benchmarks -------------------------
+@inproceedings{rasouli2019pie,
+  title     = {{PIE}: A Large-Scale Dataset and Models for Pedestrian Intention Estimation and Trajectory Prediction},
+  author    = {Rasouli, Amir and Kotseruba, Iuliia and Kunic, Toni and Tsotsos, John K.},
+  booktitle = {IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {6262--6271},
+  year      = {2019},
+  doi       = {10.1109/ICCV.2019.00636}
+}
+
+@inproceedings{rasouli2017jaad,
+  title     = {Are They Going to Cross? A Benchmark Dataset and Baseline for Pedestrian Crosswalk Behavior},
+  author    = {Rasouli, Amir and Kotseruba, Iuliia and Tsotsos, John K.},
+  booktitle = {IEEE International Conference on Computer Vision Workshops (ICCVW)},
+  pages     = {206--213},
+  year      = {2017}
+}
+
+@inproceedings{malla2020titan,
+  title     = {{TITAN}: Future Forecast Using Action Priors},
+  author    = {Malla, Srikanth and Dariush, Behzad and Choi, Chiho},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {11186--11196},
+  year      = {2020}
+}
+
+@article{chen2021psi,
+  title   = {{PSI}: A Pedestrian Behavior Dataset for Socially Intelligent Autonomous Car},
+  author  = {Chen, Tina and Jing, Taotao and Tian, Renran and Chen, Yaobin and Domeyer, Joshua and Toyoda, Heishiro and Sherony, Rini and Ding, Zhengming},
+  journal = {arXiv preprint arXiv:2112.02604},
+  year    = {2021}
+}
+
+@inproceedings{gesnouin2022assessing,
+  title     = {Assessing Cross-Dataset Generalization of Pedestrian Crossing Predictors},
+  author    = {Gesnouin, Joseph and Pechberti, Steve and Stanciulescu, Bogdan and Moutarde, Fabien},
+  booktitle = {IEEE Intelligent Vehicles Symposium (IV)},
+  pages     = {419--426},
+  year      = {2022},
+  note      = {arXiv:2201.12626}
+}
+
+@article{sharma2022survey,
+  title   = {Pedestrian Intention Prediction for Autonomous Vehicles: A Comprehensive Survey},
+  author  = {Sharma, Neha and Dhiman, Chhavi and Indu, S.},
+  journal = {Neurocomputing},
+  volume  = {508},
+  pages   = {120--152},
+  year    = {2022}
+}
+
+@inproceedings{rasouli2024diving,
+  title     = {Diving Deeper Into Pedestrian Behavior Understanding: Intention Estimation, Action Prediction, and Event Risk Assessment},
+  author    = {Rasouli, Amir and Kotseruba, Iuliia},
+  booktitle = {IEEE Intelligent Vehicles Symposium (IV)},
+  pages     = {1381--1388},
+  year      = {2024},
+  note      = {arXiv:2407.00446}
+}
+
+% ------------------------- Sequence & graph models -------------------------
+@article{hochreiter1997lstm,
+  title={Long Short-Term Memory},
+  author={Hochreiter, Sepp and Schmidhuber, J{\"u}rgen},
+  journal={Neural Computation},
+  volume={9}, number={8}, pages={1735--1780}, year={1997}, publisher={MIT Press},
+  doi={10.1162/neco.1997.9.8.1735}
+}
+
+@article{graves2005framewise,
+  title={Framewise Phoneme Classification with Bidirectional {LSTM} and Other Neural Network Architectures},
+  author={Graves, Alex and Schmidhuber, J{\"u}rgen},
+  journal={Neural Networks},
+  volume={18}, number={5-6}, pages={602--610}, year={2005}, publisher={Elsevier}
+}
+
+@article{schuster1997bilstm,
+  title={Bidirectional Recurrent Neural Networks},
+  author={Schuster, Mike and Paliwal, Kuldip K.},
+  journal={IEEE Transactions on Signal Processing},
+  volume={45}, number={11}, pages={2673--2681}, year={1997},
+  doi={10.1109/78.650093}
+}
+
+@inproceedings{alahi2016social,
+  title     = {Social {LSTM}: Human Trajectory Prediction in Crowded Spaces},
+  author    = {Alahi, Alexandre and Goel, Kratarth and Ramanathan, Vignesh and Robicquet, Alexandre and Fei-Fei, Li and Savarese, Silvio},
+  booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {961--971},
+  year      = {2016}
+}
+
+@article{cadena2022pedgraph,
+  title   = {{Pedestrian Graph +}: A Fast Pedestrian Crossing Prediction Model Based on Graph Convolutional Networks},
+  author  = {Cadena, Pablo Rodrigo Gantier and Qian, Yeqiang and Wang, Chunxiang and Yang, Ming},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {23}, number  = {11}, pages   = {21050--21061}, year = {2022},
+  doi     = {10.1109/TITS.2022.3173537}
+}
+
+@article{zou2025group,
+  title   = {A Pedestrian Group Crossing Intention Prediction Model Integrating Spatiotemporal Features},
+  author  = {Zou, Hai and Guo, Yongqing and Wei, Fulu and Guo, Dong and Li, Qingyin and Pirov, Jahongir},
+  journal = {Scientific Reports},
+  volume  = {15}, number = {1}, pages = {20675}, year = {2025},
+  doi     = {10.1038/s41598-025-05128-4}
+}
+
+% ------------------------- Attention/transformer models -------------------------
+@article{lorenzo2021capformer,
+  title   = {{CAPformer}: Pedestrian Crossing Action Prediction Using Transformer},
+  author  = {Lorenzo, Javier and Alonso, Ignacio Parra and Izquierdo, Rub{\'e}n and Ballardini, Augusto Luis and Saz, {\'A}lvaro Hern{\'a}ndez and Llorca, David Fern{\'a}ndez and Sotelo, Miguel {\'A}ngel},
+  journal = {Sensors}, volume = {21}, number = {17}, pages = {5694}, year = {2021},
+  doi     = {10.3390/s21175694}
+}
+
+@inproceedings{rasouli2023pedformer,
+  title     = {{PedFormer}: Pedestrian Behavior Prediction via Cross-Modal Attention Modulation and Gated Multitask Learning},
+  author    = {Rasouli, Amir and Kotseruba, Iuliia},
+  booktitle = {IEEE International Conference on Robotics and Automation (ICRA)},
+  pages     = {9844--9851},
+  year      = {2023},
+  note      = {arXiv:2210.07886; source for the BiPed and PedFormer rows}
+}
+
+@article{xie2025gtranspdm,
+  title   = {{GTransPDM}: A Graph-Embedded Transformer with Positional Decoupling for Pedestrian Crossing Intention Prediction},
+  author  = {Xie, Chen and Lin, Ciyun and Zheng, Xiaoyu and Gong, Bowen and L{\'o}pez, Antonio M.},
+  journal = {IEEE Signal Processing Letters},
+  volume  = {32}, pages = {2109--2113}, year = {2025},
+  doi     = {10.1109/LSP.2025.3567249},
+  note    = {arXiv:2409.20223}
+}
+
+@article{lorenzo2021intformer,
+  title   = {{IntFormer}: Predicting Pedestrian Intention with the Aid of the Transformer Architecture},
+  author  = {Lorenzo, Javier and Parra, Ignacio and Sotelo, Miguel {\'A}ngel},
+  journal = {arXiv preprint arXiv:2105.08647},
+  year    = {2021},
+  doi     = {10.48550/arXiv.2105.08647}
+}
+
+@article{zhou2023pit,
+  title   = {{PIT}: Progressive Interaction Transformer for Pedestrian Crossing Intention Prediction},
+  author  = {Zhou, Yuchen and Tan, Guang and Zhong, Rui and Li, Yaokun and Gou, Chao},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {24}, number = {12}, pages = {14213--14225}, year = {2023},
+  doi     = {10.1109/TITS.2023.3309309}
+}
+
+@article{li2025mft,
+  title   = {Multi-Context Fusion Transformer for Pedestrian Crossing Intention Prediction in Urban Environments},
+  author  = {Li, Yuanzhe and Zhong, Hang and M{\"u}ller, Steffen},
+  journal = {arXiv preprint arXiv:2511.20011},
+  year    = {2025}
+}
+
+@article{landry2025trajfusionnet,
+  title   = {{TrajFusionNet}: Pedestrian Crossing Intention Prediction via Fusion of Sequential and Visual Trajectory Representations},
+  author  = {Landry, Fran{\c{c}}ois G. and Akhloufi, Moulay A.},
+  journal = {arXiv preprint arXiv:2508.19866},
+  year    = {2025}
+}
+
+@inproceedings{liang2024tcl,
+  title     = {Temporal-Contextual Event Learning for Pedestrian Crossing Intent Prediction},
+  author    = {Liang, Hongbin and Qiao, Hezhe and Huang, Wei and Wang, Qizhou and Shang, Mingsheng and Chen, Lin},
+  booktitle = {International Conference on Neural Information Processing (ICONIP)},
+  year      = {2024},
+  note      = {arXiv:2504.06292}
+}
+
+% ------------------------- Multimodal / minimal-modality / other formulations -------------------------
+@inproceedings{kotseruba2021benchmark,
+  title     = {{Benchmark for Evaluating Pedestrian Action Prediction}},
+  author    = {Kotseruba, Iuliia and Rasouli, Amir and Tsotsos, John K.},
+  booktitle = {IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages     = {1258--1268},
+  year      = {2021}
+}
+
+@inproceedings{rasouli2022multimodal,
+  title     = {Multi-Modal Hybrid Architecture for Pedestrian Action Prediction},
+  author    = {Rasouli, Amir and Yau, Tiffany and Rohani, Mohsen and Luo, Jun},
+  booktitle = {IEEE Intelligent Vehicles Symposium (IV)},
+  pages     = {91--97},
+  year      = {2022}
+}
+
+@inproceedings{piccoli2020fussinet,
+  title     = {{FuSSI-Net}: Fusion of Spatio-Temporal Skeletons for Intention Prediction Network},
+  author    = {Piccoli, Francesco and Balakrishnan, Rajarathnam and Perez, Maria Jesus and Sachdeo, Moraldeepsingh and Nunez, Carlos and Tang, Matthew and Andreasson, Kajsa and Bjurek, Kalle and Raj, Ria Dass and Davidsson, Ebba and others},
+  booktitle = {Asilomar Conference on Signals, Systems, and Computers},
+  pages     = {68--72},
+  year      = {2020}
+}
+
+@article{azarmi2025pipnet,
+  title   = {{PIP-Net}: Pedestrian Intention Prediction in the Wild},
+  author  = {Azarmi, Mohsen and Rezaei, Mahdi and Wang, He},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {26}, number = {7}, pages = {9824--9837}, year = {2025},
+  doi     = {10.1109/TITS.2025.3570794},
+  note    = {arXiv:2402.12810}
+}
+
+@article{chen2024pedcmt,
+  title   = {Pedestrian Crossing Intention Prediction Based on Cross-Modal Transformer and Uncertainty-Aware Multi-Task Learning for Autonomous Driving},
+  author  = {Chen, Xiaobo and Zhang, Shilin and Li, Jun and Yang, Jian},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {25}, number = {9}, pages = {12538--12549}, year = {2024},
+  doi     = {10.1109/TITS.2024.3386689},
+  note    = {Code available at github.com/xbchen82/PedCMT}
+}
+
+@inproceedings{achaji2022attention,
+  title     = {Is Attention to Bounding Boxes All You Need for Pedestrian Action Prediction?},
+  author    = {Achaji, Lina and Moreau, Julien and Fouqueray, Thibault and Aioun, Fran{\c{c}}ois and Charpillet, Fran{\c{c}}ois},
+  booktitle = {IEEE Intelligent Vehicles Symposium (IV)},
+  pages     = {895--902},
+  year      = {2022},
+  note      = {arXiv:2107.08031}
+}
+
+@article{liu2025occlusion,
+  title   = {Occlusion-Aware Diffusion Model for Pedestrian Intention Prediction},
+  author  = {Liu, Yu and Liu, Zhijie and Yang, Zedong and Li, You-Fu and Kong, He},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  year    = {2025},
+  note    = {arXiv:2511.00858}
+}
+
+@inproceedings{azarmi2023local,
+  title     = {Local and Global Contextual Features Fusion for Pedestrian Intention Prediction},
+  author    = {Azarmi, Mohsen and Rezaei, Mahdi and Hussain, Tanveer and Qian, Chenghao},
+  booktitle = {International Conference on Artificial Intelligence and Smart Vehicles},
+  pages     = {1--13},
+  year      = {2023},
+  publisher = {Springer}
+}
+
+@article{yao2021coupling,
+  title   = {Coupling Intent and Action for Pedestrian Crossing Behavior Prediction},
+  author  = {Yao, Yu and Atkins, Ella and Johnson-Roberson, Matthew and Vasudevan, Ram and Du, Xiaoxiao},
+  journal = {arXiv preprint arXiv:2105.04133},
+  year    = {2021}
+}
+
+@article{zhou2023learning,
+  title   = {Learning Trajectory-Conditioned Relations to Predict Pedestrian Crossing Behavior},
+  author  = {Zhou, Chen and AlRegib, Ghassan and Parchami, Armin and Singh, Kunjan},
+  journal = {arXiv preprint arXiv:2301.05796},
+  year    = {2023}
+}
+
+@article{melocastillo2025neurosymbolic,
+  title   = {Towards Explainable Pedestrian Behavior Prediction: A Neuro-Symbolic Framework for Autonomous Driving},
+  author  = {Melo Castillo, Angie Nataly and Salinas Maldonado, Carlota and Sotelo, Miguel {\'A}ngel},
+  journal = {Applied Sciences},
+  volume  = {15}, number = {11}, pages = {6283}, year = {2025},
+  doi     = {10.3390/app15116283}
+}
+
+@inproceedings{abbasi2023watchped,
+  title     = {{WatchPed}: Pedestrian Crossing Intention Prediction Using Embedded Sensors of Smartwatch},
+  author    = {Abbasi, Jibran Ali and Imran, Navid Mohammad and Das, Lokesh Chandra and Won, Myounggyu},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  pages     = {9574--9581},
+  year      = {2023}
+}
+
+@inproceedings{abdelrahman2025vrucipi,
+  title     = {{VRU-CIPI}: Crossing Intention Prediction at Intersections for Improving Vulnerable Road Users Safety},
+  author    = {Abdelrahman, Ahmed S. and Abdel-Aty, Mohamed and Tran, Quoc Dai},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages     = {5623--5632},
+  year      = {2025},
+  note      = {arXiv:2505.09935; evaluated on the off-board UCF-VRU dataset (crossing direction), not PIE/JAAD}
+}
+
+% ------------------------- Method building blocks (Methods section) -------------------------
+@article{vaswani2017attention,
+  title   = {Attention Is All You Need},
+  author  = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  journal = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume  = {30}, year = {2017}
+}
+
+@inproceedings{xiong2020prelayernorm,
+  title     = {On Layer Normalization in the Transformer Architecture},
+  author    = {Xiong, Ruibin and Yang, Yunchang and He, Di and Zheng, Kai and Zheng, Shuxin and Xing, Chen and Zhang, Huishuai and Lan, Yanyan and Wang, Liwei and Liu, Tie-Yan},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  pages     = {10524--10533},
+  year      = {2020},
+  note      = {arXiv:2002.04745}
+}
+
+@inproceedings{cho2014gru,
+  title     = {Learning Phrase Representations Using {RNN} Encoder--Decoder for Statistical Machine Translation},
+  author    = {Cho, Kyunghyun and van Merri{\"e}nboer, Bart and Gulcehre, Caglar and Bahdanau, Dzmitry and Bougares, Fethi and Schwenk, Holger and Bengio, Yoshua},
+  booktitle = {Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  pages     = {1724--1734}, year = {2014}
+}
+
+@article{chung2014gru,
+  title   = {Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling},
+  author  = {Chung, Junyoung and Gulcehre, Caglar and Cho, KyungHyun and Bengio, Yoshua},
+  journal = {arXiv preprint arXiv:1412.3555}, year = {2014}
+}
+
+@article{elman1990rnn,
+  title={Finding Structure in Time},
+  author={Elman, Jeffrey L.},
+  journal={Cognitive Science}, volume={14}, number={2}, pages={179--211}, year={1990},
+  doi={10.1207/s15516709cog1402_1}
+}
+
+@article{rumelhart1986backprop,
+  title={Learning Representations by Back-Propagating Errors},
+  author={Rumelhart, David E. and Hinton, Geoffrey E. and Williams, Ronald J.},
+  journal={Nature}, volume={323}, number={6088}, pages={533--536}, year={1986},
+  doi={10.1038/323533a0}
+}
+
+@inproceedings{bahdanau2015attention,
+  title     = {Neural Machine Translation by Jointly Learning to Align and Translate},
+  author    = {Bahdanau, Dzmitry and Cho, Kyunghyun and Bengio, Yoshua},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2015}, note = {arXiv:1409.0473}
+}
+
+@inproceedings{kingma2015adam,
+  title     = {Adam: A Method for Stochastic Optimization},
+  author    = {Kingma, Diederik P. and Ba, Jimmy},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2015}, note = {arXiv:1412.6980}
+}
+
+@inproceedings{loshchilov2019adamw,
+  title     = {Decoupled Weight Decay Regularization},
+  author    = {Loshchilov, Ilya and Hutter, Frank},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2019}, note = {arXiv:1711.05101}
+}
+
+@article{paszke2019pytorch,
+  title   = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
+  author  = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and others},
+  journal = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume  = {32}, year = {2019}
+}
+
+% ------------------------- Detection & tracking -------------------------
+@article{ren2015faster,
+  title   = {Faster {R-CNN}: Towards Real-Time Object Detection with Region Proposal Networks},
+  author  = {Ren, Shaoqing and He, Kaiming and Girshick, Ross and Sun, Jian},
+  journal = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume  = {28}, year = {2015}, note = {arXiv:1506.01497}
+}
+
+@inproceedings{redmon2016yolo,
+  title     = {You Only Look Once: Unified, Real-Time Object Detection},
+  author    = {Redmon, Joseph and Divvala, Santosh and Girshick, Ross and Farhadi, Ali},
+  booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {779--788}, year = {2016}
+}
+
+@misc{jocher2025yolo,
+  author       = {Jocher, Glenn and {Ultralytics Team}},
+  title        = {Ultralytics {YOLO26}},
+  year         = {2025},
+  howpublished = {\url{https://github.com/ultralytics/ultralytics}},
+  note         = {Object-detection software; run with the yolo26m weights}
+}
+
+@inproceedings{bewley2016sort,
+  title     = {Simple Online and Realtime Tracking},
+  author    = {Bewley, Alex and Ge, Zongyuan and Ott, Lionel and Ramos, Fabio and Upcroft, Ben},
+  booktitle = {IEEE International Conference on Image Processing (ICIP)},
+  pages     = {3464--3468}, year = {2016}
+}
+
+@inproceedings{wojke2017deepsort,
+  title     = {Simple Online and Realtime Tracking with a Deep Association Metric},
+  author    = {Wojke, Nicolai and Bewley, Alex and Paulus, Dietrich},
+  booktitle = {IEEE International Conference on Image Processing (ICIP)},
+  pages     = {3645--3649}, year = {2017}
+}
+
+@inproceedings{zhang2022bytetrack,
+  title     = {{ByteTrack}: Multi-Object Tracking by Associating Every Detection Box},
+  author    = {Zhang, Yifu and Sun, Peize and Jiang, Yi and Yu, Dongdong and Weng, Fucheng and Yuan, Zehuan and Luo, Ping and Liu, Wenyu and Wang, Xinggang},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  pages     = {1--21}, year = {2022}, note = {arXiv:2110.06864}
+}
+
+% ------------------------- Pedestrian--vehicle interaction & external HMI (MTI scope) -------------------------
+@article{riener2019guest,
+  title   = {Guest Editors' Introduction: Multimodal Technologies and Interaction in the Era of Automated Driving},
+  author  = {Riener, Andreas and Jeon, Myounghoon},
+  journal = {Multimodal Technologies and Interaction},
+  volume  = {3}, number = {2}, pages = {41}, year = {2019},
+  doi     = {10.3390/mti3020041}
+}
+
+@article{alhawiti2024ehmi,
+  title   = {The Effectiveness of {eHMI} Displays on Pedestrian--Autonomous Vehicle Interaction in Mixed-Traffic Environments},
+  author  = {Alhawiti, Ahmed and Kwigizile, Valerian and Oh, Jun-Seok and Asher, Zachary D. and Hakimi, Osama and Aljohani, Sarah and Ayantayo, Samuel},
+  journal = {Sensors},
+  volume  = {24}, number = {15}, pages = {5018}, year = {2024},
+  doi     = {10.3390/s24155018}
+}
+
+@article{rouchitsas2019ehmi,
+  title   = {External Human--Machine Interfaces for Autonomous Vehicle-to-Pedestrian Communication: A Review of Empirical Work},
+  author  = {Rouchitsas, Alexandros and Alm, H{\aa}kan},
+  journal = {Frontiers in Psychology},
+  volume  = {10}, pages = {2757}, year = {2019},
+  doi     = {10.3389/fpsyg.2019.02757}
+}
+
+@article{rezwana2024interactions,
+  title   = {Interactions and Behaviors of Pedestrians with Autonomous Vehicles: A Synthesis},
+  author  = {Rezwana, Shama and Lownes, Nicholas},
+  journal = {Future Transportation},
+  volume  = {4}, number = {3}, pages = {722--745}, year = {2024},
+  doi     = {10.3390/futuretransp4030034}
+}
+
+% ------------------------- Methodological / feature-importance -------------------------
+@article{azarmi2024featureimportance,
+  title   = {Feature Importance in Pedestrian Intention Prediction: A Context-Aware Review},
+  author  = {Azarmi, Mohsen and Rezaei, Mahdi and Wang, He and Arabian, Ali},
+  journal = {arXiv preprint arXiv:2409.07645},
+  year    = {2024}
+}
+
+% ------------------------- Cross-dataset validation (future work) -------------------------
+@inproceedings{caesar2020nuscenes,
+  title     = {{nuScenes}: A Multimodal Dataset for Autonomous Driving},
+  author    = {Caesar, Holger and Bankiti, Varun and Lang, Alex H. and Vora, Sourabh and Liong, Venice Erin and Xu, Qiang and Krishnan, Anush and Pan, Yu and Baldan, Giancarlo and Beijbom, Oscar},
+  booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {11621--11631}, year = {2020}, note = {arXiv:1903.11027}
+}
+
+@inproceedings{rasouli2020pepscenes,
+  title     = {{PePScenes}: A Novel Dataset and Baseline for Pedestrian Action Prediction in 3D},
+  author    = {Rasouli, Amir and Yau, Tiffany and Lakner, Peter and Malekmohammadi, Saber and Rohani, Mohsen and Luo, Jun},
+  booktitle = {Machine Learning for Autonomous Driving Workshop, NeurIPS},
+  year      = {2020}, note = {arXiv:2012.07773}
+}
