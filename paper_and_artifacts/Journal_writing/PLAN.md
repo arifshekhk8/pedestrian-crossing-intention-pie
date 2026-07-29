@@ -1,5 +1,82 @@
 # Journal Paper — Writing Plan (MDPI MTI)
 
+> **✅ STATUS 2026-07-26 — the manuscript is complete and submission-ready apart from
+> front matter. Read this block first.**
+>
+> **Where it lives:** `MDPI_Article_Template/` — `main.tex`, `references.bib`
+> (59 cited refs, every one verified first-hand, **zero `% VERIFY` flags left**),
+> `figures/` (9 figures + their generator scripts), and the compiled `main.pdf`
+> (25 pages). Build with **`tectonic main.tex`** from that folder. Overleaf/pdfLaTeX
+> works too and needs no local fixes; the EPS→PDF logo conversion in `Definitions/`
+> is only there so tectonic can render them.
+>
+> **Written this session (2026-07-26):** Materials and Methods, Results, Discussion,
+> Conclusions, and the Abstract, all to full depth, plus every figure. Earlier
+> sessions produced the Introduction (with the verified road-safety statistics, see
+> `../STATISTICS_SOURCES.md`) and the Related Work.
+>
+> **Figures — all reproducible, none hand-drawn.** Generators live in
+> `MDPI_Article_Template/figures/`; run `python make_figN_*.py` from anywhere.
+> `figstyle.py` holds the shared palette (validated for colour-vision deficiency and
+> ≥3:1 contrast) so the eight figures read as one document.
+>
+> | Fig | Script | What it shows | Data source |
+> |---|---|---|---|
+> | 1 | `make_intro_figure.py` | pedestrian share of road deaths (WHO) + US trend (NHTSA) | `../STATISTICS_SOURCES.md` |
+> | 2 | `make_fig2_system.py` | the two-stream model + the live pipeline | schematic |
+> | 3 | `make_fig3_protocol.py` | track-end vs crossing-point anchoring | schematic; real rates |
+> | 4 | `make_fig4_leakage.py` | the leakage audit, before/after | **computed live** from both `leakage_per_sequence.csv` |
+> | 5 | `make_fig5_curves.py` | ROC + PR, four families + bbox-only | **computed live** from `_probs.npz` (`prep_probs.py`) |
+> | 6 | `make_fig6_forest.py` | ΔF1 / ΔAUC forest with cluster CIs | the three `*_cluster_bootstrap.json` |
+> | 7 | `make_fig7_ablations.py` | ego-speed, horizon, window length | **computed live** from `06b_matched_tte_results.csv` + OW tables |
+> | 8 | `make_fig8_latency.py` | per-family latency + pipeline budget | `latency_comparison.csv`, Issue 9 |
+>
+> Run `prep_probs.py` once before Figure 5 to build the cached probability vectors.
+>
+> **Every number in the paper was re-checked against its source file** on 2026-07-26:
+> split counts (2,178/634/2,094 and 616/186/587) recomputed from the `.npy` files,
+> leakage rates and rank-biserial effects recomputed from the audit CSVs, all
+> bootstrap intervals read from the stored JSON, and the metric table cross-checked
+> against `journal_prep/Analysis/model_comparison.csv`. No discrepancies remain.
+>
+> **Decisions still standing from 2026-07-21** (reasoning in `relatedwork.md` §7):
+> - **Venue: MDPI MTI, locked.** Fits both pillars: minimal *multimodal* fusion
+>   (pedestrian visual bbox + ego-vehicle OBD telemetry) and *interaction*
+>   (pedestrian↔AV anticipation).
+> - **Metric hierarchy: F1 → accuracy → AUC** (locked). Every table and claim leads with F1.
+> - **Reframed novelty (mandatory pivot):** the headline is NOT "2 streams is enough"
+>   (PedCMT/GTransPDM-w/o-pose/Achaji got there first — we **concede that up front**).
+>   Our novelty = **(1) the temporal-leakage audit + leak-free protocol, (2) full
+>   statistical rigor, (3) the four-family "input, not architecture, decides"
+>   isolation.** Parsimony is corroboration + explanation, not the claim.
+> - **Title (option B, chosen):** *"Two Streams, Four Architectures: A Leakage-Free,
+>   Statistically Rigorous Benchmark for Real-Time Pedestrian Crossing-Intention
+>   Prediction on PIE."*
+> - **Scope:** full draft on the PIE results; **cross-dataset generalization is
+>   ongoing/future work**, stated as such in §5.5 (running in a separate session —
+>   JAAD primary, nuScenes stretch; PePScenes dead, PSI paused; see
+>   `../../journal_prep/cross_dataset_validation/PLAN.md`).
+> - **Framing:** BiLSTM = headline model; Transformer/GRU/vanilla-RNN = a controlled
+>   "does the architecture matter?" isolation study.
+>
+> **✅ RESOLVED 2026-07-28 — the qualitative figure now exists (Figure 9).** Section 4.11
+> shows the full detection-to-prediction pipeline on two PIE test scenes: one pedestrian
+> correctly flagged 2.0 s before stepping into the road, one worker at a kerb correctly
+> left alone. Faces blurred. Video S1 (26 s, 3.3 MB) is cut and declared. Everything is
+> driven by the clean-protocol BiLSTM-F1 ensemble, gated by a parity check that
+> reproduces Table 3 exactly. Full record in **`QUALITATIVE_FIGURE_PLAN.md`**.
+>
+> **Remaining before submission — one blocking item and three optional:**
+> 1. **BLOCKING: front matter.** Authors, affiliations, ORCID, corresponding e-mail,
+>    Author Contributions initials, and the data-availability repository URL are all
+>    still `PLACEHOLDER`. Nothing else blocks submission.
+> 2. Optional: a supervisor read for scientific framing.
+> 3. Optional: MTI's cover-letter and graphical-abstract requirements.
+> 4. Optional: fold in the cross-dataset results if that session finishes in time
+>    (§5.5 and the Conclusions are already written to accommodate them).
+>
+> The roadmap below (from 2026-07-13) is still a valid section-by-section reference.
+
 > **⚠ UPDATE 2026-07-13 — read this before using the roadmap below.** Two things
 > changed after this plan was first written and the roadmap must be read through them:
 > 1. **Metric hierarchy is now F1 → accuracy → AUC** (supervisor directive). Every

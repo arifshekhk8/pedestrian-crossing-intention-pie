@@ -1,8 +1,35 @@
 # Journal_writing/ — how to write the MTI paper
 
+> **✅ UPDATE 2026-07-26 — the manuscript is finished apart from front matter.**
+> All seven sections (Abstract, Introduction, Related Work, Materials and Methods,
+> Results, Discussion, Conclusions), nine figures, and four tables are written into
+> **`MDPI_Article_Template/main.tex`** using the official MDPI class
+> (`Definitions/mdpi.cls`, journal `mti`, numeric BibTeX). The compiled `main.pdf`
+> runs to 24 pages with 59 references and no unresolved citations.
+>
+> **Build it:** from inside `MDPI_Article_Template/`, run **`tectonic main.tex`**.
+> (Two one-time local fixes let tectonic render the MDPI logos: ghostscript was
+> reinstalled and `logo-mdpi.eps`/`logo-updates.eps` were pre-converted to PDF, with
+> the class patched to point at the PDFs; a backup sits at `Definitions/mdpi.cls.orig`.
+> On Overleaf or plain pdfLaTeX none of this is needed — use the pristine class.)
+>
+> **Regenerate the figures:** every figure is produced by a script in
+> `MDPI_Article_Template/figures/`. Run `python prep_probs.py` once, then any
+> `make_figN_*.py`. Four of the eight read their numbers straight out of the result
+> files, so they cannot drift from what the paper claims. `figstyle.py` carries the
+> shared palette and chrome.
+>
+> **What is left:** only the front matter — authors, affiliations, ORCID,
+> corresponding e-mail, Author Contributions initials, and the repository URL in the
+> Data Availability statement, all currently marked `PLACEHOLDER`. See `PLAN.md` for
+> the full status block, `relatedwork.md` §7 for the framing and the honest
+> defensibility analysis, `ProjectDescription.md` for the whole-project reference,
+> and `STATISTICS_SOURCES.md` for every road-safety figure quoted in the Introduction.
+
 This folder is the workspace for drafting the journal paper. The **actual LaTeX
-compiling happens on Overleaf**; this folder holds the plan, the section scaffold,
-the bibliography, and the bridge to our results in `../journal_prep/`.
+compiling happens on Overleaf** (and now also locally via tectonic); this folder holds the
+plan, the reframed related-work analysis, the whole-project reference, and---in
+`MDPI_Article_Template/`---the paper itself.
 
 ```
 Journal_writing/
