@@ -136,6 +136,30 @@ End-to-end demo: raw video → YOLO26-M → ByteTrack → per-track 16-frame buf
 - Verified run: set03/video_0016 frames 1916-2815 on M4 MPS, ~50s/900 frames.
   Output: pipeline/demo_out/demo_video_0016.mp4 + sample PNGs + predictions.csv.
 
+## 12_supervisor_demo.py — DONE (2026-07-29)
+Presentation demo. Same model, front end and threshold as 11_ (imports them, so the
+two cannot drift); the difference is entirely in the presentation and in what it
+measures.
+- Overlay: per-pedestrian verdict ("WILL CROSS 0.78" / "not crossing" / "buffering
+  n/16"), a probability bar with a tick at tau, header (model, threshold, frame, ego
+  speed, live throughput) and a legend. Colliding labels are nudged apart and joined
+  to their box by a leader line.
+- `--scene {anticipation,bystander,driving,busy,uncertainty}`: presets picked from the
+  ranked candidate table. `uncertainty` is included on purpose so the reel is not all
+  successes.
+- `--live` plays in a window while computing (space pauses, q quits); `--write-video`
+  writes H.264 via an ffmpeg transcode, because OpenCV can only emit mp4v and mp4v
+  will not play in Keynote, PowerPoint or a browser.
+- Timing is split into the system (detector + tracker, intention ensemble) and demo
+  scaffolding (privacy blur, overlay, encode), which are excluded from the headline
+  FPS. Measured on the M4 Air at 1920x1080: detector ~38 ms/frame, ensemble ~2 ms per
+  window (~0.4 ms per single model), together ~22 FPS = 0.7x real time, detector 80-90%
+  of it. Detection-bound, matching Section 4.9.
+- Ego speed is flagged `(held)` on frames PIE does not annotate, so a carried-forward
+  value is never read as a measurement.
+- Instructions: pipeline/HOW_TO_RUN_THE_DEMO.md. Outputs to pipeline/demo_videos/
+  (gitignored) with a .json of provenance beside each mp4.
+
 ## PIE_clips/set03/video_0016.mp4, video_0012.mp4 — DOWNLOADED (Phase 4)
 Two raw demo clips (each ~1.5GB, 1920x1080, 30fps, 18000 frames). Fetched from
 the York server via 24-way parallel segmented download (server throttles single
