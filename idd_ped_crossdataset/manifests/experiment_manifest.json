@@ -1,0 +1,236 @@
+{
+  "experiment": "IDD-PeD cross-dataset validation",
+  "generated_utc": "2026-08-25T05:44:40+00:00",
+  "git": {
+    "repo_commit": "bf210a2184d1a09526d3df2a4053268c67d617e8",
+    "working_tree_dirty": true
+  },
+  "dataset": {
+    "name": "IDD-PeD",
+    "venue": "ICRA 2025",
+    "licence": "CC BY 4.0",
+    "source_host": "https://cvit.iiit.ac.in/images/datasets/IDDPed/Annotations/",
+    "files": {
+      "annotations.tar": {
+        "bytes": 478209024,
+        "sha256": "bf4bea904753b1e3b26a1543bc9e37e757e3a088eb6c92a9e9cc384672e01a35"
+      },
+      "annotations_vehicle.tar": {
+        "bytes": 58593280,
+        "sha256": "f5b018bf52162b61317246ff7bb0e21ac5a5a7a3c53bc8571a7db7438c30434a"
+      }
+    },
+    "videos_downloaded": false,
+    "parser": "idd_ped_crossdataset/src/iddped_parser.py (re-implementation of the authors' Intention/iddped_interface.py)",
+    "tracks_parsed": 4916,
+    "authors_reported_tracks": 4916
+  },
+  "protocol": {
+    "strict": {
+      "anchor": "strict",
+      "obs_len": 16,
+      "tte_min": 30,
+      "tte_max": 60,
+      "overlap": 0.5,
+      "feature_order": [
+        "x1",
+        "y1",
+        "x2",
+        "y2",
+        "ego_speed"
+      ],
+      "coordinate_space": "raw pixels, per-video resolution (see meta.width/height)",
+      "train_sets": [
+        "gp_set_0001",
+        "gp_set_0004",
+        "gp_set_0007"
+      ],
+      "val_sets": [
+        "gp_set_0002",
+        "gp_set_0006"
+      ],
+      "test_sets": [
+        "gp_set_0003",
+        "gp_set_0005",
+        "gp_set_0008",
+        "gp_set_0009"
+      ],
+      "splits": {
+        "train": {
+          "windows": 3944,
+          "pos": 138,
+          "neg": 3806,
+          "pos_rate": 0.035,
+          "pedestrians": 1250
+        },
+        "val": {
+          "windows": 1017,
+          "pos": 46,
+          "neg": 971,
+          "pos_rate": 0.0452,
+          "pedestrians": 329
+        },
+        "test": {
+          "windows": 2357,
+          "pos": 168,
+          "neg": 2189,
+          "pos_rate": 0.0713,
+          "pedestrians": 757
+        }
+      },
+      "pos_weight": 27.5797,
+      "exclusions": {
+        "track_too_short": 2325,
+        "crossing_point_not_in_track": 85,
+        "no_POI_attributes": 170
+      }
+    },
+    "cp_anchor": {
+      "anchor": "crossing_point",
+      "obs_len": 16,
+      "tte_min": 30,
+      "tte_max": 60,
+      "overlap": 0.5,
+      "feature_order": [
+        "x1",
+        "y1",
+        "x2",
+        "y2",
+        "ego_speed"
+      ],
+      "coordinate_space": "raw pixels, per-video resolution (see meta.width/height)",
+      "train_sets": [
+        "gp_set_0001",
+        "gp_set_0004",
+        "gp_set_0007"
+      ],
+      "val_sets": [
+        "gp_set_0002",
+        "gp_set_0006"
+      ],
+      "test_sets": [
+        "gp_set_0003",
+        "gp_set_0005",
+        "gp_set_0008",
+        "gp_set_0009"
+      ],
+      "splits": {
+        "train": {
+          "windows": 4189,
+          "pos": 224,
+          "neg": 3965,
+          "pos_rate": 0.0535,
+          "pedestrians": 1313
+        },
+        "val": {
+          "windows": 1147,
+          "pos": 102,
+          "neg": 1045,
+          "pos_rate": 0.0889,
+          "pedestrians": 366
+        },
+        "test": {
+          "windows": 2583,
+          "pos": 211,
+          "neg": 2372,
+          "pos_rate": 0.0817,
+          "pedestrians": 817
+        }
+      },
+      "pos_weight": 17.7009,
+      "exclusions": {
+        "track_too_short": 2163,
+        "crossing_point_not_in_track": 87,
+        "no_POI_attributes": 170
+      }
+    }
+  },
+  "models": {
+    "families": [
+      "BiLSTM-F1",
+      "Transformer-F1",
+      "GRU-F1",
+      "Vanilla_RNN-F1"
+    ],
+    "configs": {
+      "BiLSTM-F1": {
+        "lr": 0.001,
+        "dropout": 0.3,
+        "hidden": 256,
+        "num_layers": 2
+      },
+      "Transformer-F1": {
+        "d_model": 128,
+        "nhead": 4,
+        "num_layers": 4,
+        "dim_ff": 512,
+        "dropout": 0.1,
+        "pool": "last",
+        "pos": "sin",
+        "lr": 0.001,
+        "schedule": "plateau",
+        "weight_decay": 1e-05,
+        "optimizer": "adam"
+      },
+      "GRU-F1": {
+        "lr": 0.0005,
+        "dropout": 0.3,
+        "hidden": 256,
+        "num_layers": 2
+      },
+      "Vanilla_RNN-F1": {
+        "lr": 0.0001,
+        "dropout": 0.2,
+        "hidden": 256,
+        "num_layers": 2
+      }
+    },
+    "n_params": {
+      "BiLSTM-F1": 2237313,
+      "Transformer-F1": 794241,
+      "GRU-F1": 1678209,
+      "Vanilla_RNN-F1": 560001
+    },
+    "seeds": [
+      42,
+      0,
+      1,
+      2,
+      3
+    ],
+    "pie_checkpoints_used": {
+      "BiLSTM-F1": "f1_optimization/runs_f1/lstm_lr1e-03_do0.3_h256_nl2/pw1.682/seed{seed}",
+      "Transformer-F1": "f1_optimization/runs_f1/transformer_searched/pw1.682/seed{seed}",
+      "GRU-F1": "gru/phase4_final/runs_final/gru_f1_winner/seed{seed}",
+      "Vanilla_RNN-F1": "rnn/phase4_final/runs_final/rnn_f1_winner/seed{seed}"
+    }
+  },
+  "environment": {
+    "hardware": "Apple M4, 10 cores (4P+6E), 16 GB RAM",
+    "platform": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5",
+    "torch": "2.12.0",
+    "numpy": "2.4.6",
+    "sklearn": "1.9.0",
+    "scipy": "1.17.1",
+    "device_used": "cpu (bit-reproducible for recurrent families; Issue-12 finding)",
+    "mps_available": true,
+    "cuda_available": false
+  },
+  "statistics": {
+    "seeds": 5,
+    "bootstrap_B": 10000,
+    "bootstrap_rng_seed": 42,
+    "bootstrap_unit": "pedestrian track (cluster bootstrap)"
+  },
+  "parity_gate": {
+    "frozen_bilstm_pie_test_auc_max_delta": 0.0,
+    "passed": true
+  },
+  "outputs": {
+    "zero_shot": "results/expA_zero_shot.json",
+    "independent": "results/expB_independent.json",
+    "tables": "results/TABLES.md",
+    "checkpoints": "checkpoints/<protocol>/<variant>/<model>/seed<N>/"
+  }
+}

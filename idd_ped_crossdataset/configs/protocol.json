@@ -1,0 +1,59 @@
+{
+  "anchor": "strict",
+  "obs_len": 16,
+  "tte_min": 30,
+  "tte_max": 60,
+  "overlap": 0.5,
+  "feature_order": [
+    "x1",
+    "y1",
+    "x2",
+    "y2",
+    "ego_speed"
+  ],
+  "coordinate_space": "raw pixels, per-video resolution (see meta.width/height)",
+  "train_sets": [
+    "gp_set_0001",
+    "gp_set_0004",
+    "gp_set_0007"
+  ],
+  "val_sets": [
+    "gp_set_0002",
+    "gp_set_0006"
+  ],
+  "test_sets": [
+    "gp_set_0003",
+    "gp_set_0005",
+    "gp_set_0008",
+    "gp_set_0009"
+  ],
+  "splits": {
+    "train": {
+      "windows": 3944,
+      "pos": 138,
+      "neg": 3806,
+      "pos_rate": 0.035,
+      "pedestrians": 1250
+    },
+    "val": {
+      "windows": 1017,
+      "pos": 46,
+      "neg": 971,
+      "pos_rate": 0.0452,
+      "pedestrians": 329
+    },
+    "test": {
+      "windows": 2357,
+      "pos": 168,
+      "neg": 2189,
+      "pos_rate": 0.0713,
+      "pedestrians": 757
+    }
+  },
+  "pos_weight": 27.5797,
+  "exclusions": {
+    "track_too_short": 2325,
+    "crossing_point_not_in_track": 85,
+    "no_POI_attributes": 170
+  }
+}

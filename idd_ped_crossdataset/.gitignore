@@ -1,0 +1,16 @@
+# Downloaded / derived data — regenerate with scripts/00 and 01-03
+data/raw/
+data/iddped/
+data/iddped_database.pkl
+data/sequences_iddped_clean/
+data/sequences_iddped_clean_cp_anchor/
+
+# Trained checkpoints (Experiment B) — regenerate with scripts/06
+checkpoints/
+
+# Cached probability vectors
+results/expA_probs/
+results/expB_probs/
+
+# Logs
+logs/*.log
