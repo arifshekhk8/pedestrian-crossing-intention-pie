@@ -36,6 +36,17 @@ issue 10's YOLO row relabeled "oracle-matched"; determinism claims scoped
 
 ## Folder map
 
+> Beyond the numbered `issue*/` folders below, three later folders sit in `journal_prep/`:
+> **`Analysis/`** — every model from all four families in one table, plus latency and
+> hyperparameter tables. Start here if you want the results.
+> **`obs_window_extension/`** — the four F1-optimised models re-run at 32- and 64-frame
+> observation windows, plus the PSI cross-test. Shows the family equivalence is
+> horizon-bounded.
+> **`cross_dataset_validation/`** — the JAAD replication of the protocol and the
+> architecture comparison. (The IDD-PeD study, which can also test the ego-speed claim,
+> lives in top-level `idd_ped_crossdataset/`.)
+
+
 ```
 journal_prep/
 ├── PLAN.md                       master plan + per-issue DONE blocks (read first)

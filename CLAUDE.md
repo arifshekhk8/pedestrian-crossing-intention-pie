@@ -49,6 +49,25 @@ vanilla RNN); it is also the smallest and fastest of the four families (0.316 ms
 All robust to the pedestrian-cluster bootstrap; caveat: horizon-specific (an un-gated RNN
 would likely fall behind over long sequences).
 
+That caveat was then measured rather than assumed. The **observation-window extension**
+(`journal_prep/obs_window_extension/`, 2026-07-19) re-ran the F1-optimised model of each
+family at 32- and 64-frame windows: F1 declines with window length for every family, the
+four still tie at 16 and 32, and at OW64 the un-gated RNN alone falls behind (F1 −0.050,
+about twice the gated cells) — so the equivalence is **horizon-bounded, and now shown to
+be**. Two **cross-dataset** tracks followed. `journal_prep/cross_dataset_validation/`
+replicates the protocol and the four-family comparison on JAAD, which can test the
+leakage and architecture claims but **not** the input claim, because JAAD carries no
+ego-vehicle speed. `idd_ped_crossdataset/` (an isolated folder that writes nothing
+outside itself) uses IDD-PeD, which does carry per-frame OBD speed in PIE's units, for
+the first out-of-domain test of the actual 5-D input contract — zero-shot transfer of the
+frozen PIE checkpoints, plus an independent from-scratch replication.
+
+Every model from all four families sits in one place:
+`journal_prep/Analysis/model_comparison.md`, with companion latency and hyperparameter
+tables. **Read that before re-deriving any number.** The manuscript is at
+`paper_and_artifacts/Journal_writing/submission/` (`main.tex`, `references.bib`,
+figures, and an `evidence/` folder recording the source behind every external claim).
+
 Authoritative project state lives in three hand-maintained docs (in `pipeline/`) —
 **read these first**, they are kept current with real numbers:
 - `pipeline/THESIS_PLAN.md` — locked architecture, dataset splits, day-by-day plan.
@@ -61,7 +80,7 @@ outputs, don't hand-edit.
 
 ## Repository layout (after the GitHub reorg)
 
-Seven top-level folders. **Run scripts from the repo root** so relative paths resolve.
+Eight top-level folders. **Run scripts from the repo root** so relative paths resolve.
 - `pipeline/` — all numbered scripts, the three project docs, the multi-seed
   result tables, and the live-demo outputs (`pipeline/demo_out/`). ⚠ the trainer
   `04_train_bilstm.py` keeps LEGACY leaky-era defaults (`sequences/`, pos_weight
@@ -69,8 +88,13 @@ Seven top-level folders. **Run scripts from the repo root** so relative paths re
   engine (below).
 - `journal_prep/` — the 12-issue journal-readiness program (one folder per issue);
   `issue12_unified_pipeline/` holds THE unified model-agnostic training engine.
-- `paper_and_artifacts/` — `Journal_writing/` (manuscript), `runs/` (trained
-  checkpoints + norm stats), and `supervisor_review/` (presentation pack).
+  Three later folders sit alongside the issues: `Analysis/` (every model from all four
+  families in one table — start here), `obs_window_extension/` (OW32/64 + the PSI
+  cross-test), and `cross_dataset_validation/` (the JAAD replication).
+- `paper_and_artifacts/` — `Journal_writing/` (manuscript workspace: MDPI template,
+  figure generators, drawio sources, and `submission/` = the MDPI MTI submission package
+  with its `evidence/` folder), `runs/` (trained checkpoints + norm stats), and
+  `supervisor_review/` (presentation pack).
 - `transformer/` — the Transformer-vs-BiLSTM extension, one subfolder per phase
   (`phase1_setup/` … `phase5_analysis/`); see `transformer/README.md`.
 - `f1_optimization/` — the F1-first optimization program (metric hierarchy
@@ -82,9 +106,15 @@ Seven top-level folders. **Run scripts from the repo root** so relative paths re
   bidirectional tanh RNN), one subfolder per phase (`phase1_setup/` … `phase5_analysis/`);
   the un-gated RNN ties the LSTM/GRU on F1 and ties the searched transformer on AUC — gating
   buys nothing over 16 steps — and is the smallest/fastest family; see `rnn/README.md`.
+- `idd_ped_crossdataset/` — the IDD-PeD cross-dataset study (unstructured Indian traffic).
+  Self-contained: it `importlib`-loads project code read-only and monkey-patches in memory
+  only, writing nothing outside its own folder. See `idd_ped_crossdataset/README.md`.
 
-Gitignored data lives at the repo root and is NOT tracked: `PIE/`, `PIE_clips/`,
-`PIEPredict/`, `sequences/`, `pie_annotations.pkl`, `yolo26m.pt`, `.venv/`, `venv/`.
+Gitignored data is NOT tracked: `PIE/`, `PIE_clips/`, `PIEPredict/`, `sequences/`,
+`pie_annotations.pkl`, `yolo26m.pt`, `.venv/`, `venv/`, plus the two vendored datasets
+(`journal_prep/cross_dataset_validation/JAAD/`, `idd_ped_crossdataset/data/`), the IDD
+checkpoints, the Overleaf export zips, and the LaTeX build products of `submission/`
+(`main.pdf` is tracked). Checkpoints elsewhere (`runs_*/`, 190+ `.pt`) ARE tracked.
 
 ## Pipeline (scripts run in numeric order)
 
