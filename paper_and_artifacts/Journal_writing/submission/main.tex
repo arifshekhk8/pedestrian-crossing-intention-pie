@@ -129,11 +129,11 @@ Four gaps organise what follows. Temporal leakage in the observation window is n
 
 \subsection{Overview}
 
-Every model reported here sees the same data, the same splits, the same loss, the same optimiser and the same stopping rule, and is scored by the same evaluation code. Only the temporal encoder changes across families, and in each ablation only the ablated factor changes. All training runs through one model-agnostic engine, so a difference between two rows of our results tables is architectural, not an artefact of implementation or hardware. Figure~\ref{fig:system}a shows the model; Figure~\ref{fig:system}b shows the perception pipeline it runs inside.
+Every model reported here sees the same data, the same splits, the same loss, the same optimiser and the same stopping rule, and is scored by the same evaluation code. Only the temporal encoder changes across families, and in each ablation only the ablated factor changes. All training runs through one model-agnostic engine, so a difference between two rows of our results tables is architectural, not an artefact of implementation or hardware. Figure~\ref{fig:system} shows how a window is built and then encoded; Figure~\ref{fig:pipeline} shows the perception pipeline the same predictor runs inside.
 
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{figures/fig2_system.pdf}
-\caption{The two-stream crossing-intention model and the pipeline it runs inside. (\textbf{a}) A sixteen-frame window of pedestrian bounding-box coordinates and ego-vehicle speed is projected, passed through a temporal encoder, and read out to a single crossing probability; only the dashed encoder block differs across the four model families compared in this paper. (\textbf{b}) In deployment the same model runs behind a YOLO26-M detector and a ByteTrack tracker, annotated here with each stage's measured share of the per-frame cost on an Apple M4.\label{fig:system}}
+\caption{The window ends before the crossing event, so the two-stream model never observes what it predicts; only the dashed encoder changes across the four families. Faces were irreversibly blurred.\label{fig:system}}
 \end{figure}
 
 \subsection{The PIE Dataset and Splits}
@@ -208,7 +208,13 @@ Two properties of the test set govern the statistics. Its 2,094 windows come fro
 
 \subsection{Live Perception-to-Prediction Pipeline}
 
-To measure the model where its inputs are estimated rather than annotated, we run it behind a detector and a tracker. Frames go to a YOLO26-M person detector (Ultralytics YOLO, \url{https://github.com/ultralytics/ultralytics}), detections to ByteTrack~\citep{zhang2022bytetrack} for identity association, and each track keeps a rolling 16-frame buffer of box coordinates and ego speed, standardised with the training statistics. The reader preserves absolute PIE frame numbers so the speed lookup stays aligned with the video. Per frame the detector costs 33.7 ms, association about 1.0 ms and the intention model 1.647 ms, giving 36.4 ms and 27.5 frames per second; the prediction model is 4.5\% of that budget. Section~\ref{sec:results} reports what happens to the predictions when the boxes come from the detector instead of the annotations.
+To measure the model where its inputs are estimated rather than annotated, we run it behind a detector and a tracker, as shown in Figure~\ref{fig:pipeline}. Frames go to a YOLO26-M person detector (Ultralytics YOLO, \url{https://github.com/ultralytics/ultralytics}), detections to ByteTrack~\citep{zhang2022bytetrack} for identity association, and each track keeps a rolling 16-frame buffer of box coordinates and ego speed, standardised with the training statistics. The reader preserves absolute PIE frame numbers so the speed lookup stays aligned with the video. Per frame the detector costs 33.7 ms, association about 1.0 ms and the intention model 1.647 ms, giving 36.4 ms and 27.5 frames per second; the prediction model is 4.5\% of that budget. Section~\ref{sec:results} reports what happens to the predictions when the boxes come from the detector instead of the annotations.
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{figures/fig2b_pipeline.pdf}
+\caption{The model of Figure~\ref{fig:system} behind a YOLO26-M detector and a ByteTrack tracker, used only for the latency and perception experiments. Benchmark comparisons use annotated boxes.\label{fig:pipeline}}
+\end{figure}
+
 
 \section{Experimental Settings}
 \label{sec:settings}
@@ -370,11 +376,15 @@ Two limits on that number. It is a lower bound on deployed degradation, because 
 
 \subsection{Qualitative Behaviour}
 
-Figure~\ref{fig:qualitative} shows the pipeline running on two test clips with boxes from the detector and tracker, using the five-seed LSTM ensemble at its validation-tuned threshold of 0.516. In the first panel a pedestrian is flagged at $p = 0.71$ about 1.5 s before stepping off the kerb; in the second a worker standing at a kerb beside a crosswalk is correctly left at $p = 0.31$. Both panels were selected to illustrate behaviour, not to sample it, so the quantitative failure rates in the preceding subsections are the representative numbers. Across all 439 windows in these two clips the ensemble gives 134 true positives, 16 false positives, 19 false negatives and 270 true negatives, an accuracy of 0.920 and F1 of 0.884. Faces were irreversibly blurred before publication.
+The system scores every tracked pedestrian in a scene, not one at a time. Figure~\ref{fig:qualitative} shows six test frames from the deployed path, with boxes from YOLO26-M and ByteTrack rather than from the annotations. Every person whose track holds a full sixteen-frame buffer carries a crossing probability from the five-seed LSTM ensemble at its validation-tuned threshold of 0.516. Twenty-eight pedestrians are scored across the six frames, nine of them in the single frame of panel (\textbf{a}). Verdicts differ inside a frame: panel (\textbf{e}) clears a worker standing at a kerb at $p = 0.42$ while flagging a pedestrian beside them at $p = 0.75$.
+
+Only some of those boxes can be scored. The model predicts for any tracked person, including people PIE never annotated; ground truth exists only where an annotated pedestrian has a leakage-free window anchored within one second of the frame shown. Seven of the twenty-eight boxes meet that condition, and six of the seven are correct. The four verified crossers are flagged 1.3 s, 1.4 s, 1.7 s and 2.2 s before their annotated crossing point. That is the leakage-free protocol made visible: the model commits while the pedestrian is still on the footway.
+
+The seventh is the failure, and it is in the figure deliberately. Panel (\textbf{f}) is a group waiting at a kerb, and the ensemble flags all four. Over the 16 windows belonging to the four annotated non-crossers there it returns 14 false positives, scoring 0.49 to 0.63 against a threshold of 0.516. The model is uncertain rather than confidently wrong, and it errs towards flagging a pedestrian who then waits. These six frames illustrate behaviour; they do not sample it. The rates in the preceding subsections are the representative numbers. Across all 439 windows in these two clips the ensemble gives 134 true positives, 16 false positives, 19 false negatives and 270 true negatives. That is an accuracy of 0.920 and F1 of 0.884, slightly above the 0.905 and 0.856 the same ensemble reaches on the full test set. Two clips are the whole sample: panels (\textbf{a}), (\textbf{b}) and (\textbf{f}) come from one intersection approach in video 0016 at different times. Faces were irreversibly blurred before publication.
 
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{figures/fig9_qualitative.pdf}
-\caption{The detection-to-prediction pipeline on two PIE test scenes, with bounding boxes produced by YOLO26-M and ByteTrack rather than taken from the annotations, and crossing probabilities from the five-seed LSTM ensemble at its validation-tuned threshold of 0.516. (\textbf{a}) A pedestrian flagged at $p = 0.71$ approximately 1.5 s before stepping into the road. (\textbf{b}) A worker standing at a kerb beside a crosswalk, correctly not flagged at $p = 0.31$. Faces were irreversibly blurred before publication.\label{fig:qualitative}}
+\caption{The detection-to-prediction pipeline on six PIE test scenes, with bounding boxes produced by YOLO26-M and ByteTrack rather than taken from the annotations. Every pedestrian whose track holds a full sixteen-frame buffer is scored by the five-seed LSTM ensemble at its validation-tuned threshold $\tau^* = 0.516$: blue marks a predicted crossing and grey a predicted non-crossing, with the probability beside each box. A check or a cross records agreement with the dataset's own label, and is shown only for the seven boxes where an annotated pedestrian has a leakage-free window anchored within one second of the frame; the remaining boxes are model output that ground truth cannot score here. (\textbf{a}) Nine simultaneous calls, the vehicle stopped. (\textbf{b}) A crosser flagged 2.2 s before stepping into the road. (\textbf{c}) Two crossers flagged 1.3 s and 1.7 s ahead. (\textbf{d}) People moving along the road rather than into it, all cleared at 22 km/h. (\textbf{e}) Two verdicts in one frame. (\textbf{f}) A failure: four people waiting at a kerb are all flagged, and the one the dataset labels does not cross. Only two PIE clips were available locally, both from the test split, so (\textbf{a}), (\textbf{b}) and (\textbf{f}) come from the same intersection approach at different times. Faces were irreversibly blurred before publication.\label{fig:qualitative}}
 \end{figure}
 
 \section{Discussion}
@@ -409,7 +419,7 @@ Three directions follow. The audit and the model should both be replicated on a 
 
 \funding{PLACEHOLDER: this research received no external funding.}
 
-\institutionalreview{Not applicable. This study is a secondary analysis of the publicly available PIE dataset and involved no new experiments on humans or animals. Every face in the video frames reproduced in Figure~\ref{fig:qualitative} and in Video S1 was irreversibly blurred before publication.}
+\institutionalreview{Not applicable. This study is a secondary analysis of the publicly available PIE dataset and involved no new experiments on humans or animals. Every face in the video frames reproduced in Figures~\ref{fig:scenario},~\ref{fig:system} and~\ref{fig:qualitative} and in Video S1 was irreversibly blurred before publication.}
 
 \informedconsent{Not applicable.}
 

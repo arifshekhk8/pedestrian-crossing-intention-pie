@@ -117,7 +117,7 @@ The study has a deliberately narrow design. One dataset, one windowing protocol,
 
 \begin{figure}[H]
 \includegraphics[width=\textwidth]{figures_drawio/fig2_system.pdf}
-\caption{The model and the pipeline it runs inside. (\textbf{a}) The two-stream crossing-intention model. A 16-frame window of bounding-box corners and ego-vehicle speed is standardized, projected, encoded by one of four temporal architectures, and read out through a linear head. Only the dashed block changes across the four families. (\textbf{b}) The live perception-to-prediction pipeline used for the latency and detector-in-the-loop experiments, annotated with each stage's measured share of per-frame cost. The benchmark results in Section~\ref{sec:results} use annotated boxes, as is standard on PIE.\label{fig:system}}
+\caption{The window ends before the crossing event, so the two-stream model never observes what it predicts; only the dashed encoder changes across the four families. Faces were irreversibly blurred.\label{fig:system}}
 \end{figure}
 
 \subsection{The PIE Dataset and Splits}
