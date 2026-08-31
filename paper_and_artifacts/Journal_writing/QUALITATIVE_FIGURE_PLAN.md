@@ -1,6 +1,7 @@
 # Plan — Figure 9: the model actually detecting crossing intention
 
-**Created 2026-07-28. Status: DONE 2026-07-28 (Option A, two success panels).**
+**Created 2026-07-28. Status: SUPERSEDED 2026-08-31 — the two-panel figure was
+replaced by a 2x3 grid with a failure panel; see §9 at the end.**
 
 > Figure 9 is in the manuscript and Video S1 is cut. The record of what was
 > built and what was decided along the way is kept below; see "Outcome" at the
@@ -394,3 +395,78 @@ with the four non-crossers scoring 0.49–0.63 against a threshold of 0.516. It 
 cluster of pedestrians waiting at a kerb, and the model is uncertain rather than wrong.
 Adding it means one more entry in `PANELS` in `make_fig9_qualitative.py`, relaxing the
 success assertion for that panel, and a paragraph in Section 4.11.
+
+> **Done on 2026-08-31, see §9.** One claim above is wrong and is corrected there:
+> 4415–4750 is not a mixed-verdict *scene*. It is two groups ten seconds apart.
+
+---
+
+## 9. Replaced by a 2×3 grid (2026-08-31)
+
+The two-panel figure was replaced, at the author's request, with a six-panel grid in the
+style of a detection-results figure: every pedestrian the system is currently predicting
+for carries a box and a verdict, so a panel shows several simultaneous calls instead of
+one call in isolation. The generator is the same file, `make_fig9_qualitative.py`, and it
+still writes `fig9_qualitative.{pdf,png}`; Section 4.11 and the caption were rewritten, and
+`main_short.tex` was updated to match.
+
+**Why the change.** Two isolated crops show that the model can be right twice. They cannot
+show what a reader wants to check, which is what the system does with a whole street at
+once. The grid also makes room for a failure panel without giving up any of the successes,
+which retires the "successes only" flag raised in §1 of this plan.
+
+| Panel | Scene | Live calls | Ground truth |
+|---|---|---|---|
+| (a) | video_0016 f2740 | 9 (8P/1N), ego 0 | `3_16_921` p=0.685, crosser, correct, 1.40 s lead |
+| (b) | video_0016 f4324 | 5 (5P), ego 0 | `3_16_942` p=0.715, crosser, correct, 2.17 s lead |
+| (c) | video_0012 f5864 | 3 (3P), ego 0 | `3_12_742` p=0.593 and `3_12_743` p=0.787, both correct, 1.33 / 1.73 s lead |
+| (d) | video_0012 f15867 | 4 (4N), ego 22 km/h | `3_12_778` p=0.132, non-crosser, correct |
+| (e) | video_0012 f499 | 3 (2P/1N), ego 8 km/h | `3_12_725` p=0.417, non-crosser, correct |
+| (f) | video_0016 f4710 | 4 (4P), ego 4 km/h | `3_16_926` p=0.584, non-crosser, **WRONG** |
+
+Twenty-eight boxes, seven of them ground-truth-scoreable, six of the seven correct.
+
+**What can and cannot be marked.** The model emits a probability for any ByteTrack identity
+with sixteen frames buffered, including people PIE never annotated. A box carries a check
+or a cross only where it IoU-matches an annotated pedestrian holding a leakage-free window
+anchored within ±1 s; the rest are model output shown as output. The figure, the caption
+and Section 4.11 all state this, because a grid that marked everything would be claiming
+verification it does not have.
+
+**Correction to §4 Step 1.** There is no mixed-verdict scene in either clip. An exhaustive
+search over the clean-protocol windows finds zero frames where an annotated crosser and an
+annotated non-crosser both hold a window within ±1 s, and the same holds at ±2 s. The
+4415–4750 span recorded earlier is two groups ten seconds apart: the crossers `3_16_943`
+and `3_16_942` anchor at 4302–4353, the non-crossers `3_16_926/927/944/945` at 4659–4712.
+The 14-false-positives-of-16 figure is right, and it belongs to that second group alone;
+it was re-verified on 2026-08-31 by scoring those sixteen windows through the ensemble
+(probabilities 0.49–0.63, 14 above τ\* = 0.5164). Panel (f) is that group.
+
+The mixed verdicts the grid does show, such as panel (e), are mixed in the *model's*
+output over all tracked people, not in the annotated subset.
+
+**Selection.** `pipeline/11c_select_grid_scenes.py` ranks frames rather than pedestrians,
+over sixteen candidate segments rendered with `11_demo_clean_ensemble.py --dump-csv`. The
+parity gate passed exactly again before any of it (|d| = 0.00e+00 on AUC, F1, accuracy).
+Two rules earned their place:
+
+- **Crop for print, not for tightness.** The tightest crops put the median box at 0.7 of
+  the panel height but source only ~280 px, which is upscaled into softness at 5.5 cm.
+  Crops are fixed per panel at ≥760 px wide, and a box the crop would cut through is
+  dropped rather than drawn broken.
+- **The frames are fisheye and half sky.** Auto-cropping to contain every box centres on
+  nothing; each panel's crop was searched for the most boxes at the largest box size
+  subject to holding a scoreable pedestrian, then looked at.
+
+**Still true from the first build:** every published frame goes through `blur_heads()` at
+confidence 0.05 before cropping, the generator asserts each panel's ground-truth
+correctness (and now its quoted lead times) so the figure cannot drift, and Section 4.11
+still points at the Section 4.10 failure rates and gives the 439-window confusion counts
+(134/16/19/270, accuracy 0.920, F1 0.884, re-verified 2026-08-31).
+
+**One caveat now stated in the caption.** Only two PIE clips are held locally, so panels
+(a), (b) and (f) come from the same intersection approach in video_0016 at different times.
+
+**Scouting outputs** live in `pipeline/demo_out_grid/`, which is gitignored: it holds
+prediction CSVs and contact sheets built from **unblurred** frames. Nothing in it is
+publishable, and the generator re-reads the clips and blurs before writing anything.
