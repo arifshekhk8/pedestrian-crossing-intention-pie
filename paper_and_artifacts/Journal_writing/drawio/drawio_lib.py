@@ -13,6 +13,8 @@ a chart by hand and nudging bars until they look right is how a figure quietly
 stops matching its own results.
 """
 
+import base64
+import io
 from xml.sax.saxutils import escape
 
 # Palette, identical to figures/figstyle.py so the two sets of figures match.
@@ -132,6 +134,34 @@ class Doc:
             "fontStyle": 1 if bold else 0,
         })
         return self._vertex(x, y, w, h, value, style)
+
+    def image(self, x, y, w, h, path, *, width_px=220, quality=82):
+        """A raster image, embedded in the file rather than linked.
+
+        draw.io stores it as a data URI, so the .drawio opens anywhere with the
+        picture intact. It is re-encoded small first: the figure prints these
+        near 125 px wide, and a full-size PNG would put half a megabyte of
+        base64 into an XML file meant to stay editable by hand.
+        """
+        from PIL import Image
+        im = Image.open(path)
+        if im.mode in ("RGBA", "LA", "P"):
+            # JPEG has no alpha; without this the transparent part of an icon
+            # is written as black and the icon prints as a filled square.
+            im = im.convert("RGBA")
+            flat = Image.new("RGB", im.size, (255, 255, 255))
+            flat.paste(im, mask=im.split()[-1])
+            im = flat
+        im = im.convert("RGB")
+        im = im.resize((width_px, round(width_px * im.height / im.width)),
+                       Image.LANCZOS)
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=quality)
+        uri = "data:image/jpeg," + base64.b64encode(buf.getvalue()).decode()
+        style = _sty({"shape": "image", "html": 1, "imageAspect": 0,
+                      "verticalLabelPosition": "bottom", "verticalAlign": "top",
+                      "image": uri})
+        return self._vertex(x, y, w, h, "", style)
 
     def line(self, x0, y0, x1, y1, *, stroke=RULE, lw=1, dashed=False,
              arrow="none", start_arrow="none", points=None, rounded=False):

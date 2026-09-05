@@ -1,14 +1,15 @@
 # draw.io versions of the manuscript figures
 
-Eight `.drawio` files, one per figure, that open and edit in the desktop draw.io
+Nine `.drawio` files, one per figure, that open and edit in the desktop draw.io
 app. Nothing is a pasted image: every box, bar, curve, tick and label is a real
 shape you can select, move and restyle.
 
 ```
 fig1_pedestrian_statistics.drawio    fig5_curves.drawio
 fig2_system.drawio                   fig6_forest.drawio
-fig3_protocol.drawio                 fig7_ablations.drawio
-fig4_leakage.drawio                  fig8_latency.drawio
+fig2b_pipeline.drawio                fig7_ablations.drawio
+fig3_protocol.drawio                 fig8_latency.drawio
+fig4_leakage.drawio
 ```
 
 `preview/` holds a PNG of each, exported with the draw.io CLI, so you can see
@@ -67,9 +68,18 @@ all in units of `k`.
 
 ## What is drawn from what
 
-Figures 2 and 3 are schematics. They are laid out by hand in
-`make_drawio_figures.py`, and draw.io is a better tool for them than matplotlib
-ever was: they are pictures of a system and a protocol, with no data in them.
+Figures 2 and 3 are schematics: pictures of a system and a protocol, with no data
+in them.
+
+Figure 3 is laid out by hand here. **`fig2_system` and `fig2b_pipeline` are
+not** — they are the two figures one generator writes, and they import geometry
+and every label from
+`../MDPI_Article_Template/figures/make_fig2_system.py` (its `LAYOUT` and
+`WORDING` blocks) and only redraws them with draw.io shapes. Layout units are
+converted at `U` canvas points each and font sizes by `FK`, the factor that makes
+a label print at the same size from either file once both are fitted to MDPI's
+text width. So the two versions of Figure 2 cannot drift apart, and a wording
+change belongs in `make_fig2_system.py`, not in this file.
 
 The other six are data plots. Their bar lengths, curve points and interval
 positions are **computed from the same source files** the matplotlib figures

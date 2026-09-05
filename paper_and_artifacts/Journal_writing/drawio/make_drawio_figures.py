@@ -22,15 +22,20 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 FIGS = ROOT / "paper_and_artifacts" / "Journal_writing" / "MDPI_Article_Template" / "figures"
 sys.path.insert(0, str(HERE))
 
+sys.path.insert(0, str(FIGS))
+
 from drawio_lib import (ACCENT, BILSTM, CLEAN, CONTEXT, GRID, GRU, INK, INK_2,  # noqa: E402
                         LEAK, MUTED, NONE, PANEL, RNN, RULE, TRANSF, WHITE,
                         Axes, Doc, legend, panel_title)
+# Figure 2's geometry and wording live with the manuscript figure it mirrors.
+import make_fig2_system as F  # noqa: E402
 
 PARTIAL = "#e0a24b"
 TIE = "#9b9a93"
@@ -44,8 +49,9 @@ WHO_LABELS = ["Four-wheel vehicle occupants", "Pedestrians",
               "Powered 2-/3-wheeler users", "Other / unknown", "Cyclists"]
 WHO_SHARES = [30, 23, 21, 20, 6]
 WHO_EMPH = 1
-YEARS = list(range(2014, 2024))
-PED_DEATHS = [4910, 5494, 6080, 6075, 6374, 6272, 6565, 7470, 7593, 7314]
+YEARS = list(range(2015, 2025))
+PED_DEATHS = [5494, 6080, 6075, 6374, 6272, 6565, 7470, 7593, 7367, 7080]
+PEAK_IDX = 7  # 2022, the maximum of the series
 
 
 def fig1():
@@ -65,10 +71,10 @@ def fig1():
                color=INK if emph else INK_2, bold=emph)
 
     panel_title(d, 620, 26, "(b)  Pedestrians killed in traffic crashes, United States",
-                "+49% over the decade; 15% to 18% of all traffic deaths. "
-                "Source: NHTSA DOT HS 813 727, Table 1.", width=580)
+                "Down 7% from the 2022 peak, 29% above 2015; 15% to 18% of all "
+                "traffic deaths. Source: NHTSA DOT HS 813 818, Table 1.", width=580)
 
-    bx = Axes(d, 690, 110, 500, 320, (2013.4, 2023.6), (0, 8600))
+    bx = Axes(d, 690, 110, 500, 320, (2014.4, 2024.6), (0, 8600))
     bx.hgrid([2000, 4000, 6000, 8000])
     bx.yticks([0, 2000, 4000, 6000, 8000],
               ["0", "2,000", "4,000", "6,000", "8,000"], width=54)
@@ -76,7 +82,7 @@ def fig1():
         bx.vbar(yr, v, 30, fill=ACCENT)
     bx.xticks(YEARS, [str(y)[-2:] for y in YEARS], width=34)
     bx.spine_bottom()
-    for idx in (0, len(YEARS) - 1):
+    for idx in (0, PEAK_IDX, len(YEARS) - 1):
         d.text(bx.px(YEARS[idx]) - 30, bx.py(PED_DEATHS[idx]) - 22, 60, 18,
                f"{PED_DEATHS[idx]:,}", font=11, color=INK, bold=True,
                align="center")
@@ -90,80 +96,174 @@ def fig1():
 # ===========================================================================
 
 def fig2():
-    d = Doc("Figure 2 - system", 1480, 850)
+    """The editable twins of ../MDPI_Article_Template/figures/make_fig2_system.py.
 
-    # ---------------------------------------------------------- panel (a)
-    panel_title(d, 40, 24, "(a)  Two-stream crossing-intention model",
-                "Only the dashed encoder block changes across the four families; "
-                "every other component and the whole training recipe are frozen.",
-                width=1400)
-    mid = 250
-    d.rect(40, mid - 116, 220, 86,
-           "Pedestrian box\nx₁, y₁, x₂, y₂",
-           fill="#e9f0fa", stroke="#a9c4e8", font=12)
-    d.rect(40, mid + 30, 220, 86, "Ego-vehicle speed\nv  (OBD)",
-           fill="#e9f0fa", stroke="#a9c4e8", font=12)
-    d.arrow(260, mid - 73, 298, mid - 18)
-    d.arrow(260, mid + 73, 298, mid + 18)
+    Two files, matching the two figures that module writes: the model and the
+    pipeline. Geometry and wording are imported from it rather than retyped, so
+    the drawn versions cannot drift apart from the printed ones; only the
+    drawing calls differ. Layout units are converted at U points each and font
+    sizes by FK, the factor that makes a label print at the same size from
+    either file once both are fitted to MDPI's text width.
 
-    d.rect(300, mid - 62, 215, 124,
-           "16 × 5 window\n(0.5 s @ 30 fps)\ntrain-only z-score", font=12)
-    d.arrow(515, mid, 553, mid)
-    d.rect(555, mid - 62, 165, 124, "Linear\n5 → 64\n+ ReLU", font=12)
-    d.arrow(720, mid, 758, mid)
+    Edit a label in make_fig2_system.py's WORDING block, not here.
+    """
+    _fig2_one("fig2_system", F.H_MODEL, _fig2_model)
+    _fig2_one("fig2b_pipeline", F.H_PIPE, _fig2_pipeline)
 
-    # the swappable encoder
-    d.rect(760, mid - 132, 360, 264, "", fill="#fbfaf6", stroke=INK_2,
-           dashed=True, lw=2)
-    d.text(760, mid - 120, 360, 24, "Temporal encoder", font=13, color=INK,
-           bold=True, align="center")
-    for i, (name, col) in enumerate([("Bidirectional LSTM", BILSTM),
-                                     ("Transformer encoder", TRANSF),
-                                     ("Bidirectional GRU", GRU),
-                                     ("Vanilla RNN (un-gated)", RNN)]):
-        y = mid - 78 + i * 50
-        d.rect(786, y, 20, 28, fill=col, stroke=NONE, rounded=False)
-        d.text(816, y + 2, 290, 24, name, font=12, color=INK_2)
-    d.arrow(1120, mid, 1158, mid)
 
-    d.rect(1160, mid - 62, 165, 124, "Read-out\n+ linear\nhead", font=12)
-    d.arrow(1325, mid, 1358, mid)
-    d.rect(1360, mid - 42, 72, 84, "σ", fill="#e9f0fa", stroke="#a9c4e8",
-           font=18)
-    d.text(1336, mid + 50, 120, 24, "p(cross)", font=12, color=INK,
-           align="center")
+def _fig2_one(name, height, draw):
+    U = 1480 / F.W                     # draw.io canvas points per layout unit
+    PT = F.FIG_W_IN * 72 / F.W         # matplotlib points per layout unit
+    # A matplotlib size fs prints at fs * PAGE_PT / (FIG_W_IN * 72); a draw.io
+    # font argument f prints at f * TARGET_PT / BASE_FONT. FK equates the two.
+    FK = (Doc.PAGE_PT / (F.FIG_W_IN * 72)) / (Doc.TARGET_PT / Doc.BASE_FONT)
+    d = Doc(name, 1480, round(height * U))
 
-    # ---------------------------------------------------------- panel (b)
-    panel_title(d, 40, 462, "(b)  Live perception-to-prediction pipeline",
-                "Used for the latency and detector-in-the-loop experiments; the "
-                "benchmark results use annotated boxes, as is standard.",
-                width=1400)
-    m = 672
-    stages = [
-        (40, 205, "Video frame\n1920 × 1080\n30 fps", None),
-        (285, 215, "YOLO detector", "93% of per-frame cost"),
-        (540, 215, "ByteTrack\nidentity\nassociation", None),
-        (795, 215, "Per-track\n16-frame\nring buffer", None),
-        (1050, 235, "Crossing-intention\nmodel  (panel a)", "4.5%"),
-        (1320, 160, "Alert /\noverlay", None),
-    ]
-    for x, w, text, note in stages:
-        emph = note is not None
-        d.rect(x, m - 70, w, 140, text, font=12,
-               fill="#eef4fc" if emph else PANEL,
-               stroke=BILSTM if emph else RULE, lw=2 if emph else 1)
-        if note:
-            d.text(x, m + 78, w, 24, note, font=11, color=BILSTM, bold=True,
-                   align="center")
-    for i in range(len(stages) - 1):
-        x, w = stages[i][0], stages[i][1]
-        d.arrow(x + w + 4, m, stages[i + 1][0] - 4, m)
-    # Sits in the band between the wrapped subtitle and the stage row; any
-    # higher and it lands on the subtitle's second line.
-    d.text(830, m - 128, 200, 26, "ego speed v", font=11, color=MUTED,
-           align="center")
-    d.arrow(930, m - 100, 930, m - 74)
-    d.save(HERE / "fig2_system.drawio")
+    def txt(cx, cy, s, *, fs, color=F.BLACK, bold=False, align="center", w=60):
+        """One text block, centred on (cx, cy) in layout units."""
+        h = (s.count("\n") + 1) * fs * 1.30 * U / PT
+        x0 = (cx - w / 2) * U if align == "center" else cx * U
+        d.text(x0, cy * U - h / 2, w * U, h, s, font=fs * FK, color=color,
+               bold=bold, align=align)
+
+    def frame(x0, y0, x1, y1, *, fill=F.WHITE, stroke=F.HAIR, lw=0.7,
+              dashed=False, radius=4):
+        d.rect(x0 * U, y0 * U, (x1 - x0) * U, (y1 - y0) * U, fill=fill,
+               stroke=stroke, lw=lw * FK, dashed=dashed, radius=radius)
+
+    def box(x0, x1, title, sub=None, *, y0=F.ROW2_TOP, y1=F.ROW2_BOT,
+            fs=F.FS_BOX, sub_fs=F.FS_SUB, stroke=F.HAIR, lw=0.7, dashed=False,
+            bold=True, ico=None, ico_top=None, title_y=None):
+        """A stage: hairline box, title and optional detail stacked as one
+        block — the same centring rule as the matplotlib version's box()."""
+        frame(x0, y0, x1, y1, stroke=stroke, lw=lw, dashed=dashed)
+        cx, cy, w = (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0
+        if ico:
+            _icon(d, U, ico, cx, F.ICON_TOP if ico_top is None else ico_top)
+            ty = F.STAGE_TITLE_Y if title_y is None else title_y
+            txt(cx, ty, title, fs=fs, bold=bold, w=w)
+            if sub:
+                ht = (title.count("\n") + 1) * fs * 1.30 / PT
+                hs = (sub.count("\n") + 1) * sub_fs * 1.30 / PT
+                txt(cx, ty + ht / 2 + 0.45 + hs / 2, sub, fs=sub_fs, w=w)
+            return
+        if not sub:
+            txt(cx, cy, title, fs=fs, bold=bold, w=w)
+            return
+        ht = (title.count("\n") + 1) * fs * 1.30 / PT
+        hs = (sub.count("\n") + 1) * sub_fs * 1.30 / PT
+        top = cy - (ht + 0.5 + hs) / 2
+        txt(cx, top + ht / 2, title, fs=fs, bold=bold, w=w)
+        txt(cx, top + ht + 0.5 + hs / 2, sub, fs=sub_fs, w=w)
+
+    def arrow(x0, y0, x1, y1, *, stroke=RULE, lw=0.8):
+        d.arrow(x0 * U, y0 * U, x1 * U, y1 * U, stroke=stroke, lw=lw * FK)
+
+    def seg(x0, y0, x1, y1, *, stroke=RULE, lw=0.8, dashed=False):
+        d.line(x0 * U, y0 * U, x1 * U, y1 * U, stroke=stroke, lw=lw * FK,
+               dashed=dashed)
+
+    draw(d, U, FK, txt, frame, box, arrow, seg)
+    d.save(HERE / f"{name}.drawio")
+
+
+def _ico(name):
+    """The icon variant is built separately and is not what the paper uses."""
+    return name if F.WITH_ICONS else None
+
+
+def _icon(d, U, name, cx, top):
+    """One stage icon, centred on cx, embedded from the same PNG the printed
+    figure uses (prep_fig2_icons.py). Square, so width follows height."""
+    h = F.ICON_H
+    d.image((cx - h / 2) * U, top * U, h * U, h * U, FIGS / f"_icon_{name}.png",
+            width_px=96)
+
+
+def _fig2_model(d, U, FK, txt, frame, box, arrow, seg):
+    """The window, and the model that encodes it."""
+    frame(F.L, F.SRC_TOP, F.SRC_R, F.SRC_BOT)
+    txt((F.L + F.SRC_R) / 2, F.SRC_TITLE_Y, F.T_SRC, fs=F.FS_BOX, bold=True,
+        w=F.SRC_R - F.L)
+    strip = 3 * F.THUMB_W + 2 * F.THUMB_GAP
+    x = (F.L + F.SRC_R) / 2 - strip / 2
+    for i in (1, 2, 3):
+        src = FIGS / f"_track{i}.png"
+        with Image.open(src) as im:
+            h = F.THUMB_W * im.height / im.width
+        d.image(x * U, F.THUMB_TOP * U, F.THUMB_W * U, h * U, src)
+        x += F.THUMB_W + F.THUMB_GAP
+    txt((F.L + F.SRC_R) / 2, F.SRC_CAP_Y, F.T_SRC_CAP, fs=F.FS_SUB,
+        w=F.SRC_R - F.L)
+    arrow(F.SRC_R + 0.5, F.SRC_MID, F.TRACK_L - 0.9, F.SRC_MID)
+
+    txt(F.EX_LABEL_X, F.EX_LABEL_Y, F.T_EX, fs=F.FS_BOX, bold=True,
+        align="left", w=40)
+    seg(F.TRACK_L, F.TRACK_Y, F.EVENT_X, F.TRACK_Y, lw=0.9)
+
+    frame(F.WIN_L, F.WIN_TOP, F.WIN_R, F.WIN_BOT, stroke=ACCENT, lw=1.0,
+          radius=3)
+    for i in range(16):
+        x = F.WIN_L + (i + 0.5) * (F.WIN_R - F.WIN_L) / 16
+        seg(x, F.WIN_TOP + 0.5, x, F.WIN_BOT - 0.5, stroke=ACCENT, lw=0.5)
+    txt((F.WIN_L + F.WIN_R) / 2, F.WIN_LBL_Y, F.T_WIN, fs=F.FS_MARK,
+        color=ACCENT, bold=True, w=30)
+
+    seg(F.EVENT_X, F.EVENT_TOP, F.EVENT_X, F.EVENT_BOT, stroke=INK, lw=1.4)
+    txt(F.EVENT_X, F.EVENT_LBL_Y, F.T_EVENT, fs=F.FS_MARK, bold=True, w=24)
+
+    d.line(F.WIN_R * U, F.TTE_Y * U, F.EVENT_X * U, F.TTE_Y * U,
+           stroke=F.BLACK, lw=0.8 * FK, arrow="blockThin",
+           start_arrow="blockThin")
+    txt((F.WIN_R + F.EVENT_X) / 2, F.TTE_LBL_Y, F.T_TTE, fs=F.FS_SUB, w=34)
+
+    seg(F.DROP_X, F.WIN_BOT, F.DROP_X, F.WRAP_Y)
+    seg(F.DROP_X, F.WRAP_Y, F.WRAP_X, F.WRAP_Y)
+    arrow(F.WRAP_X, F.WRAP_Y, F.WRAP_X, F.ROW2_TOP - 0.5)
+
+    frame(F.STREAMS_BOX[0], F.ROW2_TOP, F.STREAMS_BOX[1], F.ROW2_BOT)
+    cxs = sum(F.STREAMS_BOX) / 2
+    if F.WITH_ICONS:
+        for dx, ico in ((-3.4, "crop"), (3.4, "gauge")):
+            _icon(d, U, ico, cxs + dx, F.ICON_TOP)
+    txt(cxs, F.STAGE_TITLE_Y if F.WITH_ICONS else F.ENC_TITLE_Y, F.T_STREAMS,
+        fs=F.FS_BOX,
+        bold=True, w=F.STREAMS_BOX[1] - F.STREAMS_BOX[0])
+    for row, label in enumerate((F.T_STREAM_BOX, F.T_STREAM_SPD)):
+        box(F.STREAMS_BOX[0] + F.CHIP_PAD, F.STREAMS_BOX[1] - F.CHIP_PAD, label,
+            y0=F.FAM_ROWS[row] - F.CHIP_H / 2,
+            y1=F.FAM_ROWS[row] + F.CHIP_H / 2, fs=F.FS_SUB, bold=False)
+    box(*F.PREP_BOX, F.T_PREP, F.T_PREP_SUB, ico=_ico("adjustments"))
+    box(*F.READ_BOX, F.T_READ, F.T_READ_SUB, ico=_ico("arrows-join"))
+    box(*F.OUT_BOX, F.T_OUT, fs=8.2, ico=_ico("walk"))
+
+    frame(F.ENC_BOX[0], F.ROW2_TOP, F.ENC_BOX[1], F.ROW2_BOT, stroke=INK_2,
+          lw=0.9, dashed=True)
+    if F.WITH_ICONS:
+        _icon(d, U, "binary-tree", sum(F.ENC_BOX) / 2, F.ICON_TOP)
+    txt(sum(F.ENC_BOX) / 2, F.ENC_TITLE_Y, F.T_ENC, fs=F.FS_BOX, bold=True,
+        w=F.ENC_BOX[1] - F.ENC_BOX[0])
+    for i, name in enumerate(F.FAMILIES):
+        txt(F.ENC_BOX[0] + F.FAM_PAD + (i % 2) * F.FAM_COL, F.FAM_ROWS[i // 2],
+            name, fs=F.FS_FAM, align="left", w=F.FAM_COL)
+
+    for a, b in ((F.STREAMS_BOX, F.PREP_BOX), (F.PREP_BOX, F.ENC_BOX),
+                 (F.ENC_BOX, F.READ_BOX), (F.READ_BOX, F.OUT_BOX)):
+        arrow(a[1] + 0.5, F.MID_B, b[0] - 0.5, F.MID_B)
+
+
+def _fig2_pipeline(d, U, FK, txt, frame, box, arrow, seg):
+    """The same predictor behind a detector and a tracker."""
+    mid = (F.STAGE_TOP + F.STAGE_BOT) / 2
+    for x0, x1, title, sub, ico in F.STAGES:
+        box(x0, x1, title, sub, y0=F.STAGE_TOP, y1=F.STAGE_BOT,
+            ico=_ico(ico), ico_top=F.PIPE_ICON_TOP, title_y=F.PIPE_TITLE_Y)
+    for a, b in zip(F.STAGES, F.STAGES[1:]):
+        arrow(a[1] + 0.5, mid, b[0] - 0.5, mid)
+
+    ring = (F.STAGES[3][0] + F.STAGES[3][1]) / 2
+    txt(ring, F.OBD_Y, F.T_OBD, fs=F.FS_SUB, w=24)
+    arrow(ring, F.OBD_Y + 1.1, ring, F.STAGE_TOP - 0.4)
 
 
 # ===========================================================================
