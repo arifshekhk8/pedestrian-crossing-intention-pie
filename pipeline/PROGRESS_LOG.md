@@ -289,3 +289,73 @@ extensions each keep their own log. Summary of everything since:
 - Detailed logs: `journal_prep/PROGRESS_LOG` equivalents per issue, `transformer/PROGRESS_LOG.md`,
   `f1_optimization/PROGRESS_LOG.md`. Current numbers: `f1_optimization/README.md`,
   `journal_prep/issue3_baseline_comparison/03_baseline_comparison.md`.
+
+---
+
+## 2026-09 → 2026-11 — audit, rewritten manuscript, submission, peer review
+
+Entries below were written on 2026-11-12 from the files and commit histories on disk.
+None of this work was done in this tree; it is logged here so the record does not stop at
+the August manuscript. Code and results: `~/Developer/pedestrian-intention-temporal-validity`
+(GitHub `arifshekhk8/pedestrian-intention-temporal-validity`).
+
+- **Independent audit (2026-08-31 → 09-01).** Every claim re-derived from code and
+  machine-written artifacts only, ignoring this tree's own docs. Working notes:
+  `~/Developer/_pedestrian_audit/ANALYSIS_PROGRESS.md`. Claims that failed are tabulated at
+  the bottom of the clean repo's `docs/CONTRIBUTIONS.md`: the JAAD four-family tie (all 20
+  runs at chance), the observation-window decline (confounded with prediction horizon), the
+  OW64 vanilla-RNN drop, the GRU-vs-RNN contrast against the transformer (arm-set
+  asymmetry), "all verdicts survive the cluster bootstrap", and "removing the leakage cost
+  nothing". The clean repo was first committed on 2026-09-01.
+- **Matched four-family comparison (2026-09-02 → 09-03).** Same seeds, pedestrian-clustered
+  bootstrap with B = 10,000, Holm correction. It refutes "all four families tie": 7 of 18
+  family contrasts are significant on the event-anchored data.
+- **Negative-anchor confound and the phase-matched control (2026-09-03).** For a PIE
+  non-crosser, `crossing_point` sits at the last annotated frame minus 2, so every negative
+  window lands at the end of its track. Distance from window to track end separates the
+  classes with AUC 1.0000. Re-sampling negatives earlier, with the rule estimated from
+  training positives only, reduces that to 0.7919 (4,520 windows) and leaves 0 of 18 family
+  contrasts significant.
+- **Ego-speed ablation under both protocols (2026-09-03 → 09-06).** Box-plus-speed beats
+  box-only in 10 of 12 contrasts under event anchoring and 0 of 12 after phase matching.
+- **Linear and tree baselines (2026-09-03 → 09-05).** In the clean repo; not in the
+  manuscript.
+- **Manuscript rewritten and submitted (2026-09-06 → 09-07).** New title, "Temporal
+  Validity and Sampling Bias in Pedestrian Crossing Prediction", new argument (audit +
+  phase-matched control), four authors. Cover letter dated 2026-09-07, to *Multimodal
+  Technologies and Interaction*; manuscript ID 4601011. The August draft in
+  `paper_and_artifacts/Journal_writing/submission/` is superseded.
+- **Demo-figure provenance (2026-10-02).** The submitted `fig6_demo.png` was produced by
+  the single legacy baseline checkpoint, while the text describes the five-seed ensemble. A
+  verified five-seed replacement exists in `~/Developer/demo/mti-4601011-five-seed-demo`.
+  The correction was deferred at the supervisor's request, to be applied if peer review
+  asks. Record: `~/Developer/demo/deferred_demo_revision.md`.
+- **Editorial pre-check (2026-10-04 → 10-08).** Two comments: language and clarity, and
+  reference accuracy. Language revised throughout; 20 DOIs added; reference [31] corrected
+  to the published IV 2022 version.
+- **Thesis (2026-10-05 → 10-06).** BCSE final report (72 pages, with Md. Riduan Islam) and
+  the defence deck built from the manuscript, in `~/Developer/Pedestrian_Crossing_Repo_Package/`
+  and `~/Developer/Paper_V1/`.
+- **Three-protocol experiment (2026-10-09).** 40 new runs on the unchanged original
+  track-end extraction (four families × box-only / box-plus-speed × five seeds) plus 80
+  replays of existing event-anchored and phase-matched checkpoints, in
+  `original_pie_four_family_20261009/` inside the clean repo. Speed contrasts: 11 of 12
+  significant on the original extraction, 10 of 12 event-anchored, 0 of 12 phase-matched.
+  Complete and verified; not committed and not in the manuscript.
+- **Version under review (2026-10-21).** Title now ends "A Multi-Dataset Audit with
+  Controlled Evaluation on PIE"; 20 pages, 32 references. The peer-review export is named
+  `vehicles-4601011`, i.e. MDPI *Vehicles*.
+- **First-round reviewer comments received (by 2026-11-12).**
+- **Documentation brought up to date (2026-11-12).** `CLAUDE.md` and `README.md` now open
+  with the current status and the list of superseded conclusions. Each study's README and
+  supervisor summary carries a dated status note. Dated reports, plans and logs were left
+  as written.
+- **Revision workspace created; this repository's root cleared (2026-11-12).** Peer-review
+  work happens in `~/Developer/vehicles-4601011-revision`. Eighteen loose, untracked items
+  belonging to the paper under review were moved there from this root: `Arif/`, `figures/`,
+  `final_paper/`, `overleaf_upload/` (+ zip), `source_papers/`, `verify_manuscript.py`,
+  `ArifG_final_PR_AUC.tex`, the 7 September submission PDF, zip and cover letter, the two
+  `fig2_system` drawio files, `method_fig.png`, `PAPER_STORY_BANGLA.pdf` and
+  `Untitled document.docx`. Nothing was deleted and nothing tracked by git was moved. The
+  full from → to list is in that folder's `LOG.md`.
+

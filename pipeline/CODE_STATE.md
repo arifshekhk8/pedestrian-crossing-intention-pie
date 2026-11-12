@@ -1,5 +1,12 @@
 # Code State
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This file describes the code in this tree and is still
+> accurate for running it. It is not the record of the paper under review (MDPI manuscript
+> 4601011, "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction"), whose
+> code and results are in `~/Developer/pedestrian-intention-temporal-validity`. The study
+> verdicts quoted in the next block (families tie, cell and gating do not matter) are
+> pre-audit and are not carried by the manuscript. See "Current status" in `../CLAUDE.md`.
+
 > **Repository layout (GitHub reorg):** this doc lives in `pipeline/` alongside the
 > scripts. Run scripts from the repo root (e.g. `python pipeline/04_train_bilstm.py`).
 > Trained runs are in `paper_and_artifacts/runs/`; demo outputs in `pipeline/demo_out/`;
@@ -135,6 +142,23 @@ End-to-end demo: raw video → YOLO26-M → ByteTrack → per-track 16-frame buf
 - Naming: 10_ (not the reserved 07_, which the attention model took).
 - Verified run: set03/video_0016 frames 1916-2815 on M4 MPS, ~50s/900 frames.
   Output: pipeline/demo_out/demo_video_0016.mp4 + sample PNGs + predictions.csv.
+
+## 11c_select_grid_scenes.py — DONE (2026-08-31)
+Ranks candidate frames for the multi-panel Figure 9 (the 2x3 grid that replaced the
+two-panel version). The unit is the FRAME, not the pedestrian, which is what 11a_
+ranked: a panel now boxes every pedestrian the system is predicting for.
+- Reads the per-segment CSVs under `pipeline/demo_out_grid/` (written by 11_ with
+  `--dump-csv`), plus `pie_annotations.pkl` and the clean-protocol `meta.pkl`/`y.npy`.
+- Scores each frame on: simultaneous live predictions, whether the verdicts differ,
+  box height after cropping, and how many boxes ground truth can score.
+- A box is scoreable only if it IoU-matches an annotated pedestrian holding a
+  leakage-free window anchored within ±30 frames (the ±1 s rule from the 2026-07-28
+  post-mortem). Everything else is model output that cannot be marked right or wrong.
+- Renders nothing and writes nothing; it prints a ranked table.
+- Finding that corrected the earlier record: NO frame in either local clip has an
+  annotated crosser and an annotated non-crosser both holding live windows. The
+  "mixed-verdict scene at video_0016 4415-4750" in QUALITATIVE_FIGURE_PLAN.md is two
+  groups ten seconds apart (crossers anchor 4302-4353, non-crossers 4659-4712).
 
 ## 12_supervisor_demo.py — DONE (2026-07-29)
 Presentation demo. Same model, front end and threshold as 11_ (imports them, so the

@@ -1,5 +1,15 @@
 # Journal Paper — Writing Plan (MDPI MTI)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** None of the manuscripts in this folder is the paper
+> under review. They are earlier drafts with a different argument (two streams, four
+> architectures, four-family equivalence). The paper now under peer review (MDPI manuscript
+> 4601011, "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction: A
+> Multi-Dataset Audit with Controlled Evaluation on PIE") was rewritten in September 2026
+> after an independent audit and is maintained on Overleaf; it reaches this machine as zip
+> exports. Treat `submission/`, `Overleaf_package/` and `MDPI_Article_Template/` as read-only
+> history. Check any figure generator or drawio source here against the current export before
+> reusing it. Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 > **✅ STATUS 2026-07-26 — the manuscript is complete and submission-ready apart from
 > front matter. Read this block first.**
 >
@@ -23,7 +33,7 @@
 > | Fig | Script | What it shows | Data source |
 > |---|---|---|---|
 > | 1 | `make_intro_figure.py` | pedestrian share of road deaths (WHO) + US trend (NHTSA) | `../STATISTICS_SOURCES.md` |
-> | 2 | `make_fig2_system.py` | the two-stream model + the live pipeline | schematic |
+> | 2 | `make_fig2_system.py` | writes two figures: `fig2_system` (window construction + the two-stream model) and `fig2b_pipeline` (perception-to-prediction) | schematic; PIE thumbnails from `prep_fig2_track.py` |
 > | 3 | `make_fig3_protocol.py` | track-end vs crossing-point anchoring | schematic; real rates |
 > | 4 | `make_fig4_leakage.py` | the leakage audit, before/after | **computed live** from both `leakage_per_sequence.csv` |
 > | 5 | `make_fig5_curves.py` | ROC + PR, four families + bbox-only | **computed live** from `_probs.npz` (`prep_probs.py`) |

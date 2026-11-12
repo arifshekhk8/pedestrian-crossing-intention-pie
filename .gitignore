@@ -35,6 +35,10 @@ __pycache__/
 # The published assets are the figure PDF and supplementary/video_s1.mp4,
 # both of which are committed. Regenerate with pipeline/11_demo_clean_ensemble.py.
 pipeline/demo_out_clean/
+# Scene-scouting for Figure 9: prediction CSVs plus contact sheets built from
+# UNBLURRED source frames. Nothing here is publishable; the figure generator
+# re-reads the clips and blurs before anything is written.
+pipeline/demo_out_grid/
 
 # Generated presentation videos (regenerate with pipeline/12_supervisor_demo.py)
 pipeline/demo_videos/
@@ -58,3 +62,6 @@ paper_and_artifacts/Journal_writing/submission/*.blg
 paper_and_artifacts/Journal_writing/submission/*.bbl
 paper_and_artifacts/Journal_writing/submission/*.out
 paper_and_artifacts/Journal_writing/submission/*.toc
+
+# draw.io autosave and temp files
+.$*

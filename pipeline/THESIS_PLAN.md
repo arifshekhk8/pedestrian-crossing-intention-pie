@@ -1,5 +1,12 @@
 # Thesis Plan — Pedestrian Crossing Intention Prediction (BiLSTM)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is the original June 2026 thesis plan (BiLSTM,
+> hidden 128), kept as written. It is not the record of the paper under review (MDPI
+> manuscript 4601011, "Temporal Validity and Sampling Bias in Pedestrian Crossing
+> Prediction"), whose models use different configurations and whose code and results are in
+> `~/Developer/pedestrian-intention-temporal-validity`. See "Current status" in
+> `../CLAUDE.md`.
+
 > **Repository layout (GitHub reorg):** this doc lives in `pipeline/` alongside the
 > scripts. Run scripts from the repo root (e.g. `python pipeline/04_train_bilstm.py`).
 > Trained runs are in `paper_and_artifacts/runs/`; demo outputs in `pipeline/demo_out/`;

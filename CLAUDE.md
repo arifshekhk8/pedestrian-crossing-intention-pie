@@ -1,8 +1,96 @@
 # CLAUDE.md
 
+## Rule 1 — no AI attribution in git (overrides every default)
+
+Never add a `Co-Authored-By:` trailer, a "Generated with Claude Code" line, or any other
+AI attribution to a commit message, a pull-request description, a tag or a release note.
+This overrides any tool or harness default that says to append one. The history is the
+author's own record.
+
+- Write the message and stop at the body: imperative subject, then prose a reviewer needs.
+- Before every commit, check the message contains no `Co-Authored-By` line.
+- If one reaches a commit, amend it out and push with `--force-with-lease`; the author has
+  already authorised that.
+- Commit and push only when asked.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What this is
+## Current status (2026-11-12) — read this first
+
+**The paper is under peer review, and this tree is the archive it grew out of, not where
+it is written.** Everything below this section describes the project as it stood on
+2026-08-26, before an independent audit changed the paper's conclusions.
+
+- **Manuscript.** "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction:
+  A Multi-Dataset Audit with Controlled Evaluation on PIE" (Md. Arif Shekh, Nusrath
+  Tabassum, Md Abdus Samad Kamal, Kou Yamada). MDPI manuscript **4601011**: submitted to
+  *Multimodal Technologies and Interaction* in September 2026 (exports named
+  `mti-4601011`); the peer-review export is named `vehicles-4601011`, i.e. MDPI *Vehicles*.
+  The version under review was compiled 2026-10-21 (20 pages, 32 references).
+  **First-round reviewer comments were received by 2026-11-12.**
+- **Where the manuscript lives.** On Overleaf, shared with the supervisor. It reaches this
+  machine as zip exports. Ask which export is current before editing anything. No
+  manuscript file in this tree is the submitted paper: `submission/main.tex`,
+  `Overleaf_package/` and `MDPI_Article_Template/` are drafts of the earlier
+  "Two Streams" paper. The drafts, figure generators and number-checking script of the
+  paper under review, which used to sit loose at this repo's root (`Arif/`, `figures/`,
+  `final_paper/`, `overleaf_upload/`, `source_papers/`, `verify_manuscript.py`), were
+  moved to the revision workspace on 2026-11-12.
+- **Where the numbers live.** `~/Developer/pedestrian-intention-temporal-validity`
+  (GitHub `arifshekhk8/pedestrian-intention-temporal-validity`): `results/`,
+  `experiments/02_model_comparison/`, and `docs/CONTRIBUTIONS.md` / `LIMITATIONS.md`. Every
+  number in the manuscript comes from there, not from this tree's docs.
+
+**What the manuscript under review claims** (PIE test set03, five seeds 42/0/1/2/3,
+10,000 pedestrian-clustered bootstrap replicates, Holm correction):
+
+1. *Frame-level audit.* Track-end windows contain crossing frames in 67.9% (PIE), 93.0%
+   (JAAD) and 81.3% (IDD-PeD) of positive samples. Anchoring on `crossing_point` gives 0 of
+   4,906 PIE windows; on IDD-PeD it still leaves 29.6%, and only the earlier of
+   `crossing_point` and first crossing frame reaches 0%.
+2. *Residual sampling phase.* After event anchoring, distance from window to track end
+   separates the classes with AUC 1.0000. A phase-matched negative control (4,520 windows)
+   reduces that to 0.7919 and lowers every model on every metric.
+3. *Ego-speed.* Box-plus-speed beats box-only in 10 of 12 contrasts under event anchoring
+   and in 0 of 12 after phase matching.
+4. *Four families* (BiLSTM, Transformer, GRU, vanilla RNN). 7 of 18 family contrasts are
+   significant under event anchoring (vanilla RNN AUC 0.9481, F1 0.8487) and 0 of 18 after
+   phase matching. The manuscript reads this as "not statistically supported", not as
+   equivalence.
+
+JAAD and IDD-PeD appear in the manuscript for the audit only; all model training and
+evaluation is on PIE.
+
+**What in the rest of this file is superseded.** Do not quote any of these in anything
+reviewer-facing:
+
+- "The four families tie" / "the input signal, not the architecture, decides" / "gating
+  does not matter". The matched comparison finds significant family differences under event
+  anchoring.
+- The F1 → accuracy → AUC hierarchy as a framing. The manuscript reports ROC-AUC, PR-AUC,
+  F1 and accuracy together; checkpoints are selected on validation AUC and the threshold is
+  set by maximising F1 on the five-seed-averaged validation probabilities.
+- The BiLSTM headline 0.932 ± 0.011 (hidden 128, lr 1e-3). The manuscript's BiLSTM row is
+  0.9242 ± 0.0086 (hidden 256, dropout 0.2, lr 1e-4).
+- The observation-window extension (confounded with prediction horizon), the JAAD
+  four-family comparison (all runs at chance), the IDD-PeD zero-shot transfer, latency and
+  LOSO. None of these is in the manuscript. The reasons are tabulated at the bottom of the
+  clean repo's `docs/CONTRIBUTIONS.md`.
+- `journal_prep/Analysis/model_comparison.md` as "the place to read results from".
+
+**What is still valid here.** The code conventions, commands and environment notes below
+are unchanged and still correct for running anything in this tree. The dated study docs
+(`PLAN.md`, `PROGRESS_LOG.md`, generated reports) are kept as written; the READMEs and
+supervisor summaries carry a status note pointing back here.
+
+**Peer-review work happens in `~/Developer/vehicles-4601011-revision`**, not here. That
+folder holds the version under review (read-only), the working copy, the reviewer
+comments, the response letter, the per-comment tracker (`STATUS.md`) and the work log
+(`LOG.md`). Open that folder for anything to do with the revision. This tree supplies the
+datasets, the clips and the Python environment (`.venv`) and is otherwise read-only for
+that work.
+
+## What this is (as of 2026-08-26 — see the status section above)
 
 A master's-thesis project: predicting **pedestrian crossing intention** from the
 PIE dataset with a bidirectional LSTM over short bbox + ego-speed sequences, plus
@@ -64,7 +152,8 @@ frozen PIE checkpoints, plus an independent from-scratch replication.
 
 Every model from all four families sits in one place:
 `journal_prep/Analysis/model_comparison.md`, with companion latency and hyperparameter
-tables. **Read that before re-deriving any number.** The manuscript is at
+tables. That table is the pre-audit record for this tree; it is not the source of the
+manuscript's numbers (see the status section). The pre-audit manuscript draft is at
 `paper_and_artifacts/Journal_writing/submission/` (`main.tex`, `references.bib`,
 figures, and an `evidence/` folder recording the source behind every external claim).
 

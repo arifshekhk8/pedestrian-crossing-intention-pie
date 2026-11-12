@@ -1,87 +1,108 @@
-# Pedestrian Crossing-Intention Prediction on PIE
+# Pedestrian Crossing Prediction on PIE — research archive
 
-Predicting whether a pedestrian is about to step into the road, from a short window of
-their bounding-box motion plus the ego-vehicle's speed. Two input streams, no pose, no
-optical flow, no segmentation. The work re-extracts the
-[PIE dataset](https://data.nvision2.eecs.yorku.ca/PIE_dataset/) under a leakage-free
-protocol, evaluates four temporal encoders on it under one engine, and ships a live
+This repository is the working archive of a thesis project on predicting whether a
+pedestrian will cross in front of a vehicle, from a short window of bounding-box motion
+plus the ego-vehicle's speed, on the
+[PIE dataset](https://data.nvision2.eecs.yorku.ca/PIE_dataset/). It holds the original
+numbered pipeline, four model-family studies, the cross-dataset work and a live
 YOLO26 + ByteTrack demo.
 
-This is a research pipeline for a master's thesis and a journal manuscript, not an
-application. There is no build system and no test suite; the code runs as numbered
-scripts executed in order.
+The paper that came out of this work is now under peer review, and **its conclusions
+differ from several that the studies in this tree first reached**. Read the next two
+sections before quoting anything from the folders below.
+
+This is a research pipeline, not an application. There is no build system and no test
+suite; the code runs as numbered scripts executed in order.
+
+## Current status (2026-11-12)
+
+| | |
+|---|---|
+| Paper | *Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE* |
+| Authors | Md. Arif Shekh, Nusrath Tabassum, Md Abdus Samad Kamal, Kou Yamada |
+| Manuscript | MDPI 4601011. Submitted to *Multimodal Technologies and Interaction* (September 2026); the peer-review export is named `vehicles-4601011` (MDPI *Vehicles*) |
+| Version under review | compiled 2026-10-21, 20 pages, 32 references |
+| Stage | first-round reviewer comments received; the revision is worked in a separate folder, `vehicles-4601011-revision` |
+| Thesis | BCSE final report and defence deck built from the manuscript (October 2026) |
+
+The manuscript is written on Overleaf and is **not** in this repository. The code and the
+machine-written results behind every number in it are in a separate repository,
+`pedestrian-intention-temporal-validity`. The drafts under
+`paper_and_artifacts/Journal_writing/` are earlier versions with a different argument.
 
 ## Start here
 
 | If you want | Read |
 |---|---|
-| The paper | [`paper_and_artifacts/Journal_writing/submission/main.pdf`](paper_and_artifacts/Journal_writing/submission/main.pdf) |
-| Every model in one table | [`journal_prep/Analysis/model_comparison.md`](journal_prep/Analysis/model_comparison.md) |
-| How the project is organised and why | [`CLAUDE.md`](CLAUDE.md) |
+| The code and numbers behind the paper | the `pedestrian-intention-temporal-validity` repository (`README.md`, `docs/CONTRIBUTIONS.md`, `docs/LIMITATIONS.md`) |
+| What is current and what is superseded in this tree | [`CLAUDE.md`](CLAUDE.md), "Current status" |
 | The chronological record of every run | [`pipeline/PROGRESS_LOG.md`](pipeline/PROGRESS_LOG.md) |
 | What each script does and produces | [`pipeline/CODE_STATE.md`](pipeline/CODE_STATE.md) |
+| The pre-audit results table for this tree | [`journal_prep/Analysis/model_comparison.md`](journal_prep/Analysis/model_comparison.md) |
 
-Every number below traces to a file in this repository. Where a claim rests on an
-external source, the source is named in
-[`paper_and_artifacts/Journal_writing/submission/evidence/`](paper_and_artifacts/Journal_writing/submission/evidence/).
+## What the manuscript under review reports
 
-## Headline result
+All model training and evaluation is on PIE: train set01/02/04, validation set05/06, test
+set03. Five seeds (42, 0, 1, 2, 3), pedestrian-clustered bootstrap with 10,000
+replicates, Holm correction within each family of contrasts. JAAD and IDD-PeD are used
+for the frame-level audit only.
 
-Metric hierarchy is **F1 → accuracy → AUC** (supervisor directive). Test is PIE **set03**,
-2,094 windows, 32.5% positive; five seeds; selection on validation only; the test set was
-touched once. Each row is that family's F1-optimised model under an identical protocol.
+**1. Track-end windows contain the action they are meant to predict.**
 
-| Family | Params | **F1** | Accuracy | ROC-AUC | Latency (CPU, ms/window) |
-|---|---|---|---|---|---|
-| BiLSTM | 2,237,313 | **0.844 ± 0.008** | 0.897 ± 0.006 | 0.940 ± 0.004 | 0.575 |
-| Transformer | 794,241 | **0.847 ± 0.017** | 0.896 ± 0.011 | 0.947 ± 0.003 | 0.459 |
-| GRU | 1,678,209 | **0.849 ± 0.011** | 0.901 ± 0.010 | 0.941 ± 0.007 | 0.721 |
-| Vanilla RNN | 560,001 | **0.852 ± 0.012** | 0.902 ± 0.008 | 0.948 ± 0.002 | 0.316 |
+| Dataset | Temporal anchor | Samples | Windows containing a crossing frame |
+|---|---|---|---|
+| PIE | historical track-end | 570 positive sequences | 67.9% of positives |
+| PIE | `crossing_point` | 4,906 windows | 0.0% |
+| JAAD | naive anchor | 460 positive windows | 93.0% of positives |
+| JAAD | event anchor | 972 windows | 0.0% |
+| IDD-PeD | track-end | 8,651 windows | 81.3% of positives |
+| IDD-PeD | `crossing_point` | 7,919 windows | 29.6% of positives |
+| IDD-PeD | earlier of event and onset | 7,318 windows | 0.0% |
 
-Source: [`journal_prep/Analysis/model_comparison.md`](journal_prep/Analysis/model_comparison.md)
-and [`latency_comparison.md`](journal_prep/Analysis/latency_comparison.md).
+**2. Removing crossing frames does not make the two classes comparable in time.** On the
+event-anchored PIE data, the distance from the observation window to the end of the track
+is 32–62 frames for non-crossers and 88–6,606 for crossers. That variable alone separates
+the classes with AUC 1.0000. A phase-matched control re-draws the non-crossing windows
+earlier, using a distribution estimated from training positives only (4,520 windows). It
+reduces that separation to 0.7919. It does not remove it.
 
-## What the study establishes
+**3. Model performance under the two protocols** (box + ego-speed input, five-seed means):
 
-**1. The standard windowing protocol leaks, and the leak is large.** Anchoring the
-observation window at the end of the annotated track puts the crossing inside the window
-it is supposed to precede for **67.9%** of crossing sequences. Re-anchoring every window at
-PIE's own `crossing_point`, with a minimum look-ahead of 30 frames, removes this by
-construction (0 of 4,906 windows) and yields 3.5× as many windows.
-→ [`journal_prep/issue1_leakage_audit/`](journal_prep/issue1_leakage_audit/),
-[`journal_prep/issue2_clean_protocol/`](journal_prep/issue2_clean_protocol/)
+| Model | AUC | PR-AUC | F1 | Accuracy |
+|---|---|---|---|---|
+| BiLSTM | 0.9242 → 0.8923 | 0.8688 → 0.7897 | 0.8276 → 0.7698 | 0.8826 → 0.8184 |
+| Transformer | 0.9447 → 0.8971 | 0.8964 → 0.7947 | 0.8250 → 0.7544 | 0.8849 → 0.7828 |
+| GRU | 0.9375 → 0.8817 | 0.8890 → 0.7684 | 0.8419 → 0.7401 | 0.8945 → 0.7964 |
+| Vanilla RNN | 0.9481 → 0.8872 | 0.8925 → 0.7749 | 0.8487 → 0.7553 | 0.8996 → 0.8104 |
 
-**2. The input signal matters; the architecture does not.** Given the same search budget
-and the same F1-first recipe on the same engine, an LSTM, a pre-LN Transformer, a GRU and
-an un-gated Elman RNN are statistically indistinguishable on F1 under a pedestrian-cluster
-bootstrap. Not even gating changes the answer over a 16-frame window, and the smallest,
-fastest family is the un-gated RNN.
-→ [`transformer/`](transformer/), [`gru/`](gru/), [`rnn/`](rnn/), [`f1_optimization/`](f1_optimization/)
+Each cell is event-anchored → phase-matched. Under event anchoring 7 of 18 family
+contrasts are significant after correction; after phase matching, 0 of 18.
 
-**3. Ego-vehicle speed carries the signal.** Removing it and leaving bounding boxes alone
-drops F1 from 0.828 to **0.551** on the same protocol. This is confirmatory rather than
-novel, and it comes with a caveat the manuscript states plainly: the instrumented vehicle
-was driven by a human who could see the pedestrian, so part of what the speed profile
-encodes is that driver's own anticipation.
+**4. The measured benefit of ego-speed depends on the sampling protocol.** Under event
+anchoring, adding speed to the boxes raises PR-AUC by +0.0565 to +0.2189 and 10 of 12
+contrasts are significant. After phase matching the differences are small and mixed
+(−0.0206 to +0.0049 in PR-AUC) and 0 of 12 are significant. The manuscript does not
+conclude that speed is uninformative, only that its apparent benefit on PIE is sensitive
+to how the windows are built.
 
-**4. The equivalence is horizon-bounded.** Extending the observation window to 32 and 64
-frames lowers F1 for every family. The four still tie at 16 and 32 frames; at 64 the
-un-gated RNN alone falls behind. Longer histories are where gating would earn its keep.
-→ [`journal_prep/obs_window_extension/`](journal_prep/obs_window_extension/)
+## What changed from this tree's earlier conclusions
 
-The manuscript's baseline table places these results against published PIE work without
-claiming the top of any column. The highest F1 in that table is PIP-Net's 0.88, obtained
-at a 0.5 s horizon with seven input streams.
+An independent audit in September 2026 re-derived every claim from code and
+machine-written artifacts. These are the conclusions recorded in this tree's study
+folders that the manuscript does not carry:
 
-## The manuscript
+| Earlier conclusion in this tree | Status |
+|---|---|
+| The four families are statistically indistinguishable; the input, not the architecture, decides | Not supported. With matched seeds and Holm correction, 7 of 18 contrasts are significant under event anchoring. After phase matching none is, which is a failure to resolve differences, not a tie |
+| Ego-speed carries the signal (box-only F1 0.551) | Holds under event anchoring only; not supported after the phase-matched control |
+| Metric hierarchy F1 → accuracy → AUC | Not used as a framing; four metrics are reported side by side |
+| BiLSTM test AUC 0.932 ± 0.011 (hidden 128) | A different configuration from the manuscript's BiLSTM row (0.9242 ± 0.0086, hidden 256) |
+| F1 declines with observation-window length; the un-gated RNN alone falls behind at 64 frames | Not in the manuscript. The window sweep is confounded with prediction horizon |
+| The four families tie on JAAD | Not in the manuscript. All 20 JAAD runs sit at chance |
+| IDD-PeD zero-shot transfer, latency, LOSO | Not in the manuscript |
 
-[`paper_and_artifacts/Journal_writing/submission/`](paper_and_artifacts/Journal_writing/submission/)
-holds the MDPI MTI submission package: `main.tex`, `references.bib`, the figures, and an
-`evidence/` folder recording the verification behind the text — baseline numbers checked
-against the primary PDFs, method warrants including the two the literature contradicts, a
-number-by-number audit, and the sources for the road-safety statistics. Figure generators
-for the two Introduction figures are in `evidence/`, so both rebuild from the dataset and
-the cited releases.
+The reasons are tabulated at the bottom of `docs/CONTRIBUTIONS.md` in the
+`pedestrian-intention-temporal-validity` repository.
 
 ## Repository layout
 
@@ -89,17 +110,17 @@ the cited releases.
 |---|---|
 | [`pipeline/`](pipeline/) | the numbered scripts, the three hand-maintained project docs (`THESIS_PLAN.md`, `PROGRESS_LOG.md`, `CODE_STATE.md`), the multi-seed result tables, and the live-demo outputs |
 | [`journal_prep/`](journal_prep/) | the 12-issue journal-readiness program: leakage audit, clean protocol, bootstrap CIs, LOSO, ablations, latency, detector-in-the-loop, and the unified model-agnostic training engine (`issue12_unified_pipeline/`) |
-| [`journal_prep/Analysis/`](journal_prep/Analysis/) | every model from all four families in one table, plus latency and hyperparameter tables — **the fastest way to see all results at once** |
+| [`journal_prep/Analysis/`](journal_prep/Analysis/) | every model from all four families in one table, plus latency and hyperparameter tables — the pre-audit record for this tree, not the source of the manuscript's numbers |
 | [`journal_prep/obs_window_extension/`](journal_prep/obs_window_extension/) | the same four F1-optimised models re-run at 32- and 64-frame observation windows, plus the PSI cross-test |
 | [`journal_prep/cross_dataset_validation/`](journal_prep/cross_dataset_validation/) | JAAD replication of the protocol and the architecture comparison (JAAD has no ego speed, so it cannot test the input claim) |
 | [`idd_ped_crossdataset/`](idd_ped_crossdataset/) | IDD-PeD cross-dataset study in unstructured Indian traffic — the first out-of-domain test of the 5-D input contract, since IDD-PeD does carry ego speed |
-| [`transformer/`](transformer/) | the Transformer-vs-BiLSTM extension (staged search; wins on AUC, ties on F1) |
+| [`transformer/`](transformer/) | the Transformer-vs-BiLSTM extension (staged validation-only search, 78 configurations) |
 | [`f1_optimization/`](f1_optimization/) | the F1-first optimization program for both original families |
-| [`gru/`](gru/) | the GRU-vs-BiLSTM recurrent-cell study (the gated twin ties the LSTM) |
-| [`rnn/`](rnn/) | the vanilla-RNN gating-isolation study (removing gating costs nothing at 16 frames) |
-| [`paper_and_artifacts/Journal_writing/`](paper_and_artifacts/Journal_writing/) | the manuscript workspace: the MDPI template, the figure generators, the drawio diagram sources, and the `submission/` package |
+| [`gru/`](gru/) | the GRU-vs-BiLSTM recurrent-cell study (same search and optimization as the BiLSTM) |
+| [`rnn/`](rnn/) | the vanilla-RNN gating-isolation study (`nn.LSTM` → `nn.RNN`, same search and optimization) |
+| [`paper_and_artifacts/Journal_writing/`](paper_and_artifacts/Journal_writing/) | the **pre-audit** manuscript workspace: the MDPI template, the figure generators, the drawio diagram sources, and the `submission/` draft. Not the paper under review |
 | [`paper_and_artifacts/runs/`](paper_and_artifacts/runs/) | trained checkpoints, per-feature normalization stats, and final metrics |
-| `paper_and_artifacts/supervisor_review/` | presentation pack — ⚠ a dated 2026-06 snapshot on the pre-leakage-fix numbers; current numbers live in `journal_prep/` and `Analysis/` |
+| `paper_and_artifacts/supervisor_review/` | presentation pack — ⚠ a dated 2026-06 snapshot on the pre-leakage-fix numbers; do not quote it |
 
 Each of `transformer/`, `f1_optimization/`, `gru/`, `rnn/`, `obs_window_extension/`,
 `cross_dataset_validation/` and `idd_ped_crossdataset/` carries its own `PLAN.md` and
@@ -181,6 +202,10 @@ annotation table, then `02_build_sequences.py` for the legacy windows or
 
 ## Status
 
-Experimental work is complete across all four model families, the observation-window
-extension and the cross-dataset studies. The current effort is the MDPI MTI manuscript in
-`submission/`. `PROGRESS_LOG.md` carries the full chronological record.
+Experimental work in this tree stopped in August 2026. The September audit, the rewritten
+manuscript and the experiments behind it live in the `pedestrian-intention-temporal-validity`
+repository. The manuscript is under peer review (see "Current status" at the top); the
+first-round reviewer comments have been received and the revision is worked in a separate
+folder, `vehicles-4601011-revision`, which also holds the paper's drafts, figure generators
+and number-checking script that used to sit at this repository's root.
+`pipeline/PROGRESS_LOG.md` carries the full chronological record.
