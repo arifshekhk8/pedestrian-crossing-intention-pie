@@ -1,5 +1,17 @@
 # Transformer vs. BiLSTM — Supervisor Summary
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> does not carry its conclusion forward. The manuscript reports a matched four-family
+> comparison on the event-anchored data (same five seeds, pedestrian-clustered bootstrap, Holm
+> correction), in which the Transformer (AUC 0.9447 ± 0.0090) is significantly above the
+> BiLSTM and the GRU on AUC and is not separated from the vanilla RNN, and a phase-matched
+> control under which none of the 18 family contrasts remains significant. The 0.950-vs-0.932
+> comparison against the frozen hidden-128 BiLSTM, and the reading that the gain came from the
+> search, are not in the manuscript. Current state: "Current status" in `CLAUDE.md` at the
+> repository root.
+
 **Student:** Arif
 **Date:** 2026-07-12
 **One-line summary:** You asked us to build the best Transformer we could on the same

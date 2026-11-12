@@ -1,5 +1,14 @@
 # IDD-PeD cross-dataset validation
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> uses IDD-PeD for the frame-level audit only: crossing frames appear in 81.3% of positive
+> windows under track-end anchoring, in 29.6% under the supplied `crossing_point`, and in none
+> of the 7,318 windows anchored on the earlier of `crossing_point` and the first crossing
+> frame. The zero-shot transfer and the from-scratch replication in this folder are not in the
+> manuscript. Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 **Isolated experiment folder.** Nothing outside `idd_ped_crossdataset/` is written, modified,
 renamed, or deleted by anything in here. Existing project code (the unified engine, the model
 classes, the eval helpers) is `importlib`-loaded **read-only** and, where a dimension or data

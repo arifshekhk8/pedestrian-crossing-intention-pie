@@ -1,5 +1,13 @@
 # PLAN — PSI 2.0 (2023) cross-dataset test of the PIE-trained models (OW 16/32/64)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The PSI 2.0
+> cross-test was abandoned: the dataset was never obtained, two of the three scripts were
+> never written, and the checkpoints trained for it fold PIE's test split into training, so
+> they must not be reused for any PIE evaluation. PSI does not appear in the paper now under
+> peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in Pedestrian
+> Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE"). Current
+> state: "Current status" in `CLAUDE.md` at the repository root.
+
 **Goal (user directive, 2026-07-19):** train + validate on the **full PIE** dataset, use **PSI 2.0
 (2023)** as an external **test** set, for observation windows **16, 32, 64**. Start with the
 **vanilla RNN** (F1-optimised). Decisions locked: **5-D faithful** feature set (real

@@ -1,5 +1,15 @@
 # PLAN — Observation-window extension (OW 32 & 64 on all four F1-optimised families)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The
+> observation-window results are not in the paper now under peer review (MDPI manuscript
+> 4601011, "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction: A
+> Multi-Dataset Audit with Controlled Evaluation on PIE"). The September 2026 audit found the
+> sweep confounded with prediction horizon: the stride is tied to the window length, so the
+> share of TTE = 60 windows rises from 23.6% to 87.1% as the window grows. It also found that
+> the OW64 vanilla-RNN drop rests on an ensemble scoring below its own seed mean. The PSI 2.0
+> cross-test under `psi_crosstest/` was abandoned. Current state: "Current status" in
+> `CLAUDE.md` at the repository root.
+
 **Supervisor directive (2026-07-19):** try observation windows **32 and 64** on all four model
 families, evaluating only the **F1-optimised** version of each family.
 

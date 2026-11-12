@@ -1,5 +1,13 @@
 # journal_prep/ — Reviewer-Readiness Work
 
+> **⚠ STATUS NOTE (added 2026-11-12).** The issue folders here are the pre-audit record, kept
+> as written. Of this program, the leakage audit (Issue 1) and the event-anchored protocol
+> (Issue 2) carry into the paper now under peer review (MDPI manuscript 4601011, "Temporal
+> Validity and Sampling Bias in Pedestrian Crossing Prediction: A Multi-Dataset Audit with
+> Controlled Evaluation on PIE"). The hidden-128 BiLSTM headline (AUC 0.932 ± 0.011), the
+> attention and window/TTE ablations, LOSO, latency and the baseline-comparison table do not
+> appear in it. Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 Everything here fixes issues a journal reviewer would raise *before* submission.
 It is **separate from the original thesis pipeline** in `pipeline/` (numbered scripts
 + `paper_and_artifacts/runs/`), which is left as the historical record

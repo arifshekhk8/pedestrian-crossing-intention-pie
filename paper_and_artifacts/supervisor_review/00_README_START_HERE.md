@@ -11,6 +11,12 @@
 > This pack is retained only as a historical artifact / figure source; to reuse it,
 > regenerate the figures + CSVs from the clean run outputs (do not hand-edit).
 
+> **⚠ STATUS NOTE (added 2026-11-12).** The "current" F1-first numbers quoted in the banner
+> above are themselves pre-audit and are not carried by the paper now under peer review (MDPI
+> manuscript 4601011, "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction:
+> A Multi-Dataset Audit with Controlled Evaluation on PIE"). Do not quote either set. Current
+> state: "Current status" in `CLAUDE.md` at the repository root.
+
 **Student:** Arif
 **Date:** 2026-06-16 (snapshot — see banner above)
 **One-line summary:** A bidirectional LSTM predicts whether a pedestrian will

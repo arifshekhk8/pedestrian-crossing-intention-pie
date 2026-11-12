@@ -1,5 +1,12 @@
 # Handover prompt — paste this into a NEW Claude Code session
 
+> **⚠ STATUS NOTE (added 2026-11-12).** Do not paste this prompt into a new session. It
+> describes the project as of 2026-07-21 (an MDPI MTI draft arguing four-family equivalence),
+> which is no longer the paper. The paper now under peer review (MDPI manuscript 4601011,
+> "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction: A Multi-Dataset
+> Audit with Controlled Evaluation on PIE") uses JAAD for the frame-level audit only. Current
+> state: "Current status" in `CLAUDE.md` at the repository root.
+
 > Copy everything in the fenced block below into a fresh session (run from the repo root,
 > `/Users/arif/Developer/pedestrian-thesis`). It is self-contained.
 

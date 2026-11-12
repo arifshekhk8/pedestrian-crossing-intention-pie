@@ -1,5 +1,13 @@
 # Analysis — cross-model comparison pack (the paper-writing folder)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** These tables are the pre-audit summary of this tree's
+> runs: the F1-optimised and AUC-selected models from the per-family studies. They are not the
+> source of the numbers in the paper now under peer review (MDPI manuscript 4601011, "Temporal
+> Validity and Sampling Bias in Pedestrian Crossing Prediction: A Multi-Dataset Audit with
+> Controlled Evaluation on PIE"), which come from the matched comparison in
+> `~/Developer/pedestrian-intention-temporal-validity/experiments/02_model_comparison/`.
+> Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 One place that pulls together **every model we trained** across the four families
 (BiLSTM · Transformer · GRU · vanilla RNN) on the clean PIE crossing-intention protocol —
 comparison tables, latency, hyperparameters, confusion matrices, and the figures you'll want

@@ -1,5 +1,15 @@
 # Overleaf package — three-contribution version
 
+> **⚠ STATUS NOTE (added 2026-11-12).** None of the manuscripts in this folder is the paper
+> under review. They are earlier drafts with a different argument (two streams, four
+> architectures, four-family equivalence). The paper now under peer review (MDPI manuscript
+> 4601011, "Temporal Validity and Sampling Bias in Pedestrian Crossing Prediction: A
+> Multi-Dataset Audit with Controlled Evaluation on PIE") was rewritten in September 2026
+> after an independent audit and is maintained on Overleaf; it reaches this machine as zip
+> exports. Treat `submission/`, `Overleaf_package/` and `MDPI_Article_Template/` as read-only
+> history. Check any figure generator or drawio source here against the current export before
+> reusing it. Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 Everything Overleaf needs to compile the manuscript, and nothing it doesn't.
 Self-contained: no file here points outside this folder.
 

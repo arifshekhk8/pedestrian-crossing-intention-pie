@@ -1,5 +1,18 @@
 # Vanilla RNN vs. BiLSTM — Supervisor Summary
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> does not carry the "gating buys nothing" verdict. In its matched comparison on the
+> event-anchored data the vanilla RNN has the highest mean AUC (0.9481 ± 0.0058) and F1
+> (0.8487 ± 0.0154) and is significantly above the BiLSTM and the GRU on both after Holm
+> correction. After the phase-matched control none of the 18 family contrasts is significant,
+> which the manuscript reads as differences that could not be resolved, not as a tie. The
+> September 2026 audit also found that the GRU-vs-RNN contrast against the transformer
+> reflects an arm-set asymmetry, and that one RNN endpoint changes from win to tie under the
+> cluster bootstrap. The latency and LOSO results here are not in the manuscript. Current
+> state: "Current status" in `CLAUDE.md` at the repository root.
+
 **Student:** Arif
 **Date:** 2026-07-14
 **One-line summary:** You asked us to test two more model families on the same pipeline under

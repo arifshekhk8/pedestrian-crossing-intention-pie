@@ -1,5 +1,17 @@
 # transformer/ — Transformer extension (BiLSTM vs Transformer, clean PIE protocol)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> does not carry its conclusion forward. The manuscript reports a matched four-family
+> comparison on the event-anchored data (same five seeds, pedestrian-clustered bootstrap, Holm
+> correction), in which the Transformer (AUC 0.9447 ± 0.0090) is significantly above the
+> BiLSTM and the GRU on AUC and is not separated from the vanilla RNN, and a phase-matched
+> control under which none of the 18 family contrasts remains significant. The 0.950-vs-0.932
+> comparison against the frozen hidden-128 BiLSTM, and the reading that the gain came from the
+> search, are not in the manuscript. Current state: "Current status" in `CLAUDE.md` at the
+> repository root.
+
 Supervisor-requested extension: build the **best Transformer** intention predictor on the
 existing pipeline and dataset, then compare it against the locked BiLSTM under the exact
 clean protocol. Master plan with all pre-registered decisions: **[PLAN.md](PLAN.md)**.

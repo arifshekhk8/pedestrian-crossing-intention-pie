@@ -1,5 +1,17 @@
 # GRU vs. BiLSTM — Supervisor Summary
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> makes no equivalence claim between recurrent cells. In its matched comparison on the
+> event-anchored data, 7 of 18 family contrasts are significant after Holm correction,
+> including the vanilla RNN and the Transformer above the GRU on AUC. After the phase-matched
+> control none is, which the manuscript reads as differences that could not be resolved, not
+> as a tie. The September 2026 audit also found that "the GRU loses to the transformer on AUC
+> but the RNN ties it" reflects an arm-set asymmetry (this study never trained an AUC-selected
+> large model), not a cell effect. The latency and LOSO results here are not in the
+> manuscript. Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 **Student:** Arif
 **Date:** 2026-07-14
 **One-line summary:** You asked us to test two more model families on the same pipeline under

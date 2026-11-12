@@ -1,5 +1,15 @@
 # f1_optimization/ — F1-first optimization of both models (supervisor directive)
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> does not use the F1 → accuracy → AUC hierarchy. It reports ROC-AUC, PR-AUC, F1 and accuracy
+> side by side, selects checkpoints on validation AUC, and sets the threshold by maximising F1
+> on the five-seed-averaged validation probabilities. The "families tie on F1" verdict did not
+> survive the matched comparison: on the event-anchored data the vanilla RNN's F1 is
+> significantly above the BiLSTM's (Δ 0.0320) and the GRU's (Δ 0.0185) after Holm correction.
+> Current state: "Current status" in `CLAUDE.md` at the repository root.
+
 The supervisor's rule: **F1 first, then accuracy, then AUC.** This folder re-optimizes
 both the BiLSTM and the Transformer for that hierarchy — threshold tuning, F1-based
 config re-selection, F1-aware checkpoint retraining, and a pos_weight sweep — under the

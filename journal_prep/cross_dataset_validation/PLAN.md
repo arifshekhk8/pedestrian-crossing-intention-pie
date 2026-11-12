@@ -1,5 +1,14 @@
 # PLAN — Cross-dataset validation of the PIE-trained crossing-intention models
 
+> **⚠ STATUS NOTE (added 2026-11-12).** This is a dated record, kept as written. The paper now
+> under peer review (MDPI manuscript 4601011, "Temporal Validity and Sampling Bias in
+> Pedestrian Crossing Prediction: A Multi-Dataset Audit with Controlled Evaluation on PIE")
+> uses JAAD for the frame-level audit only: 93.0% of the 460 positive windows contain a
+> crossing frame under the naive anchor, and the 972 event-anchored windows contain none. The
+> JAAD four-family comparison is not in the manuscript. All 20 runs sit at chance (AUC
+> 0.494–0.520), so it is a null result, not evidence that the families tie. Current state:
+> "Current status" in `CLAUDE.md` at the repository root.
+
 **Goal (2026-07-21).** Strengthen the MTI paper by showing our findings generalize
 beyond PIE — a **zero-shot cross-dataset test** (train on PIE, test on a second dataset
 we never train on). This directly answers the "single dataset (PIE only)" reviewer risk
